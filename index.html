@@ -1,258 +1,345 @@
-<html lang="es">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Xatspace - By Temerx</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;1,400&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
-<style>
-/* Reset y Fondo - Gama de verde más oscuro */
-body { 
-    margin: 0; padding: 0; background: #0d1a12; 
-    font-family: 'Lora', serif; color: #c2d6cb; 
-    height: 100vh; overflow: hidden; 
-    display: flex; justify-content: center; align-items: center; 
-    cursor: url("https://u.cubeupload.com/TemerX/mousecursorpng23332.png"), auto; 
-    position: relative; 
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temer</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            background: black;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-#bg-image { position: fixed; inset: 0; background: url("https://mrwallpaper.com/images/thumbnail/inuyasha-and-kagome-in-white-cplufncoxi7ac82l.jpg") no-repeat center center; background-size: cover; filter: blur(6px) brightness(0.4); transform: scale(1.1); z-index: -2; }
-#bg-overlay { position: fixed; inset: 0; background: rgba(10, 30, 20, 0.6); z-index: -1; }
+        #textEffect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 70px;
+            font-weight: 900;
+            color: #ffffff;
+            opacity: 0;
+            letter-spacing: 6px;
+            transition: opacity 1.2s;
+            text-shadow: 0 0 10px #000000, 0 0 30px #000000, 0 0 60px #000000;
+            pointer-events: none;
+            z-index: 10;
+            text-align: center;
+            width: 90vw;
+        }
 
-/* --- EFECTO NIEVE --- */
-.snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-.snowflake { 
-    position: absolute; background-color: #d1eee2; border-radius: 50%; 
-    opacity: 0.6; animation: fall linear infinite; 
-}
-@keyframes fall { 
-    0% { transform: translateY(-10vh); } 
-    100% { transform: translateY(110vh); } 
-}
+        /* Contenedor de imagen centrado que se queda permanente */
+        #imageContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 1.2s;
+            pointer-events: none;
+            z-index: 5; /* Detrás del texto final pero visible */
+            text-align: center;
+        }
 
-/* Ventanas */
-.window { 
-    background: rgba(15, 35, 25, 0.85); 
-    backdrop-filter: blur(15px); 
-    -webkit-backdrop-filter: blur(15px); 
-    border: 2px solid rgba(45, 125, 80, 0.6); 
-    border-radius: 25px; 
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); 
-    position: absolute; 
-    z-index: 2; 
-    overflow: hidden; 
-}
+        #imageContainer img {
+            max-width: 300px;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+        }
 
-.profile-header { background: rgba(30, 85, 55, 0.8); height: 32px; display: flex; align-items: center; justify-content: center; position: relative; cursor: grab; }
-.profile-header::before { content: ""; width: 40px; height: 4px; background: rgba(255,255,255,0.5); border-radius: 10px; position: absolute; top: 14px; }
+        /* Sub-textos organizados arriba y abajo */
+        .sub-text-top {
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #aaaaaa; 
+            opacity: 0;
+            transition: opacity 1.2s;
+            text-shadow: 0 0 10px #000000, 0 0 20px #000000;
+            line-height: 1.4;
+        }
 
-/* Perfil Principal */
-.profile-window { width: 350px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.profile-content { padding: 30px; box-sizing: border-box; text-align: center; }
-.username { font-size: 52px; font-family: 'Great Vibes', cursive; margin-bottom: 20px; background: linear-gradient(to right, #4aca83, #8fe3b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub-text-bottom {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #aaaaaa; 
+            opacity: 0;
+            transition: opacity 1.2s;
+            text-shadow: 0 0 10px #000000, 0 0 20px #000000;
+            line-height: 1.4;
+        }
+         
+        #smokeOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("https://static.vecteezy.com/system/resources/previews/010/884/548/original/dense-fluffy-puffs-of-white-smoke-and-fog-on-transparent-background-abstract-smoke-clouds-movement-blurred-out-of-focus-smoking-blows-from-machine-dry-ice-fly-fluttering-in-air-effect-texture-png.png") center/cover no-repeat;
+            opacity: 0;
+            transition: opacity 1.5s;
+            pointer-events: none;
+        }
 
-.icon-profile-container { width: 140px; height: 140px; margin: 0 auto 20px; border-radius: 50%; border: 3px solid #3da36b; overflow: hidden; box-shadow: 0 8px 20px rgba(20, 70, 45, 0.6); }
-.icon-profile-img { width: 100%; height: 100%; object-fit: cover; }
-
-.profile-info { font-size: 15px; line-height: 1.6; color: #b1d4c0; margin-bottom: 15px; }
-.quote { font-style: italic; font-size: 13px; color: #65d494; font-weight: 500; }
-
-/* Paneles Laterales */
-.side-panel { position: fixed; top: 10%; width: 310px; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-#playlist-panel { left: -350px; height: auto; }
-#playlist-panel.active { left: 30px; }
-#guestbook-panel { right: -350px; height: 75vh; }
-#guestbook-panel.active { right: 30px; }
-
-.panel-content { 
-    padding: 20px; 
-    box-sizing: border-box; 
-    height: calc(100% - 32px); 
-    overflow-y: auto; 
-}
-.panel-title { font-family: 'Great Vibes', cursive; font-size: 36px; text-align: center; color: #65d494; margin-bottom: 25px; }
-
-/* REPRODUCTOR */
-#nowPlaying {
-    font-family: 'Lora', serif;
-    font-size: 15px;
-    text-align: center;
-    color: #65d494;
-    font-weight: bold;
-    margin-bottom: 20px;
-    min-height: 25px;
-}
-
-.player-album-art {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
-    border: 3px solid #3da36b;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(20, 70, 45, 0.6);
-}
-.player-album-art img { width: 100%; height: 100%; object-fit: cover; }
-
-.player-controls {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 5px;
-    padding-bottom: 15px;
-}
-.control-btn {
-    font-size: 26px;
-    color: #5acb87;
-    cursor: pointer;
-    transition: 0.3s;
-    user-select: none;
-}
-.control-btn:hover { transform: scale(1.2); color: #8fe3b2; }
-
-/* Guestbook Styles */
-.sig-bubble { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
-.sig-avatar-container { width: 50px; height: 50px; min-width: 50px; border-radius: 50%; border: 2px solid #3da36b; overflow: hidden; background: #0f2519; }
-.sig-avatar-img { width: 100%; height: 100%; object-fit: cover; }
-.sig-text { background: rgba(20, 45, 32, 0.9); border: 1px solid rgba(61, 163, 107, 0.4); border-radius: 0 20px 20px 20px; padding: 12px; font-size: 13px; color: #c2d6cb; box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3); }
-.sig-name { display: block; color: #65d494; font-weight: bold; font-size: 12px; margin-bottom: 4px; }
-
-.bottom-controls { display: flex; justify-content: center; gap: 35px; padding-bottom: 25px; }
-.icon-btn { font-size: 28px; color: #5acb87; cursor: pointer; transition: 0.3s; }
-.icon-btn:hover { color: #8fe3b2; }
-
-/* ESTILO DE LA BARRA DE DESPLAZAMIENTO */
-.panel-content::-webkit-scrollbar { width: 6px; }
-.panel-content::-webkit-scrollbar-thumb { background: #3da36b; border-radius: 10px; }
-.panel-content::-webkit-scrollbar-track { background: transparent; }
-</style>
+        canvas {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-
-<div id="bg-image"></div>
-<div id="bg-overlay"></div>
-
-<div class="snow-container" id="snow"></div>
-
-<div class="window profile-window" id="profileWindow">
-  <div class="profile-header" id="profileHeader"></div>
-  <div class="profile-content">
-    <div class="username">Jinkitarma</div>
-    <div class="icon-profile-container">
-      <img src="https://i0.xat.com/web_gear/chat/GetImage9.php?s&W=240&H=240&U=https://xatimg.com/image/lElhkmkrT0EE.png" class="icon-profile-img">
-    </div>
-    <div class="profile-info">ID <b>444325008</b>.<br>welcome to my <b>xatspace</b>.<br></div>
-    <div class="quote">“No importa cuánto tiempo tome, haré que te conviertas en un demonio completo.”</div>
-  </div>
-  <div class="bottom-controls">
-    <div class="icon-btn" onclick="togglePanel('playlist-panel')">♫</div>
-    <div class="icon-btn" onclick="togglePanel('guestbook-panel')">✎</div>
-  </div>
-</div>
-
-<div class="window side-panel" id="playlist-panel">
-  <div class="profile-header"></div>
-  <div class="panel-content">
-    <div class="panel-title">Playlist</div>
-    <div class="player-album-art">
-        <img src="https://i0.xat.com/web_gear/chat/GetImage9.php?s&W=240&H=240&U=https://xatimg.com/image/lElhkmkrT0EE.png">
-    </div>
-    <div id="nowPlaying">Cargando...</div>
-    <div class="player-controls">
-        <div class="control-btn" onclick="prevTrack()">«</div>
-        <div class="control-btn" id="playBtn" onclick="togglePlay()">▶</div>
-        <div class="control-btn" onclick="nextTrack()">»</div>
-    </div>
-    <audio id="mainAudio"></audio>
-  </div>
-</div>
-
-<div class="window side-panel" id="guestbook-panel">
-  <div class="profile-header"></div>
-  <div class="panel-content">
-    <div class="panel-title">Guestbook</div>
-
-    <div class="sig-bubble">
-      <div class="sig-avatar-container"><img src="https://i0.xat.com/web_gear/chat/GetImage9.php?s&W=240&H=240&U=https://xat.com/content/web/R00247/img/xatspace/default.png" class="sig-avatar-img"></div>
-      <div class="sig-text"><span class="sig-name">°R♦2♠D♥2° </span>ACASO ES NECESARIO TENER DE FRENTE A ALGUIEN QUE SE CONSIDERA AMIGO </div>
+    <div id="smokeOverlay"></div>
+    
+    <!-- Imagen central permanente -->
+    <div id="imageContainer">
+        <img src="https://xatimg.com/image/yLXeAZnrGZKr.png" alt="Logo">
     </div>
 
-    <div class="sig-bubble">
-      <div class="sig-avatar-container"><img src="https://i0.xat.com/web_gear/chat/GetImage9.php?s&W=240&H=240&U=https://xatimg.com/image/CpGkxa03pOZE.png" class="sig-avatar-img"></div>
-      <div class="sig-text"><span class="sig-name">JIMENA</span>GRACIAS JINKI POR AYUDARME CUANDO MAS TE NECESITABA</div>
+    <div id="textEffect">
+        <div id="topText" class="sub-text-top"></div>
+        <div id="mainText"></div>
+        <div id="bottomText" class="sub-text-bottom"></div>
     </div>
 
-    <div class="sig-bubble">
-      <div class="sig-avatar-container"><img src="https://u.cubeupload.com/TemerX/extaesremovebgprevie.png" class="sig-avatar-img"></div>
-      <div class="sig-text"><span class="sig-name">TemerX</span>Sorpresa!.. Espero te guste.</div>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, flash, rain, rainGeo;
+        let cloudParticles = [];
+        let rainCount = 15000;
+        let smokeParticles = [];
 
-  </div>
-</div>
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
-<script>
-function togglePanel(id) { document.getElementById(id).classList.toggle('active'); }
+            camera.position.z = 1;
+            camera.rotation.x = 1.16;
+            camera.rotation.y = -0.12;
+            camera.rotation.z = 0.27;
 
-// Nieve
-const snowCont = document.getElementById('snow');
-for (let i = 0; i < 30; i++) {
-    const s = document.createElement('div');
-    s.className = 'snowflake';
-    s.style.left = Math.random() * 100 + '%';
-    const size = (Math.random() * 6 + 2) + 'px';
-    s.style.width = size; s.style.height = size;
-    s.style.animationDuration = (Math.random() * 3 + 4) + 's';
-    s.style.animationDelay = Math.random() * 5 + 's';
-    snowCont.appendChild(s);
-}
+            const ambient = new THREE.AmbientLight(0x555555);
+            scene.add(ambient);
 
-const songs = [
-    { n: "La Chispa", u: "https://www.dropbox.com/scl/fi/v6wumdr909ees6jzommzt/08.-La-Chispa-Adecuada-Enrique-B-nbury-y-Le-n-Larregui.mp3?rlkey=kfrxxnsy0vtc2lf11ndh4kdsi&st=qt3r17dx&dl=1" },
-    { n: "Devuelveme", u: "https://www.dropbox.com/scl/fi/oehkktdtqiynig761pkx4/05.-Devu-lveme-a-Mi-Chica-Hombres-G.mp3?rlkey=53xvc7vmir2m9fgrfxj5ve041&st=pjduizyo&dl=1" },
-    { n: "Entre Dos Tierras", u: "https://www.dropbox.com/scl/fi/uf20dp5o1nvphsb37co1v/12.-Entre-Dos-Tierras-Soda-Stereo.mp3?rlkey=ok3devmawara7p845bwe456q2&st=2gsqqdmu&dl=1" },
-    { n: "La Celula", u: "https://www.dropbox.com/scl/fi/evceybujp97k2bx5iju6m/22.-La-C-lula-Que-Explota-Caifanes.mp3?rlkey=sdli8rwdlfau4uxgd8c9mkhec&st=oltefg5u&dl=1" },
-    { n: "Persiana", u: "https://www.dropbox.com/scl/fi/6goaz4ym42xs53urbg1ch/28.-Persiana-Americana-Soda-Stereo.mp3?rlkey=goq9chl8mvhtis5ad5jj9wqay&st=5xv40dix&dl=1" },
-    { n: "Bonito ", u: "https://www.dropbox.com/scl/fi/l65b37eqb1oz9ti4pzgaf/42.-Bonito-Jarabe-de-Palo.mp3?rlkey=cbveocec3jjw4wk0z7g4od7qd&st=a8l0sso5&dl=1" },
+            const directionalLight = new THREE.DirectionalLight(0xffeedd);
+            directionalLight.position.set(0, 0, 1);
+            scene.add(directionalLight);
 
-];
+            flash = new THREE.PointLight(0x062d89, 30, 500, 1.7);
+            flash.position.set(200, 300, 100);
+            scene.add(flash);
 
-let currentTrackIndex = 0;
-const audio = document.getElementById('mainAudio');
-const playBtn = document.getElementById('playBtn');
-const nowPlaying = document.getElementById('nowPlaying');
+            renderer = new THREE.WebGLRenderer();
+            scene.fog = new THREE.FogExp2(0x11111f, 0.002);
+            renderer.setClearColor(scene.fog.color);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-function loadTrack(index) {
-    currentTrackIndex = index;
-    audio.src = songs[index].u;
-    nowPlaying.innerText = songs[index].n;
-}
+            let positions = [];
+            let sizes = [];
+            rainGeo = new THREE.BufferGeometry();
+            
+            for (let i = 0; i < rainCount; i++) {
+                positions.push(
+                    Math.random() * 400 - 200,
+                    Math.random() * 500 - 250,
+                    Math.random() * 400 - 200
+                );
+                sizes.push(30);
+            }
+            
+            rainGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
+            rainGeo.setAttribute("size", new THREE.BufferAttribute(new Float32Array(sizes), 1));
 
-function togglePlay() {
-    if (audio.paused) { audio.play(); playBtn.innerText = "⏸"; } 
-    else { audio.pause(); playBtn.innerText = "▶"; }
-}
+            const rainMaterial = new THREE.PointsMaterial({
+                color: 0xaaaaaa,
+                size: 0.1,
+                transparent: true
+            });
 
-function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % songs.length;
-    loadTrack(currentTrackIndex);
-    audio.play(); playBtn.innerText = "⏸";
-}
+            rain = new THREE.Points(rainGeo, rainMaterial);
+            scene.add(rain);
 
-function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + songs.length) % songs.length;
-    loadTrack(currentTrackIndex);
-    audio.play(); playBtn.innerText = "⏸";
-}
+            let loader = new THREE.TextureLoader();
+            loader.load(
+                "https://static.vecteezy.com/system/resources/previews/010/884/548/original/dense-fluffy-puffs-of-white-smoke-and-fog-on-transparent-background-abstract-smoke-clouds-movement-blurred-out-of-focus-smoking-blows-from-machine-dry-ice-fly-fluttering-in-air-effect-texture-png.png",
+                function (texture) {
+                    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
+                    const cloudMaterial = new THREE.MeshLambertMaterial({
+                        map: texture,
+                        transparent: true
+                    });
 
-audio.onended = () => { nextTrack(); };
-loadTrack(0);
+                    for (let p = 0; p < 25; p++) {
+                        let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
+                        cloud.position.set(
+                            Math.random() * 800 - 400,
+                            500,
+                            Math.random() * 500 - 450
+                        );
 
-function drag(id, head) {
-    const el = document.getElementById(id), h = document.getElementById(head);
-    let x=0, y=0, d=false;
-    h.onmousedown = e => { d=true; x=e.clientX-el.offsetLeft; y=e.clientY-el.offsetTop; };
-    document.onmouseup = () => d=false;
-    document.onmousemove = e => { if(d){ el.style.left=(e.clientX-x)+'px'; el.style.top=(e.clientY-y)+'px'; } };
-}
-drag('profileWindow', 'profileHeader');
-</script>
+                        cloud.rotation.x = 1.16;
+                        cloud.rotation.y = -0.12;
+                        cloud.rotation.z = Math.random() * 360;
+                        cloud.material.opacity = 0.6;
+                        cloudParticles.push(cloud);
+                        scene.add(cloud);
+                    }
+                    animate();
+                    window.addEventListener("resize", onWindowResize);
+                }
+            );
+        }
+
+        function createSmokeBurst() {
+            const geometry = new THREE.BufferGeometry();
+            const count = 200;
+            const positions = [];
+            const velocities = [];
+            
+            for (let i = 0; i < count; i++) {
+                positions.push(0, 0, 0);
+                velocities.push(
+                    (Math.random() - 0.5) * 2,
+                    Math.random() * 2,
+                    (Math.random() - 0.5) * 2
+                );
+            }
+            
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.InputStream = true;
+            geometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocities, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 3,
+                transparent: true,
+                opacity: 0.6,
+                depthWrite: false
+            });
+            
+            const points = new THREE.Points(geometry, material);
+            points.position.set(0, 0, -20);
+            scene.add(points);
+            smokeParticles.push(points);
+        }
+
+        function updateSmoke() {
+            smokeParticles.forEach(p => {
+                let pos = p.geometry.attributes.position;
+                let vel = p.geometry.attributes.velocity;
+                for (let i = 0; i < pos.count; i++) {
+                    pos.array[i * 3] += vel.array[i * 3] * 0.2;
+                    pos.array[i * 3 + 1] += vel.array[i * 3 + 1] * 0.2;
+                    pos.array[i * 3 + 2] += vel.array[i * 3 + 2] * 0.2;
+                }
+                pos.needsUpdate = true;
+                p.material.opacity *= 0.995;
+            });
+        }
+
+        function animate() {
+            cloudParticles.forEach(p => {
+                p.rotation.z -= 0.002;
+            });
+            
+            rain.position.z -= 0.222;
+            if (rain.position.z < -200) {
+                rain.position.z = 0;
+            }
+
+            if (Math.random() > 0.93 || flash.power > 100) {
+                if (flash.power < 100)
+                    flash.position.set(Math.random() * 400, 300 + Math.random() * 200, 100);
+                flash.power = 50 + Math.random() * 500;
+            }
+            
+            updateSmoke();
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        init();
+
+        let textContainer = document.getElementById("textEffect");
+        let mainText = document.getElementById("mainText");
+        let topText = document.getElementById("topText");
+        let bottomText = document.getElementById("bottomText");
+        let imageContainer = document.getElementById("imageContainer");
+
+        function showText(t) {
+            mainText.innerHTML = t;
+            textContainer.style.opacity = 1;
+        }
+
+        function hideText() {
+            textContainer.style.opacity = 0;
+            topText.style.opacity = 0;
+            bottomText.style.opacity = 0;
+        }
+
+        function showImage() {
+            imageContainer.style.opacity = 1;
+        }
+
+        function showExtraTextsWithDelay(topStr, bottomStr, delayMs) {
+            topText.innerHTML = topStr;
+            bottomText.innerHTML = bottomStr;
+            
+            setTimeout(() => {
+                topText.style.opacity = 1;
+                bottomText.style.opacity = 1;
+            }, delayMs);
+        }
+
+        function hideExtraTexts() {
+            topText.style.opacity = 0;
+            bottomText.style.opacity = 0;
+        }
+
+        setTimeout(() => {
+            createSmokeBurst();
+        }, 2500);
+
+        // 1. Aparece el texto 1 en el segundo 2.0 y se oculta en el 5.2
+        setTimeout(() => {
+            showText("𒆜ᵀᵉᵐᵉʳ ̶̶̶ۣۜ͜͡ ✗☬™");
+        }, 2000);
+
+        setTimeout(() => {
+            hideText();
+        }, 5200);
+
+        // 2. Aparece la imagen en el segundo 6.5 y SE QUEDA PERMANENTE
+        setTimeout(() => {
+            showImage();
+            createSmokeBurst();
+        }, 6500);
+
+        // 3. Frases finales arriba y abajo manteniendo la imagen visible en el centro
+        setTimeout(() => {
+            showText("<br><br><br><br>");
+            showExtraTextsWithDelay(
+                "¿Qué haces cuando hay un mal que no puedes derrotar solo por tus medios?<br>¿Te manchas las manos con el mal para destruir el mal?<br>¿O permaneces firme y justo incluso si eso significa rendirte al mal?<br><br><i>*En mi caso, cometo el mal para destruir el mal mayor*</i>.",
+                "Incluso si tengo que cargar con todos los males de este mundo...<br>no me importa. Si eso puede salvar al mundo, lo aceptaré con gusto.<br><br>Aquel que domina la oscuridad para derrotar al mal absoluto, no es un sirviente de la sombra, sino su maestro.",
+                1000
+            );
+        }, 9000);
+
+        setTimeout(() => {
+            hideExtraTexts();
+        }, 16000);
+
+    </script>
 </body>
 </html>
