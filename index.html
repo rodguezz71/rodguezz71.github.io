@@ -1,1 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kemo Pro</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --main-bg: #050505;
+            --custom-color: #078F8A; 
+            --accent-glow: #078F8A;
+            --glass-bg: rgba(7, 143, 138, 0.05);
+        }
+
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #000000, #041a19, #020c0c, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes nameFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .name-font {
+            font-family: 'Pacifico', cursive;
+            color: var(--custom-color);
+            font-size: clamp(2.5rem, 10vw, 3.2rem);
+            margin-bottom: -0.5rem;
+            text-shadow: 0 0 20px rgba(7, 143, 138, 0.5);
+            display: inline-block;
+            animation: nameFloat 3s ease-in-out infinite;
+        }
+
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #041a19 0%, #000000 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .fade-out { opacity: 0 !important; visibility: hidden !important; }
+
+        .intro-img {
+            width: 200px; height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--custom-color);
+            box-shadow: 0 0 30px rgba(7, 143, 138, 0.3);
+            margin-bottom: 2.5rem;
+        }
+
+        .enter-btn {
+            background: rgba(7, 143, 138, 0.1);
+            color: #fff;
+            border: 2px solid var(--custom-color);
+            padding: 12px 45px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(7, 143, 138, 0.2);
+        }
+
+        .enter-btn:hover {
+            background: var(--custom-color);
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(7, 143, 138, 0.5);
+        }
+
+        #main-content {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease-in;
+            padding: 2rem 1rem;
+            z-index: 10;
+        }
+
+        #main-content.visible { opacity: 1; visibility: visible; }
+
+        .glass-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(7, 143, 138, 0.2);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(7, 143, 138, 0.05);
+            border-radius: 2.5rem;
+            max-width: 320px;
+            width: 100%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .title-font {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.4rem, 6vw, 1.8rem);
+            font-weight: bold;
+            background: linear-gradient(to right, #444 20%, var(--custom-color) 40%, #fff 50%, var(--custom-color) 60%, #444 80%);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .profile-container {
+            position: relative;
+            width: clamp(200px, 60vw, 240px);
+            height: clamp(200px, 60vw, 240px);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #visualizer-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        .profile-img-wrapper { z-index: 2; transition: transform 0.05s ease-out; }
+
+        .profile-img {
+            width: clamp(100px, 35vw, 130px);
+            height: clamp(100px, 35vw, 130px);
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--custom-color);
+            box-shadow: 0 0 20px rgba(7, 143, 138, 0.4);
+        }
+
+        #music-player {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(7, 143, 138, 0.4);
+            border-radius: 20px;
+            padding: 18px;
+            z-index: 60;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #music-player.visible { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: scale(1) translateY(0); 
+        }
+
+        .play-btn {
+            background: var(--custom-color);
+            color: #000;
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #player-minimized {
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px;
+            width: 55px; 
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid var(--custom-color);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 55;
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            opacity: 0; 
+            visibility: hidden;
+            transform: scale(0.5);
+            transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(7, 143, 138, 0.3);
+        }
+
+        #player-minimized.active { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: scale(1); 
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 100%; height: 4px;
+            background: rgba(7, 143, 138, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px; height: 12px;
+            background: var(--custom-color); border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="intro-overlay">
+        <img src="https://i0.xat.com/web_gear/chat/GetImage9.php?s&W=240&H=240&U=https://xatimg.com/image/lElhkmkrT0EE.png" alt="Intro" class="intro-img">
+        <button class="enter-btn" onclick="startExperience()">Enter</button>
+    </div>
+
+    <div id="main-content">
+        <div class="glass-card">
+            <h1 class="name-font">jinkitarma</h1>
+
+            <div class="profile-container">
+                <canvas id="visualizer-canvas"></canvas>
+                <div id="profile-wrapper" class="profile-img-wrapper">
+                    <img src="https://i0.xat.com/web_gear/chat/GetImage9.php?s&W=240&H=240&U=https://xatimg.com/image/lElhkmkrT0EE.png" alt="Profile" class="profile-img">
+                </div>
+            </div>
+
+            <div id="title-element" class="title-font mb-4">444325008</div>
+
+            <div class="flex flex-col gap-2 w-full items-center">
+                <div class="flex items-center bg-white/5 px-3 py-1.5 rounded-full border border-[0.5px] border-[#078F8A]/30 shadow-sm">
+                    <span class="mr-2 text-[0.75rem] text-white/80 font-bold uppercase">Country :</span>
+                    <img src="https://xatimg.com/image/e6rxkRVzs49l.png" class="w-5 h-auto object-contain" alt="Country Flag">
+                </div>
+                <div class="flex items-center bg-white/5 px-3 py-1.5 rounded-full border border-[0.5px] border-[#078F8A]/30 shadow-sm gap-3">
+                    <span class="text-[0.75rem] text-white/80 font-bold uppercase">Clubs</span>
+                    <div class="flex items-center gap-2 border-l border-white/10 pl-3">
+                        <img src="https://xatimg.com/image/2K8tKTZhO3GJ.png" class="w-5 h-5 object-contain" alt="Club 1">
+                        <img src="https://xatimg.com/image/ioAZtJa0DP6i.png" class="w-5 h-5 object-contain" alt="Club 2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                
+
+    <div id="player-minimized" onclick="expandPlayer()">
+        <svg viewBox="0 0 24 24" width="24" fill="#078F8A">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+    </div>
+
+    <div id="music-player">
+        <button class="absolute top-2 right-3 text-white/20 hover:text-white" onclick="minimizePlayer(event)">✕</button>
+        <div class="flex items-center justify-between w-full mt-2">
+            <div class="flex flex-col">
+                <span class="text-[9px] text-white/40 uppercase tracking-widest font-bold">Now Playing</span>
+                <span class="text-[11px] text-white/90 font-medium">Paulo Londra - Adan y Eva</span>
+            </div>
+            <div class="play-btn" onclick="togglePlay()">
+                <svg id="play-icon" viewBox="0 0 24 24" width="18" fill="currentColor">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 w-full">
+            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.5" onchange="audio.volume=this.value">
+        </div>
+        <audio id="audio-element" loop crossorigin="anonymous">
+            <source src="https://files.catbox.moe/8sruil.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio-element');
+        const canvas = document.getElementById('visualizer-canvas');
+        const ctx = canvas.getContext('2d');
+        const profileWrapper = document.getElementById('profile-wrapper');
+        const playIcon = document.getElementById('play-icon');
+
+        let audioCtx, analyser, source, dataArray, bufferLength;
+        let isInitialized = false;
+
+        const pauseSVG = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        const playSVG = '<path d="M8 5v14l11-7z"/>';
+
+        function initAudio() {
+            if (isInitialized) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            source = audioCtx.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            analyser.fftSize = 256;
+            bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            isInitialized = true;
+            resizeCanvas();
+            drawVisualizer();
+        }
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer);
+            if (!analyser) return;
+            analyser.getByteFrequencyData(dataArray);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const innerRadius = canvas.width * 0.28;
+            let bass = dataArray[0];
+            profileWrapper.style.transform = `scale(${1 + (bass / 450)})`;
+            for (let i = 0; i < 60; i++) {
+                const angle = (i * 2 * Math.PI) / 60;
+                const barHeight = (dataArray[i] / 255) * 40;
+                const xStart = centerX + Math.cos(angle) * innerRadius;
+                const yStart = centerY + Math.sin(angle) * innerRadius;
+                const xEnd = centerX + Math.cos(angle) * (innerRadius + barHeight);
+                const yEnd = centerY + Math.sin(angle) * (innerRadius + barHeight);
+                ctx.strokeStyle = '#078F8A'; 
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+            }
+        }
+
+        function startExperience() {
+            initAudio();
+            audio.play();
+            playIcon.innerHTML = pauseSVG;
+            document.getElementById('intro-overlay').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('main-content').classList.add('visible');
+                document.getElementById('player-minimized').classList.add('active');
+            }, 800);
+        }
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playIcon.innerHTML = pauseSVG;
+            } else {
+                audio.pause();
+                playIcon.innerHTML = playSVG;
+            }
+        }
+
+        function expandPlayer() {
+            document.getElementById('player-minimized').classList.remove('active');
+            document.getElementById('music-player').classList.add('visible');
+        }
+
+        function minimizePlayer(e) {
+            if(e) e.stopPropagation();
+            document.getElementById('music-player').classList.remove('visible');
+            document.getElementById('player-minimized').classList.add('active');
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>
