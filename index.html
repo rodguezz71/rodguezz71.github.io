@@ -1,9 +1,21 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temer</title>
+    <title>Temer - Escena y Reproductor</title>
+    
+    <!-- Dependencias de Iconos (Reproductor) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* Variables del reproductor */
+        :root {
+            --pure-white: #ffffff;
+            --white-glow: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Estilos generales (Fondo 3D) */
         body {
             width: 100vw;
             height: 100vh;
@@ -13,6 +25,59 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        /* --- ESTILOS DEL REPRODUCTOR FLOTANTE --- */
+        .audio-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 20px; 
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        }
+
+        .audio-controls i {
+            cursor: pointer; 
+            color: var(--pure-white); 
+            font-size: 1.2rem; 
+            text-shadow: 0 0 10px var(--white-glow);
+            transition: 0.3s;
+        }
+
+        .audio-controls i:hover {
+            text-shadow: 0 0 15px var(--pure-white);
+            transform: scale(1.1);
+        }
+
+        input[type=range] { 
+            -webkit-appearance: none; 
+            width: 80px; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-runnable-track { 
+            width: 100%; 
+            height: 3px; 
+            background: rgba(255, 255, 255, 0.3); 
+            border-radius: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            height: 12px; 
+            width: 12px; 
+            border-radius: 50%; 
+            background: var(--pure-white); 
+            cursor: pointer; 
+            margin-top: -4.5px; 
+            box-shadow: 0 0 10px var(--pure-white); 
+        }
+
+        /* --- ESTILOS DE LA ESCENA 3D Y TEXTOS --- */
         #textEffect {
             position: absolute;
             top: 50%;
@@ -31,7 +96,6 @@
             width: 90vw;
         }
 
-        /* Contenedor de imagen centrado que se queda permanente */
         #imageContainer {
             position: absolute;
             top: 50%;
@@ -40,7 +104,7 @@
             opacity: 0;
             transition: opacity 1.2s;
             pointer-events: none;
-            z-index: 5; /* Detrás del texto final pero visible */
+            z-index: 5;
             text-align: center;
         }
 
@@ -50,9 +114,7 @@
             filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
         }
 
-        /* Sub-textos organizados arriba y abajo */
-        .sub-text-top {
-            margin-bottom: 15px;
+        .sub-text-top, .sub-text-bottom {
             font-size: 14px;
             font-weight: 600;
             letter-spacing: 1px;
@@ -62,18 +124,8 @@
             text-shadow: 0 0 10px #000000, 0 0 20px #000000;
             line-height: 1.4;
         }
-
-        .sub-text-bottom {
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: #aaaaaa; 
-            opacity: 0;
-            transition: opacity 1.2s;
-            text-shadow: 0 0 10px #000000, 0 0 20px #000000;
-            line-height: 1.4;
-        }
+        .sub-text-top { margin-bottom: 15px; }
+        .sub-text-bottom { margin-top: 15px; }
          
         #smokeOverlay {
             position: absolute;
@@ -85,6 +137,7 @@
             opacity: 0;
             transition: opacity 1.5s;
             pointer-events: none;
+            z-index: 1; 
         }
 
         canvas {
@@ -93,9 +146,22 @@
     </style>
 </head>
 <body>
+
+    <!-- REPRODUCTOR DE MÚSICA (Con Autoplay) -->
+    <div class="audio-controls">
+        <i class="fas fa-play" id="playBtn" onclick="togglePlay()"></i>
+        <i class="fas fa-volume-up" id="muteBtn" onclick="toggleMute()"></i>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
+    </div>
+    
+    <!-- Agregamos el atributo 'autoplay' aquí -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="https://www.image2url.com/r2/default/audio/1784864943457-5ee0de5d-32e9-4ab5-ac15-277d4aab2315.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- ELEMENTOS DE LA ESCENA 3D -->
     <div id="smokeOverlay"></div>
     
-    <!-- Imagen central permanente -->
     <div id="imageContainer">
         <img src="https://xatimg.com/image/yLXeAZnrGZKr.png" alt="Logo">
     </div>
@@ -106,8 +172,50 @@
         <div id="bottomText" class="sub-text-bottom"></div>
     </div>
 
+    <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
     <script>
+        // --- LÓGICA DEL REPRODUCTOR DE MÚSICA ---
+        const music = document.getElementById('bgMusic');
+        const muteBtn = document.getElementById('muteBtn');
+        const playBtn = document.getElementById('playBtn');
+
+        music.volume = 0.5;
+
+        // Sincronizar el ícono de play/pause con el estado real del audio
+        music.addEventListener('play', () => {
+            playBtn.className = "fas fa-pause";
+        });
+        
+        music.addEventListener('pause', () => {
+            playBtn.className = "fas fa-play";
+        });
+
+        function togglePlay() {
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function toggleMute() {
+            if (music.muted) { 
+                music.muted = false; 
+                muteBtn.className = "fas fa-volume-up"; 
+            } else { 
+                music.muted = true; 
+                muteBtn.className = "fas fa-volume-mute"; 
+            }
+        }
+
+        function changeVolume(val) {
+            music.volume = val;
+            muteBtn.className = val == 0 ? "fas fa-volume-mute" : "fas fa-volume-up";
+            if(val > 0) music.muted = false;
+        }
+
+        // --- LÓGICA DE LA ESCENA 3D ---
         let scene, camera, renderer, flash, rain, rainGeo;
         let cloudParticles = [];
         let rainCount = 15000;
@@ -311,7 +419,6 @@
             createSmokeBurst();
         }, 2500);
 
-        // 1. Aparece el texto 1 en el segundo 2.0 y se oculta en el 5.2
         setTimeout(() => {
             showText("𒆜ᵀᵉᵐᵉʳ ̶̶̶ۣۜ͜͡ ✗☬™");
         }, 2000);
@@ -320,13 +427,11 @@
             hideText();
         }, 5200);
 
-        // 2. Aparece la imagen en el segundo 6.5 y SE QUEDA PERMANENTE
         setTimeout(() => {
             showImage();
             createSmokeBurst();
         }, 6500);
 
-        // 3. Frases finales arriba y abajo manteniendo la imagen visible en el centro
         setTimeout(() => {
             showText("<br><br><br><br>");
             showExtraTextsWithDelay(
