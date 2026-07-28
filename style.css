@@ -7,7 +7,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
@@ -28,8 +28,21 @@ body {
     position: absolute;
 }
 
-.jd-xatframe {
+/* Contenedor flexible para alinear el chat y el reproductor lado a lado */
+.main-layout-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.jd-xatframe {
+    width: 1280px;
     height: 100vh;
     position: relative;
     background: linear-gradient(135deg, #000000 270px, transparent 271px),
@@ -186,7 +199,8 @@ canvas {
     backdrop-filter: blur(4px);
     position: relative;
     overflow: hidden;
-    margin: 30px auto;
+    flex-shrink: 0;
+    margin: 0;
     transition: all 0.5s ease, filter 0.5s ease;
     z-index: 200;
     border: 1px solid rgba(255, 255, 255, 0.1);
