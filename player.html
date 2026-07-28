@@ -32,116 +32,122 @@
         </script>
     </head>
     <body>
-        <!-- Marco del Chat -->
-        <div class="jd-xatframe">
-            <div class="jd-content">
-                <aside>
-                    <div class="jd-title">
-                        <span>Bienvenidos</span>
-                        <div class="jd-env">
-                            <span style="--i:1">N</span>
-                            <span style="--i:2">E</span>
-                            <span style="--i:3">S</span>
-                            <span style="--i:4">T</span>
+        <!-- Contenedor principal que agrupa el chat y el reproductor en paralelo -->
+        <div class="main-layout-wrapper">
+            
+            <!-- Marco del Chat (Izquierda) -->
+            <div class="jd-xatframe">
+                <div class="jd-content">
+                    <aside>
+                        <div class="jd-title">
+                            <span>Bienvenidos</span>
+                            <div class="jd-env">
+                                <span style="--i:1">N</span>
+                                <span style="--i:2">E</span>
+                                <span style="--i:3">S</span>
+                                <span style="--i:4">T</span>
+                            </div>
+                            <div class="jd-pd"><h1>Chat <div><span class="jd-white">Info</span></div></h1></div>
+                            <div class="jd-desc">Dejanos tu dudas!.</div>
                         </div>
-                        <div class="jd-pd"><h1>Chat <div><span class="jd-white">Info</span></div></h1></div>
-                        <div class="jd-desc">Dejanos tu dudas!.</div>
-                    </div>
-                </aside>
-                <section>
-                    <div class="jd-inner"></div>
-                </section>
+                    </aside>
+                    <section>
+                        <div class="jd-inner"></div>
+                    </section>
+                </div>
             </div>
-        </div>
-        <canvas></canvas>
 
-        <!-- Contenedor del Reproductor -->
-        <div class="player-container">
-            <div id="stream1"></div>
-            
-            <div class="music-notes-container">
-                <div class="music-note">♪</div><div class="music-note">♫</div>
-                <div class="music-note">♩</div><div class="music-note">♬</div>
-                <div class="music-note">♪</div><div class="music-note">♫</div>
-                <div class="music-note">♩</div><div class="music-note">♬</div>
-            </div>
-            
-            <div class="sparkles-container">
-                <div class="sparkle"></div><div class="sparkle"></div>
-                <div class="sparkle"></div><div class="sparkle"></div>
-                <div class="sparkle"></div><div class="sparkle"></div>
-                <div class="sparkle"></div><div class="sparkle"></div>
-                <div class="sparkle"></div><div class="sparkle"></div>
-                <div class="sparkle"></div>
-            </div>
-            
-            <!-- Contenedor de oyentes y AutoDJ sin íconos -->
-            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; position: absolute; top: 15px; left: 15px; z-index: 10;">
-                <div class="listeners-container" style="position: static; margin: 0; width: auto; min-width: 80px; justify-content: flex-start; background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px 10px; color: white; display: flex; align-items: center; gap: 8px;">
-                    <div id='sonic_listeners' class="listeners-count" style="color: #ffffff; display: flex; align-items: center;">--</div>
-                </div>
-                <div class="dj-wrapper" style="position: static; margin: 0; width: auto; min-width: 80px; justify-content: flex-start; background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px 10px; color: white; display: flex; align-items: center; gap: 8px;">
-                    <div id="sonic_dj" class="dj-container" style="color: white; font-weight: bold; display: flex; align-items: center;">AutoDj</div>
-                </div>
-            </div>
-            
-            <div class="radio-logo">
-                <div class="pulse-effect-container">
-                    <div class="pulse-ring pulse-ring-1"></div>
-                    <div class="pulse-ring pulse-ring-2"></div>
-                    <div class="pulse-ring pulse-ring-3"></div>
-                </div>
-                <img src="https://xatimg.com/image/gU7W5u41xudN.jpg" alt="NEST">
-                <div class="player-controls">
-                    <button class="play-button" id="playButton">▶</button>
-                </div>
-            </div>
-            
-            <div class="player-title animated-title">
-                <div class="neon-title">
-                    <span class="neon-word first-word">
-                        <span class="neon-letter" style="--delay: 0s;">B</span>
-                        <span class="neon-letter" style="--delay: 0.1s;">O</span>
-                        <span class="neon-letter" style="--delay: 0.2s;">T</span>
-                        <span class="neon-letter" style="--delay: 0.3s;">H</span>
-                        <span class="neon-letter" style="--delay: 0.4s;">▪</span>
-                        <span class="neon-letter" style="--delay: 0.6s;">D</span>
-                        <span class="neon-letter" style="--delay: 0.7s;">J</span>
-                    </span>
+            <!-- Contenedor del Reproductor (Derecha) -->
+            <div class="player-container">
+                <div id="stream1"></div>
+                
+                <div class="music-notes-container">
+                    <div class="music-note">♪</div><div class="music-note">♫</div>
+                    <div class="music-note">♩</div><div class="music-note">♬</div>
+                    <div class="music-note">♪</div><div class="music-note">♫</div>
+                    <div class="music-note">♩</div><div class="music-note">♬</div>
                 </div>
                 
-                <div class="audio-waves">
-                    <div class="wave-bar" style="--delay: 0.1s; --height: 15px;"></div>
-                    <div class="wave-bar" style="--delay: 0.2s; --height: 35px;"></div>
-                    <div class="wave-bar" style="--delay: 0.3s; --height: 25px;"></div>
-                    <div class="wave-bar" style="--delay: 0.4s; --height: 40px;"></div>
-                    <div class="wave-bar" style="--delay: 0.5s; --height: 20px;"></div>
-                    <div class="wave-bar" style="--delay: 0.6s; --height: 30px;"></div>
-                    <div class="wave-bar" style="--delay: 0.7s; --height: 35px;"></div>
-                    <div class="wave-bar" style="--delay: 0.8s; --height: 45px;"></div>
-                    <div class="wave-bar" style="--delay: 0.9s; --height: 30px;"></div>
-                    <div class="wave-bar" style="--delay: 1.0s; --height: 25px;"></div>
+                <div class="sparkles-container">
+                    <div class="sparkle"></div><div class="sparkle"></div>
+                    <div class="sparkle"></div><div class="sparkle"></div>
+                    <div class="sparkle"></div><div class="sparkle"></div>
+                    <div class="sparkle"></div><div class="sparkle"></div>
+                    <div class="sparkle"></div><div class="sparkle"></div>
+                    <div class="sparkle"></div>
                 </div>
-                <div class="glow-effect"></div>
+                
+                <!-- Contenedor de oyentes y AutoDJ sin íconos -->
+                <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; position: absolute; top: 15px; left: 15px; z-index: 10;">
+                    <div class="listeners-container" style="position: static; margin: 0; width: auto; min-width: 80px; justify-content: flex-start; background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px 10px; color: white; display: flex; align-items: center; gap: 8px;">
+                        <div id='sonic_listeners' class="listeners-count" style="color: #ffffff; display: flex; align-items: center;">--</div>
+                    </div>
+                    <div class="dj-wrapper" style="position: static; margin: 0; width: auto; min-width: 80px; justify-content: flex-start; background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px 10px; color: white; display: flex; align-items: center; gap: 8px;">
+                        <div id="sonic_dj" class="dj-container" style="color: white; font-weight: bold; display: flex; align-items: center;">AutoDj</div>
+                    </div>
+                </div>
+                
+                <div class="radio-logo">
+                    <div class="pulse-effect-container">
+                        <div class="pulse-ring pulse-ring-1"></div>
+                        <div class="pulse-ring pulse-ring-2"></div>
+                        <div class="pulse-ring pulse-ring-3"></div>
+                    </div>
+                    <img src="https://xatimg.com/image/gU7W5u41xudN.jpg" alt="NEST">
+                    <div class="player-controls">
+                        <button class="play-button" id="playButton">▶</button>
+                    </div>
+                </div>
+                
+                <div class="player-title animated-title">
+                    <div class="neon-title">
+                        <span class="neon-word first-word">
+                            <span class="neon-letter" style="--delay: 0s;">B</span>
+                            <span class="neon-letter" style="--delay: 0.1s;">O</span>
+                            <span class="neon-letter" style="--delay: 0.2s;">T</span>
+                            <span class="neon-letter" style="--delay: 0.3s;">H</span>
+                            <span class="neon-letter" style="--delay: 0.4s;">▪</span>
+                            <span class="neon-letter" style="--delay: 0.6s;">D</span>
+                            <span class="neon-letter" style="--delay: 0.7s;">J</span>
+                        </span>
+                    </div>
+                    
+                    <div class="audio-waves">
+                        <div class="wave-bar" style="--delay: 0.1s; --height: 15px;"></div>
+                        <div class="wave-bar" style="--delay: 0.2s; --height: 35px;"></div>
+                        <div class="wave-bar" style="--delay: 0.3s; --height: 25px;"></div>
+                        <div class="wave-bar" style="--delay: 0.4s; --height: 40px;"></div>
+                        <div class="wave-bar" style="--delay: 0.5s; --height: 20px;"></div>
+                        <div class="wave-bar" style="--delay: 0.6s; --height: 30px;"></div>
+                        <div class="wave-bar" style="--delay: 0.7s; --height: 35px;"></div>
+                        <div class="wave-bar" style="--delay: 0.8s; --height: 45px;"></div>
+                        <div class="wave-bar" style="--delay: 0.9s; --height: 30px;"></div>
+                        <div class="wave-bar" style="--delay: 1.0s; --height: 25px;"></div>
+                    </div>
+                    <div class="glow-effect"></div>
+                </div>
+                
+                <div class="volume-control">
+                    <i id="volumeIcon" class="fas fa-volume-down"></i>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
+                    <span id="volumePercentage" class="volume-percentage">70%</span>
+                </div>
+                
+                <div class="now-playing" id="nowPlaying">
+                    <div id='sonic_title'>En vivo...</div>
+                </div>
+                
+                <!-- Reloj y fecha sin íconos -->
+                <div class="datetime-container" style="justify-content: center; gap: 8px; display: flex; align-items: center;">
+                    <span id="current-time" style="font-weight: bold; color: #fff; display: flex; align-items: center;">00:00:00</span>
+                    <span class="date-separator" style="color: #fff; opacity: 0.6; display: flex; align-items: center;">|</span>
+                    <span id="current-date" style="font-weight: bold; color: #fff; display: flex; align-items: center;">01/01/2025</span>
+                </div>
             </div>
-            
-            <div class="volume-control">
-                <i id="volumeIcon" class="fas fa-volume-down"></i>
-                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
-                <span id="volumePercentage" class="volume-percentage">70%</span>
-            </div>
-            
-            <div class="now-playing" id="nowPlaying">
-                <div id='sonic_title'>En vivo...</div>
-            </div>
-            
-            <!-- Reloj y fecha sin íconos -->
-            <div class="datetime-container" style="justify-content: center; gap: 8px; display: flex; align-items: center;">
-                <span id="current-time" style="font-weight: bold; color: #fff; display: flex; align-items: center;">00:00:00</span>
-                <span class="date-separator" style="color: #fff; opacity: 0.6; display: flex; align-items: center;">|</span>
-                <span id="current-date" style="font-weight: bold; color: #fff; display: flex; align-items: center;">01/01/2025</span>
-            </div>
+
         </div>
+
+        <canvas></canvas>
 
         <!-- Script con la lógica de audio y controles -->
         <script>
