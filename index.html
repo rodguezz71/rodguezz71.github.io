@@ -15,7 +15,7 @@
             --white-glow: rgba(255, 255, 255, 0.6);
         }
 
-        /* Estilos generales (Fondo 3D) */
+        /* Estilos generales (Fondo 3D Principal) */
         body {
             width: 100vw;
             height: 100vh;
@@ -38,7 +38,7 @@
             background: rgba(255, 255, 255, 0.08);
             padding: 12px 20px; 
             border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
 
@@ -77,7 +77,53 @@
             box-shadow: 0 0 10px var(--pure-white); 
         }
 
-        /* --- ESTILOS DE LA ESCENA 3D Y TEXTOS --- */
+        /* --- PANTALLA DE INTRODUCCIÓN CON SU PROPIO CANVAS 3D --- */
+        .intro {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+            overflow: hidden;
+            transition: opacity 1s ease;
+        }
+
+        /* Canvas exclusivo para el fondo de la intro */
+        #introCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .intro-btn {
+            padding: 15px 35px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+            background: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+            transition: 0.3s;
+            font-family: Arial, Helvetica, sans-serif;
+            z-index: 2; /* Encima del canvas de intro */
+        }
+
+        .intro-btn:hover {
+            transform: scale(1.1);
+            background: #000;
+            color: #fff;
+            border-color: #fff;
+            box-shadow: 0 0 35px rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- ESTILOS DE LA ESCENA 3D PRINCIPAL Y TEXTOS --- */
         #textEffect {
             position: absolute;
             top: 50%;
@@ -139,27 +185,28 @@
             pointer-events: none;
             z-index: 1; 
         }
-
-        canvas {
-            display: block;
-        }
     </style>
 </head>
 <body>
 
-    <!-- REPRODUCTOR DE MÚSICA (Con Autoplay) -->
+    <!-- PANTALLA DE INTRODUCCIÓN CON SU PROPIO FONDO 3D INDEPENDIENTE -->
+    <div class="intro" id="intro">
+        <canvas id="introCanvas"></canvas>
+        <button class="intro-btn" onclick="enterSite()">☬ Entrar ☬</button>
+    </div>
+
+    <!-- REPRODUCTOR DE MÚSICA -->
     <div class="audio-controls">
         <i class="fas fa-play" id="playBtn" onclick="togglePlay()"></i>
         <i class="fas fa-volume-up" id="muteBtn" onclick="toggleMute()"></i>
         <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
     </div>
     
-    <!-- Agregamos el atributo 'autoplay' aquí -->
-    <audio id="bgMusic" loop autoplay>
+    <audio id="bgMusic" loop>
         <source src="https://www.image2url.com/r2/default/audio/1784864943457-5ee0de5d-32e9-4ab5-ac15-277d4aab2315.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- ELEMENTOS DE LA ESCENA 3D -->
+    <!-- ELEMENTOS DE LA ESCENA 3D PRINCIPAL -->
     <div id="smokeOverlay"></div>
     
     <div id="imageContainer">
@@ -182,7 +229,6 @@
 
         music.volume = 0.5;
 
-        // Sincronizar el ícono de play/pause con el estado real del audio
         music.addEventListener('play', () => {
             playBtn.className = "fas fa-pause";
         });
@@ -215,13 +261,134 @@
             if(val > 0) music.muted = false;
         }
 
-        // --- LÓGICA DE LA ESCENA 3D ---
+        function enterSite() {
+            const intro = document.getElementById("intro");
+            if(!intro) return;
+
+            intro.style.opacity = "0";
+            setTimeout(() => {
+                intro.remove();
+            }, 1000);
+
+            music.play().catch(e => console.log(e));
+        }
+
+        // --- 1. LÓGICA 3D PARA LA PANTALLA DE INTRODUCCIÓN (INDEPENDIENTE) ---
+        let introScene, introCamera, introRenderer, introFlash, introRain, introRainGeo;
+        let introCloudParticles = [];
+        let introRainCount = 15000;
+
+        function initIntroScene() {
+            const canvas = document.getElementById('introCanvas');
+            introScene = new THREE.Scene();
+            introCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+
+            introCamera.position.z = 1;
+            introCamera.rotation.x = 1.16;
+            introCamera.rotation.y = -0.12;
+            introCamera.rotation.z = 0.27;
+
+            const ambient = new THREE.AmbientLight(0x555555);
+            introScene.add(ambient);
+
+            const directionalLight = new THREE.DirectionalLight(0xffeedd);
+            directionalLight.position.set(0, 0, 1);
+            introScene.add(directionalLight);
+
+            introFlash = new THREE.PointLight(0x062d89, 30, 500, 1.7);
+            introFlash.position.set(200, 300, 100);
+            introScene.add(introFlash);
+
+            introRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            introScene.fog = new THREE.FogExp2(0x11111f, 0.002);
+            introRenderer.setClearColor(introScene.fog.color);
+            introRenderer.setSize(window.innerWidth, window.innerHeight);
+
+            let positions = [];
+            let sizes = [];
+            introRainGeo = new THREE.BufferGeometry();
+            
+            for (let i = 0; i < introRainCount; i++) {
+                positions.push(
+                    Math.random() * 400 - 200,
+                    Math.random() * 500 - 250,
+                    Math.random() * 400 - 200
+                );
+                sizes.push(30);
+            }
+            
+            introRainGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
+            introRainGeo.setAttribute("size", new THREE.BufferAttribute(new Float32Array(sizes), 1));
+
+            const rainMaterial = new THREE.PointsMaterial({
+                color: 0xaaaaaa,
+                size: 0.1,
+                transparent: true
+            });
+
+            introRain = new THREE.Points(introRainGeo, rainMaterial);
+            introScene.add(introRain);
+
+            let loader = new THREE.TextureLoader();
+            loader.load(
+                "https://static.vecteezy.com/system/resources/previews/010/884/548/original/dense-fluffy-puffs-of-white-smoke-and-fog-on-transparent-background-abstract-smoke-clouds-movement-blurred-out-of-focus-smoking-blows-from-machine-dry-ice-fly-fluttering-in-air-effect-texture-png.png",
+                function (texture) {
+                    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
+                    const cloudMaterial = new THREE.MeshLambertMaterial({
+                        map: texture,
+                        transparent: true
+                    });
+
+                    for (let p = 0; p < 25; p++) {
+                        let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
+                        cloud.position.set(
+                            Math.random() * 800 - 400,
+                            500,
+                            Math.random() * 500 - 450
+                        );
+                        cloud.rotation.x = 1.16;
+                        cloud.rotation.y = -0.12;
+                        cloud.rotation.z = Math.random() * 360;
+                        cloud.material.opacity = 0.6;
+                        introCloudParticles.push(cloud);
+                        introScene.add(cloud);
+                    }
+                    animateIntro();
+                }
+            );
+        }
+
+        function animateIntro() {
+            if(document.getElementById("intro")) {
+                requestAnimationFrame(animateIntro);
+            }
+
+            introCloudParticles.forEach(p => {
+                p.rotation.z -= 0.002;
+            });
+            
+            introRain.position.z -= 0.222;
+            if (introRain.position.z < -200) {
+                introRain.position.z = 0;
+            }
+
+            if (Math.random() > 0.93 || introFlash.power > 100) {
+                if (introFlash.power < 100)
+                    introFlash.position.set(Math.random() * 400, 300 + Math.random() * 200, 100);
+                introFlash.power = 50 + Math.random() * 500;
+            }
+            
+            introRenderer.render(introScene, introCamera);
+        }
+
+
+        // --- 2. LÓGICA 3D PARA LA ESCENA PRINCIPAL ---
         let scene, camera, renderer, flash, rain, rainGeo;
         let cloudParticles = [];
         let rainCount = 15000;
         let smokeParticles = [];
 
-        function init() {
+        function initMainScene() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
@@ -241,7 +408,7 @@
             flash.position.set(200, 300, 100);
             scene.add(flash);
 
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({ antialias: true });
             scene.fog = new THREE.FogExp2(0x11111f, 0.002);
             renderer.setClearColor(scene.fog.color);
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -297,8 +464,7 @@
                         cloudParticles.push(cloud);
                         scene.add(cloud);
                     }
-                    animate();
-                    window.addEventListener("resize", onWindowResize);
+                    animateMain();
                 }
             );
         }
@@ -319,7 +485,6 @@
             }
             
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            geometry.InputStream = true;
             geometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocities, 3));
             
             const material = new THREE.PointsMaterial({
@@ -350,7 +515,7 @@
             });
         }
 
-        function animate() {
+        function animateMain() {
             cloudParticles.forEach(p => {
                 p.rotation.z -= 0.002;
             });
@@ -368,17 +533,30 @@
             
             updateSmoke();
             renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animateMain);
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+        // Manejo general de redimensionamiento de ventana para ambos motores 3D
+        window.addEventListener("resize", () => {
+            // Redimensionar Intro
+            if(introCamera && introRenderer) {
+                introCamera.aspect = window.innerWidth / window.innerHeight;
+                introCamera.updateProjectionMatrix();
+                introRenderer.setSize(window.innerWidth, window.innerHeight);
+            }
+            // Redimensionar Escena Principal
+            if(camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
 
-        init();
+        // Inicializar ambas escenas al cargar
+        initIntroScene();
+        initMainScene();
 
+        // --- LÓGICA DE TEXTOS Y ANIMACIONES ---
         let textContainer = document.getElementById("textEffect");
         let mainText = document.getElementById("mainText");
         let topText = document.getElementById("topText");
