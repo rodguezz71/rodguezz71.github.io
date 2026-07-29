@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>NEST</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons and Emojis -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #e6e8e9;
+            color: #656565;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        #outer-wrapper {
+            max-width: 1068px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #top-bar {
+            background-color: #267bbd;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        .top-bar-nav ul, .top-bar-social ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .top-bar-nav ul li a, .top-bar-social ul li a {
+            color: #ffffff;
+            font-size: 12px;
+            padding: 0 10px;
+            line-height: 34px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .top-bar-nav ul li a:hover, .top-bar-social ul li a:hover {
+            color: #1CA2FC;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+        .top-bar-social ul li a i {
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        /* New Header-Wrap / Header Integration */
+        #header-wrap {
+            align-items: center;
+            display: flex;
+            height: 280px;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+        }
+        #header-wrap::before {
+            animation: fade-slide-down 2s 500ms cubic-bezier(0, 0.5, 0, 1) forwards;
+            background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.8)),
+                url('https://png.pngtree.com/thumb_back/fh260/background/20210906/pngtree-natural-prairie-green-fresh-banner-image_805613.jpg') no-repeat bottom;
+            background-size: cover;
+            bottom: 0;
+            content: "";
+            left: -5%;
+            opacity: 0;
+            position: absolute;
+            right: -5%;
+            top: 0;
+            z-index: 1;
+        }
+        #header-wrap::after {
+            animation: rotate-up 500ms 500ms cubic-bezier(0, 0.5, 0, 1) forwards;
+            background: #267bbd;
+            content: "";
+            height: 40rem;
+            left: -5%;
+            position: absolute;
+            right: -5%;
+            top: 102%;
+            transform-origin: 0 0;
+            z-index: 2;
+        }
+        #header-content {
+            margin-top: -5%;
+            overflow: visible;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            z-index: 3;
+        }
+        #header-content h1, #header-content h3 { 
+            color: #fff;
+            margin: 0;
+            opacity: 0;
+        }
+        #header-content h1 {
+            animation: fade-slide-down-rotate 2s 2s cubic-bezier(0, 0.5, 0, 1) forwards;
+            animation-delay: 800ms;
+            font-family: 'Satisfy', cursive;
+            font-size: 4rem;
+            font-weight: 400;
+            margin-bottom: 2.5%;
+        }
+        #header-content h3 {
+            animation: fade-slide-up 3s 3s cubic-bezier(0, 0.5, 0, 1) forwards;
+            animation-delay: 800ms;
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+        }
+        #header-content h3 span {
+            color: #A1E545;
+            font-family: 'Satisfy', cursive;
+            font-size: 2em;
+            letter-spacing: 0;
+            opacity: 0.8;
+            padding: 0 0.25em;
+            text-transform: none;
+        }
+
+        .header-menu {
+            background-color: #163ce9;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.5s ease;
+        }
+        .header-menu.scrolled {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            animation: slide-down 0.2s ease;
+            opacity: 0.95;
+        }
+        .header-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .header-menu ul li a {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0 15px;
+            line-height: 48px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .header-menu ul li a:hover {
+            color: #1CA2FC;
+            transform: translateY(-2px);
+        }
+        #content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px 15px;
+            margin: 0 -15px;
+        }
+        #main-wrapper {
+            width: 71%;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+        #sidebar-wrapper {
+            width: 28%;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+        .post {
+            margin-bottom: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .post:hover {
+            transform: translateY(-5px);
+        }
+        .post-image-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+        }
+        .post-thumb {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .post-image-wrap:hover .post-thumb {
+            transform: scale(1.05);
+        }
+        .post-content {
+            padding: 20px;
+        }
+        .post-title a {
+            color: #161619;
+            font-size: 18px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .post-title a:hover {
+            color: #1CA2FC;
+        }
+        .post-meta {
+            font-size: 12px;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+        }
+        .post-excerpt {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        #footer {
+            background-color: #010101;
+            color: #707070;
+            padding: 20px;
+            text-align: center;
+        }
+        .copyright {
+            font-size: 14px;
+            color: #ffffff;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            display: inline-block;
+        }
+        .copyright::before {
+            content: '🌟';
+            position: absolute;
+            left: -20px;
+            animation: sparkle 2s infinite;
+        }
+        .copyright::after {
+            content: '🌟';
+            position: absolute;
+            right: -20px;
+            animation: sparkle 2s infinite 0.5s;
+        }
+        .back-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1CA2FC;
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .back-top.visible {
+            opacity: 1;
+        }
+        /* Cartoon Character Styles */
+        .cartoon-character {
+            position: fixed;
+            bottom: 60px;
+            left: 20px;
+            width: 100px;
+            height: 100px;
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+        .cartoon-head {
+            width: 60px;
+            height: 60px;
+            background-color: #ffcc99;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            border: 2px solid #333;
+        }
+        .cartoon-eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 40px;
+            position: absolute;
+            top: 20px;
+            left: 10px;
+        }
+        .cartoon-eye {
+            width: 10px;
+            height: 10px;
+            background-color: #000;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+        .cartoon-mouth {
+            width: 20px;
+            height: 10px;
+            background-color: #267bbd;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+        }
+        .cartoon-body {
+            width: 40px;
+            height: 50px;
+            background-color: #1CA2FC;
+            border-radius: 20px;
+            margin: 0 auto;
+            border: 2px solid #333;
+        }
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slide-down {
+            0% { opacity: 0; transform: translateY(-100%); }
+            100% { opacity: 0.9; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes blink {
+            0%, 10%, 100% { height: 10px; }
+            5% { height: 2px; }
+        }
+        @keyframes fade-slide-down {
+            0% {
+                opacity: 0;
+                transform: translateY(-4rem);
+            }
+            100% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        @keyframes fade-slide-down-rotate {
+            0% {
+                opacity: 0;
+                transform: translateY(-4rem);
+            }
+            100% {
+                opacity: 1;
+                transform: rotate(-4deg);
+            }
+        }
+        @keyframes fade-slide-up {
+            0% {
+                opacity: 0;
+                transform: translateY(4rem);
+            }
+            100% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        @keyframes rotate-up {
+            100% {
+                transform: rotateZ(-4deg);
+            }
+        }
+        /* Sidebar Widget */
+        .widget {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .widget h3 {
+            color: #161619;
+            font-size: 16px;
+            margin: 0 0 10px;
+            font-weight: 700;
+        }
+        .widget ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .widget ul li a {
+            color: #656565;
+            font-size: 14px;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+        .widget ul li a:hover {
+            color: #1CA2FC;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div id="top-bar">
+        <div class="top-bar-nav">
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Reportes</a></li>
+                <li><a href="#">Galeria</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </div>
+        <div class="top-bar-social">
+            <ul>
+                <li><a href="#" class="facebook"><i class="fab fa-facebook-f"></i> </a></li>
+                <li><a href="#" class="twitter"><i class="fab fa-twitter"></i> </a></li>
+                <li><a href="#" class="instagram"><i class="fab fa-instagram"></i> </a></li>
+                <li><a href="#" class="youtube"><i class="fab fa-youtube"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Header -->
+    <div id="header-wrap">
+        <div id="header-content">
+            <h1>NEST</h1>
+            <h3>A <span>Favor</span> DE NUESTRA COMUNIDAD</h3>
+        </div>
+    </div>
+    <!-- Main Menu -->
+    <div class="header-menu" id="main-menu">
+        <ul>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Reportes</a></li>
+            <li><a href="#">Galeria</a></li>
+            <li><a href="#">Contacto</a></li>
+        </ul>
+    </div>
+    <!-- Content -->
+    <div id="outer-wrapper">
+        <div id="content-wrapper">
+            <div id="main-wrapper">
+                <!-- Xat -->
+                <div class="post">
+                    <div class="post-image-wrap">
+                       <iframe src="https://xat.com/embed/chat.php#id=220536079&gn=Nest" allow="clipboard-write" width="728" height="486" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                </div>
+          <!-- Radio -->
+                <div class="post">
+                    <div class="post-image-wrap">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX92kHKPtycCixQWQbuT6ML1jkhXZYW1kKp6pbfXLX13FdzNKLbptB1m8&s=10" class="post-thumb" alt="America">
+                    </div>
+                    <div class="post-content">
+                        <h2 class="post-title"><a href="#">Call A recien pavimentada</a></h2>
+                        <div class="post-meta">Publicado el 1 de julio de 2025 | Por NOTIuno</div>
+                        <p class="post-excerpt">
+                            Calle recien pavimentada se dejaron escombros en la calle hace 1 mes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="sidebar-wrapper">
+                <div class="widget">
+                    <h3>Temas Recientas</h3>
+                    <ul>
+                        <li><a href="#">Calle 1 Tuberias</a></li>
+                        <li><a href="#">Sin agua</a></li>
+                        <li><a href="#">Pavimentacio</a></li>
+                        <li><a href="#">Accidentes</a></li>
+                    </ul>
+                </div>
+                <div class="widget">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="#">Reportes</a></li>
+                        <li><a href="#">Galeria</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div id="footer">
+        <p class="copyright">All Rights Reserved by TemerX © 2026</p>
+    </div>
+    <!-- Back to Top -->
+    <div class="back-top" title="Back to Top"><i class="fas fa-arrow-up"></i></div>
+    <!-- Cartoon Character -->
+    <div class="cartoon-character">
+        <div class="cartoon-head">
+            <div class="cartoon-eyes">
+                <div class="cartoon-eye"></div>
+                <div class="cartoon-eye"></div>
+            </div>
+            <div class="cartoon-mouth"></div>
+        </div>
+        <div class="cartoon-body"></div>
+    </div>
+    <!-- JavaScript -->
+    <script>
+        // Sticky Header
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-menu');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Back to Top Button
+        const backTop = document.querySelector('.back-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                backTop.classList.add('visible');
+            } else {
+                backTop.classList.remove('visible');
+            }
+        });
+
+        backTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Cartoon Character Interaction
+        const cartoon = document.querySelector('.cartoon-character');
+        let isAnimating = false;
+        cartoon.addEventListener('click', () => {
+            if (!isAnimating) {
+                isAnimating = true;
+                cartoon.style.animation = 'none'; // Reset animation
+                setTimeout(() => {
+                    cartoon.style.animation = 'bounce 0.5s 2';
+                    setTimeout(() => {
+                        cartoon.style.animation = 'bounce 2s infinite';
+                        isAnimating = false;
+                    }, 1000);
+                }, 10);
+            }
+        });
+
+        // Facebook SDK with Error Handling
+        (function(d, s, id) {
+            try {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
+                js.onerror = () => console.error('Failed to load Facebook SDK');
+                fjs.parentNode.insertBefore(js, fjs);
+            } catch (e) {
+                console.error('Error loading Facebook SDK:', e);
+            }
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+</body>
+</html>
