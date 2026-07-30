@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - Cinematográfico y Nieve Mágica</title>
+    <!-- Importamos la fuente romántica desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+            1. EL FONDO ORIGINAL 
+            ========================================= */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; 
+            background-color: #000000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            cursor: default;
+            --gold-brown: #c5a059;
+            --gold-shine: #e6ca65;
+        }
+
+        .lienzo-principal {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1c20 40%, #4a4e59 80%, #a8aeb8 100%);
+            background-size: 300% 300%;
+            animation: transicionFondo 20s ease-in-out infinite alternate; z-index: 0;
+        }
+
+        @keyframes transicionFondo { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+
+        /* ESCARCHA Y ESTRELLAS */
+        .escarcha { position: absolute; background-color: rgba(255, 255, 255, 0.8); border-radius: 50%; z-index: 1; animation: caerEscarcha linear infinite, parpadeo 2s ease-in-out infinite alternate; }
+        @keyframes caerEscarcha { 0% { transform: translateY(-10vh); } 100% { transform: translateY(110vh); } }
+        @keyframes parpadeo { 0% { opacity: 0.2; } 100% { opacity: 1; box-shadow: 0 0 3px #ffffff; } }
+
+        .estrella-cayendo { position: absolute; background-color: #ffffff; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); z-index: 2; animation: caerEstrella linear infinite; }
+        .deriva-izq { --desplazamiento-x: -15vw; } .deriva-der { --desplazamiento-x: 15vw; } .deriva-fuerte-izq { --desplazamiento-x: -30vw; } .deriva-fuerte-der { --desplazamiento-x: 30vw; }
+        @keyframes caerEstrella { 0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 0.8; } 100% { transform: translateY(110vh) translateX(var(--desplazamiento-x)) rotate(360deg); opacity: 0; } }
+
+        .palabra-cayendo { position: absolute; color: #ffffff; font-family: Arial, sans-serif; white-space: nowrap; z-index: 3; animation: caerEstrella linear infinite; }
+        .texto-tenue { opacity: 0.3; filter: blur(1px); } .texto-claro { opacity: 0.8; text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
+
+        /* =========================================
+            2. PANTALLA DE ENTRADA
+            ========================================= */
+        .pantalla-entrada {
+            position: fixed; 
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5, 7, 10, 0.95); 
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; 
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .pantalla-entrada.oculto {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .btn-entrar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            padding: 18px 60px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            animation: latidoBoton 2s infinite; 
+            transition: all 0.3s ease;
+        }
+
+        .btn-entrar:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes latidoBoton {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,255,255,0.5); border-color: #fff; }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        }
+
+        /* =========================================
+            3. DISEÑO DEL PERFIL 
+            ========================================= */
+        .layout-perfil {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; gap: 20px; z-index: 10; align-items: flex-start; 
+        }
+
+        .cristal {
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); 
+            color: #ffffff;
+        }
+
+        .columna-izq { display: flex; flex-direction: column; gap: 12px; margin-top: -20px; }
+
+        /* PANEL DE STATUS COMPACTO CON ANIMACIÓN DE TINTINEO */
+        .tarjeta-status {
+            width: 130px;
+            margin: 0 auto;
+            border-radius: 12px;
+            padding: 5px 8px;
+            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .punto-status {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: tintinearCírculo 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes tintinearCírculo {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* TARJETA DE USUARIO IZQUIERDA */
+        .tarjeta-usuario {
+            width: 190px;
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+            box-sizing: border-box;
+            font-size: 13px;
+            letter-spacing: 1px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .tarjeta-usuario span {
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- FOTO MEJORADA Y EFECTOS --- */
+        @keyframes vaYviene {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); box-shadow: 0 12px 30px rgba(255,255,255,0.3); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .anillo-foto { 
+            width: 190px; height: 190px; 
+            border-radius: 50%; padding: 8px; 
+            display: flex; justify-content: center; align-items: center; 
+            position: relative; 
+            animation: vaYviene 4s ease-in-out infinite; 
+        }
+
+        .foto-wrapper {
+            position: relative;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            overflow: hidden; 
+            z-index: 2;
+        }
+        
+        .foto-wrapper img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            position: absolute; top: 0; left: 0; 
+            z-index: 1; 
+        }
+
+        .copo-nieve {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            z-index: 3; 
+            animation: caerNieveInterna linear infinite;
+        }
+
+        @keyframes caerNieveInterna {
+            0% { transform: translateY(-20px); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(200px); opacity: 0; }
+        }
+
+        .estrella-plata {
+            position: absolute;
+            color: #e0e0e0; 
+            text-shadow: 0 0 5px #ffffff, 0 0 15px silver; 
+            z-index: 4;
+            animation: destelloPlata ease-in-out infinite alternate;
+        }
+
+        @keyframes destelloPlata {
+            0% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(45deg); }
+        }
+
+        /* REPRODUCTOR Y OTROS COMPONENTES */
+        .tarjeta-reproductor { width: 190px; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; box-sizing: border-box; }
+        
+        @keyframes girarDisco { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .album-art { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; background: #222; object-fit: cover; animation: girarDisco 12s linear infinite; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); }
+        .cancion-titulo { font-size: 12px; font-weight: bold; margin: 5px 0 15px 0; }
+        
+        .controles-musica { display: flex; gap: 15px; margin-bottom: 15px; font-size: 14px; cursor: pointer; user-select: none; }
+        .barra-volumen { display: flex; align-items: center; gap: 8px; width: 100%; font-size: 12px; }
+        .barra-volumen input[type=range] { width: 100%; height: 4px; background: rgba(255,255,255,0.3); outline: none; border-radius: 2px; -webkit-appearance: none; cursor: pointer; }
+        .barra-volumen input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: #fff; border-radius: 50%; }
+
+        /* COLUMNA DERECHA (PRINCIPAL + NUEVO PANEL) */
+        .columna-der {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* TARJETA PRINCIPAL */
+        .tarjeta-principal { width: 480px; height: 490px; border-radius: 30px; padding: 25px 30px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; }
+        .contenedor-tabs { display: flex; gap: 5px; background: rgba(255, 255, 255, 0.05); padding: 6px; border-radius: 30px; margin-bottom: 20px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); }
+        .tab-btn { background: transparent; border: none; color: rgba(255, 255, 255, 0.6); font-size: 11px; font-weight: bold; letter-spacing: 1px; padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; }
+        .tab-btn.activo { background: rgba(255, 255, 255, 0.2); color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* PANELES DE CONTENIDO */
+        .panel-contenido {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .panel-contenido.activo {
+            display: flex;
+        }
+
+        /* --- CUADRÍCULA DE AMIGOS --- */
+        .grid-amigos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .grid-amigos::-webkit-scrollbar { width: 4px; }
+        .grid-amigos::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 2px; }
+
+        .tarjeta-amigo {
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+
+        .tarjeta-amigo:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .avatar-amigo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .info-amigo {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .nombre-amigo {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .id-amigo {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 0.5px;
+        }
+
+        /* --- GALERÍA 3x3 PERFECTAMENTE ALINEADA --- */
+        .frame-galeria {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .box-galery {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .box-galery > [type=checkbox] {
+            display: none;
+        }
+
+        .box-galery .imgs {
+            --zi: calc((100% - 8px) / 3);
+            width: var(--zi);
+            height: var(--zi);
+            object-fit: cover;
+            transition: 0.2s;
+            cursor: pointer;
+            position: absolute;
+            z-index: 1;
+            background-position: center;
+            background-size: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-image: url('https://img.magnific.com/vector-gratis/ilustracion-anime-kawaii-dibujado-mano_52683-123300.jpg?semt=ais_test_b&w=740&q=80');
+        }
+
+        /* Posicionamiento estricto de cuadrícula 3x3 */
+        .box-galery .img1 { top: 0; left: 0; }
+        .box-galery .img2 { top: 0; left: calc(var(--zi) + 4px); }
+        .box-galery .img3 { top: 0; right: 0; }
+        
+        .box-galery .img4 { top: calc(var(--zi) + 4px); left: 0; }
+        .box-galery .img5 { top: calc(var(--zi) + 4px); left: calc(var(--zi) + 4px); }
+        .box-galery .img6 { top: calc(var(--zi) + 4px); right: 0; }
+        
+        .box-galery .img7 { bottom: 0; left: 0; }
+        .box-galery .img8 { bottom: 0; left: calc(var(--zi) + 4px); }
+        .box-galery .img9 { bottom: 0; right: 0; }
+
+        /* Expansión individual por cada checkbox seleccionado */
+        #btn1:checked ~ .img1,
+        #btn2:checked ~ .img2,
+        #btn3:checked ~ .img3,
+        #btn4:checked ~ .img4,
+        #btn5:checked ~ .img5,
+        #btn6:checked ~ .img6,
+        #btn7:checked ~ .img7,
+        #btn8:checked ~ .img8,
+        #btn9:checked ~ .img9 {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+            border-radius: 12px;
+        }
+
+        /* PANELES INFERIORES EN DOS COLUMNAS */
+        .contenedor-info-doble {
+            width: 480px;
+            display: flex;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .caja-info-estilo {
+            flex: 1;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            box-sizing: border-box;
+        }
+
+        .caja-info-estilo .valor-principal {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .caja-info-estilo .etiqueta-secundaria {
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 1px;
+        }
+
+        /* ESTILO PARA LA BANDERA CON IMAGEN DE XAT */
+        .bandera-img {
+            width: 22px;
+            height: auto;
+            vertical-align: middle;
+            display: inline-block;
+            animation: flamearBandera 2.5s ease-in-out infinite;
+        }
+
+        /* =========================================
+            4. ANIMACIONES (TÍTULO Y BANDERA)
+            ========================================= */
+        @keyframes colorYDesenfoque {
+            0% { color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.8); filter: blur(0px); } 
+            33% { color: #888888; text-shadow: 0 0 5px rgba(136,136,136,0.5); filter: blur(3px); }  
+            66% { color: #111111; text-shadow: 0 0 15px rgba(255,255,255,0.2); filter: blur(6px); } 
+            100% { color: #c0c0c0; text-shadow: 0 0 10px rgba(192,192,192,0.8); filter: blur(0px); } 
+        }
+
+        @keyframes flamearBandera {
+            0%, 100% { transform: rotate(0deg) skew(0deg); }
+            25% { transform: rotate(10deg) skew(-5deg); }
+            75% { transform: rotate(-10deg) skew(5deg); }
+        }
+
+        .titulo-nombre { 
+            font-size: 50px; 
+            font-weight: 800; 
+            margin: 0 0 10px 0; 
+            letter-spacing: 1px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            animation: colorYDesenfoque 6s infinite alternate; 
+        }
+
+        .bandera-mx {
+            display: inline-block;
+            margin-left: 15px;
+            font-size: 40px;
+            animation: flamearBandera 2.5s ease-in-out infinite; 
+        }
+
+        /* EFECTO MÁQUINA DE ESCRIBIR AJUSTADO */
+        .frase-inspiradora { 
+            font-family: 'Caveat', 'Comic Sans MS', cursive; 
+            font-size: 19px; 
+            line-height: 1.1; 
+            color: rgba(255, 255, 255, 0.85); 
+            font-weight: 400; 
+            text-align: center; 
+            margin: 0; 
+            width: 90%; 
+            white-space: pre-wrap; 
+            height: 310px; 
+            letter-spacing: 1px;
+        }
+
+        .frase-inspiradora::after {
+            content: '|';
+            animation: parpadeoCursor 1s step-end infinite;
+        }
+
+        @keyframes parpadeoCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* =========================================
+            5. RASTRO DEL CURSOR
+            ========================================= */
+        .rastro-cursor {
+            position: absolute;
+            pointer-events: none; 
+            z-index: 10000; 
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 15px silver;
+            animation: desvanecerRastro 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes desvanecerRastro {
+            0% { opacity: 1; transform: scale(1) translate(0, 0); }
+            100% { 
+                opacity: 0; 
+                transform: scale(0.1) translate(var(--dir-x), var(--dir-y)); 
+            }
+        }
+
+        /* =========================================
+            NUEVO: FIRMA DEL CREADOR
+            ========================================= */
+        .firma-creador {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            z-index: 50; 
+            pointer-events: none; 
+            animation: colorFirma 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes colorFirma {
+            0% { color: #555555; opacity: 0.3; text-shadow: 0 0 2px rgba(85,85,85,0.2); } 
+            50% { color: #e0e0e0; opacity: 0.7; text-shadow: 0 0 8px rgba(224,224,224,0.6); } 
+            100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="pantalla-entrada" id="overlay-entrada">
+        <button class="btn-entrar" id="boton-entrar">ENTRAR</button>
+    </div>
+
+    <div class="lienzo-principal" id="escenario">
+        
+        <div class="layout-perfil">
+            
+            <div class="columna-izq">
+                
+                <div class="anillo-foto cristal" id="contenedor-foto">
+                    <div class="foto-wrapper" id="nieve-interna">
+                        <img src="https://images.steamusercontent.com/ugc/13144472863532397789/13F6F749F9CE5E4246C5219F8D3DAF2B70DB89C4/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true" alt="Foto">
+                    </div>
+                </div>
+
+                <!-- Panel de Status Compacto con Tintineo -->
+                <div id="panel-status" class="tarjeta-status cristal">
+                    <span id="status-indicator" class="punto-status"></span>
+                    <span id="status-text">CARGANDO...</span>
+                </div>
+
+                <div class="tarjeta-usuario cristal">
+                    <span>@Yehaa</span>
+                    <span>(45878454).</span>
+                  
+                </div>
+
+                <div class="tarjeta-reproductor cristal">
+                    <img src="https://picsum.photos/200/200?random=1" alt="Album Art" class="album-art">
+                    
+                    <p class="cancion-titulo">MI KRYPTONITA - Doble ONE</p>
+                    
+                    <audio id="musica-fondo" loop>
+                        <source src="https://files.catbox.moe/mr76hj.mp3" type="audio/mpeg">
+                    </audio>
+
+                    <div class="controles-musica">
+                        <span>⏮</span> 
+                        <span id="btn-play">▶</span> 
+                        <span>⏭</span>
+                    </div>
+                    <div class="barra-volumen">
+                        <span>🔊</span> 
+                        <input type="range" id="control-volumen" min="0" max="1" step="0.1" value="0.5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="columna-der">
+                <div class="tarjeta-principal cristal">
+                    <div class="contenedor-tabs">
+                        <button class="tab-btn activo" data-target="panel-principal">PRINCIPAL</button>
+                        <button class="tab-btn" data-target="panel-amigos">AMIGOS</button>
+                        <button class="tab-btn" data-target="panel-galeria">GALERIA DE FOTOS</button>
+                    </div>
+                    
+                    <!-- Panel Principal (Activo por defecto) -->
+                    <div id="panel-principal" class="panel-contenido activo">
+                        <h1 class="titulo-nombre">♥ Yehaa ♥ <span class="bandera-mx">🇲🇽</span></h1>
+                        <p class="frase-inspiradora" id="texto-poetico"></p>
+                    </div>
+
+                    <!-- Panel Amigos -->
+                    <div id="panel-amigos" class="panel-contenido">
+                        <div class="grid-amigos">
+                            <a href="https://xat.com" target="_blank" class="tarjeta-amigo cristal">
+                                <img src="https://picsum.photos/100/100?random=10" alt="Avatar" class="avatar-amigo">
+                                <div class="info-amigo">
+                                    <span class="nombre-amigo">amigo 1</span>
+                                    <span class="id-amigo">00000000</span>
+                                </div>
+                            </a>
+                            <a href="https://xat.com" target="_blank" class="tarjeta-amigo cristal">
+                                <img src="https://picsum.photos/100/100?random=11" alt="Avatar" class="avatar-amigo">
+                                <div class="info-amigo">
+                                    <span class="nombre-amigo">amigo 2</span>
+                                    <span class="id-amigo">00000000</span>
+                                </div>
+                            </a>
+                            <a href="https://xat.com" target="_blank" class="tarjeta-amigo cristal">
+                                <img src="https://picsum.photos/100/100?random=12" alt="Avatar" class="avatar-amigo">
+                                <div class="info-amigo">
+                                    <span class="nombre-amigo">amigo 3</span>
+                                    <span class="id-amigo">00000000</span>
+                                </div>
+                            </a>
+                            <a href="https://xat.com" target="_blank" class="tarjeta-amigo cristal">
+                                <img src="https://picsum.photos/100/100?random=13" alt="Avatar" class="avatar-amigo">
+                                <div class="info-amigo">
+                                    <span class="nombre-amigo">amigo 4</span>
+                                    <span class="id-amigo">00000000</span>
+                                </div>
+                            </a>
+                            <a href="https://xat.com" target="_blank" class="tarjeta-amigo cristal">
+                                <img src="https://picsum.photos/100/100?random=14" alt="Avatar" class="avatar-amigo">
+                                <div class="info-amigo">
+                                    <span class="nombre-amigo">amigo 5</span>
+                                    <span class="id-amigo">00000000</span>
+                                </div>
+                            </a>
+                            <a href="https://xat.com" target="_blank" class="tarjeta-amigo cristal">
+                                <img src="https://picsum.photos/100/100?random=15" alt="Avatar" class="avatar-amigo">
+                                <div class="info-amigo">
+                                    <span class="nombre-amigo">amigo 6</span>
+                                    <span class="id-amigo">00000000</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Panel Galería con la cuadrícula perfectamente alineada -->
+                    <div id="panel-galeria" class="panel-contenido">
+                        <div class="frame-galeria">
+                            <div class="box-galery">
+                                <input type="checkbox" id="btn1">
+                                <input type="checkbox" id="btn2">
+                                <input type="checkbox" id="btn3">
+                                <input type="checkbox" id="btn4">
+                                <input type="checkbox" id="btn5">
+                                <input type="checkbox" id="btn6">
+                                <input type="checkbox" id="btn7">
+                                <input type="checkbox" id="btn8">
+                                <input type="checkbox" id="btn9">
+                            
+                                <label for="btn1" class="imgs img1"></label>
+                                <label for="btn2" class="imgs img2"></label>
+                                <label for="btn3" class="imgs img3"></label>
+                                <label for="btn4" class="imgs img4"></label>
+                                <label for="btn5" class="imgs img5"></label>
+                                <label for="btn6" class="imgs img6"></label>
+                                <label for="btn7" class="imgs img7"></label>
+                                <label for="btn8" class="imgs img8"></label>
+                                <label for="btn9" class="imgs img9"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paneles Inferiores en Dos Columnas -->
+                <div class="contenedor-info-doble">
+                    <div class="caja-info-estilo cristal">
+                        <span class="valor-principal">Mexico <img src="https://xat.com/images/smw/flag/mx.png" alt="Bandera" class="bandera-img"></span>
+                        <span class="etiqueta-secundaria">Origen</span>
+                    </div>
+                    <div class="caja-info-estilo cristal">
+                        <span class="valor-principal">Sagittarius ♐</span>
+                        <span class="etiqueta-secundaria">Signo</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FIRMA -->
+        <div class="firma-creador">Desings: TemerX</div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            /* ====================================================
+               VERIFICACIÓN DE ESTADO API (Soporte Online, Offline y Available en Naranja)
+               ==================================================== */
+            async function verificarStatus() {
+                const statusText = document.getElementById('status-text');
+                const statusIndicator = document.getElementById('status-indicator');
+                
+                try {
+                    const response = await fetch('https://illuxat.com/api/online/RaphaeLDRZM');
+                    const json = await response.json();
+                    
+                    let statusValue = "";
+                    if (json && json.data && json.data.status) {
+                        statusValue = String(json.data.status).trim().toLowerCase();
+                    } else if (json && json.status) {
+                        statusValue = String(json.status).trim().toLowerCase();
+                    }
+
+                    if (statusValue === "available") {
+                        statusText.innerText = "AVAILABLE";
+                        statusIndicator.style.backgroundColor = "#ff9f43";
+                        statusIndicator.style.boxShadow = "0 0 6px #ff9f43";
+                    } else if (statusValue === "online" || statusValue === "true" || statusValue === "1" || json === true) {
+                        statusText.innerText = "EN LÍNEA";
+                        statusIndicator.style.backgroundColor = "#22c55e";
+                        statusIndicator.style.boxShadow = "0 0 6px #22c55e";
+                    } else if (statusValue === "offline" || statusValue === "false" || statusValue === "0") {
+                        statusText.innerText = "OFFLINE";
+                        statusIndicator.style.backgroundColor = "#e84118";
+                        statusIndicator.style.boxShadow = "0 0 6px #e84118";
+                    } else {
+                        statusText.innerText = statusValue ? statusValue.toUpperCase() : "AUSENTE";
+                        statusIndicator.style.backgroundColor = "var(--gold-brown)";
+                        statusIndicator.style.boxShadow = "0 0 6px var(--gold-brown)";
+                    }
+                } catch (error) {
+                    console.error("Error al consultar el estado:", error);
+                    statusText.innerText = "OFFLINE";
+                    statusIndicator.style.backgroundColor = "#e84118";
+                    statusIndicator.style.boxShadow = "0 0 6px #e84118";
+                }
+            }
+
+            verificarStatus();
+            setInterval(verificarStatus, 60000);
+
+            /* ====================================================
+               EFECTO DE ESTRELLITAS SIGUIENDO AL RATÓN
+               ==================================================== */
+            const caracteresRastro = ['✦', '★', '✧', '✨', '.'];
+            
+            document.addEventListener('mousemove', function(e) {
+                let rastro = document.createElement('span');
+                rastro.className = 'rastro-cursor';
+                
+                rastro.innerText = caracteresRastro[Math.floor(Math.random() * caracteresRastro.length)];
+                
+                let tamano = Math.random() * 12 + 8;
+                rastro.style.fontSize = `${tamano}px`;
+                
+                rastro.style.left = `${e.pageX}px`;
+                rastro.style.top = `${e.pageY}px`;
+                
+                let direccionX = (Math.random() - 0.5) * 60 + 'px'; 
+                let direccionY = (Math.random() - 0.5) * 60 + 20 + 'px'; 
+                
+                rastro.style.setProperty('--dir-x', direccionX);
+                rastro.style.setProperty('--dir-y', direccionY);
+                
+                document.body.appendChild(rastro);
+                
+                setTimeout(() => {
+                    rastro.remove();
+                }, 1000);
+            });
+
+            /* ====================================================
+               1. EFECTO: NIEVE DENTRO DE LA FOTO
+               ==================================================== */
+            const contenedorNieve = document.getElementById('nieve-interna');
+            for(let i = 0; i < 40; i++) {
+                let copo = document.createElement('div');
+                copo.className = 'copo-nieve';
+                let tamano = Math.random() * 3 + 1; 
+                copo.style.width = `${tamano}px`;
+                copo.style.height = `${tamano}px`;
+                copo.style.left = `${Math.random() * 100}%`;
+                copo.style.animationDuration = `${Math.random() * 3 + 2}s`; 
+                copo.style.animationDelay = `-${Math.random() * 5}s`;
+                contenedorNieve.appendChild(copo);
+            }
+
+            /* ====================================================
+               2. EFECTO: ESTRELLAS DE PLATA ALREDEDOR DE LA FOTO
+               ==================================================== */
+            const contenedorFoto = document.getElementById('contenedor-foto');
+            const formasEstrellas = ['✦', '★', '✧', '✨'];
+            
+            for(let i = 0; i < 15; i++) { 
+                let estrella = document.createElement('span');
+                estrella.className = 'estrella-plata';
+                estrella.innerText = formasEstrellas[Math.floor(Math.random() * formasEstrellas.length)];
+                
+                let angulo = Math.random() * Math.PI * 2;
+                let radio = 98 + Math.random() * 15; 
+                
+                let xPx = Math.cos(angulo) * radio;
+                let yPx = Math.sin(angulo) * radio;
+                
+                estrella.style.left = `calc(50% + ${xPx}px)`;
+                estrella.style.top = `calc(50% + ${yPx}px)`;
+                
+                estrella.style.fontSize = `${Math.random() * 14 + 10}px`; 
+                estrella.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                estrella.style.animationDelay = `-${Math.random() * 2}s`;
+                
+                contenedorFoto.appendChild(estrella);
+            }
+
+            /* ====================================================
+               3. LÓGICA DE LA MÁQUINA DE ESCRIBIR
+               ==================================================== */
+            const textoPoeticoEl = document.getElementById('texto-poetico');
+            const textoInspirador = `"Yo Antes de Ti"\n\nVivo sin plazo ni tiempo,\nDisfruto el hoy el momento a mi Modo, Mi Manera,\n\nNo pierdo mi tranquilidad por Cualquiera,\n\nGasto mi Vida como el ultimo aliento,\n\nConvivo con quienes me Rodean y en verdad Quieren estar a mi lado,\n\nCon su presencia construyo, Instantes Únicos y Gratos....`;
+            
+            let charIndex = 0;
+            let escribiendo = false;
+
+            function maquinaDeEscribir() {
+                if (charIndex < textoInspirador.length) {
+                    textoPoeticoEl.textContent += textoInspirador.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(maquinaDeEscribir, 45);
+                } else {
+                    setTimeout(() => {
+                        textoPoeticoEl.style.transition = 'opacity 2s ease';
+                        textoPoeticoEl.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            textoPoeticoEl.textContent = '';
+                            textoPoeticoEl.style.opacity = '1';
+                            charIndex = 0;
+                            maquinaDeEscribir(); 
+                        }, 2000); 
+                    }, 5000); 
+                }
+            }
+
+            /* ====================================================
+               4. LÓGICA DEL BOTÓN DE ENTRADA Y MÚSICA
+               ==================================================== */
+            const overlayEntrada = document.getElementById('overlay-entrada');
+            const botonEntrar = document.getElementById('boton-entrar');
+            const audio = document.getElementById('musica-fondo');
+            const btnPlay = document.getElementById('btn-play');
+            const controlVolumen = document.getElementById('control-volumen');
+
+            botonEntrar.addEventListener('click', function() {
+                overlayEntrada.classList.add('oculto');
+                audio.play();
+                btnPlay.innerText = '⏸'; 
+                
+                if (!escribiendo) {
+                    escribiendo = true;
+                    setTimeout(maquinaDeEscribir, 1000); 
+                }
+            });
+
+            btnPlay.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play();
+                    btnPlay.innerText = '⏸'; 
+                } else {
+                    audio.pause();
+                    btnPlay.innerText = '▶'; 
+                }
+            });
+
+            controlVolumen.addEventListener('input', function() {
+                audio.volume = this.value;
+            });
+
+            /* ====================================================
+               5. SISTEMA DE FONDO GLOBAL (ESCARCHA Y ESTRELLAS)
+               ==================================================== */
+            const escenario = document.getElementById('escenario');
+
+            const cantidadEscarcha = 150; 
+            for (let i = 0; i < cantidadEscarcha; i++) {
+                let particula = document.createElement('div');
+                particula.className = 'escarcha';
+                particula.style.width = particula.style.height = `${Math.random() * 1.5 + 1}px`;
+                particula.style.left = `${Math.random() * 100}vw`;
+                particula.style.animationDuration = `${Math.random() * 12 + 8}s, 2s`; 
+                particula.style.animationDelay = `-${Math.random() * 20}s, -${Math.random() * 2}s`;
+                escenario.appendChild(particula);
+            }
+
+            const cantidadEstrellas = 40;
+            const direcciones = ['deriva-izq', 'deriva-der', 'deriva-fuerte-izq', 'deriva-fuerte-der'];
+            for (let i = 0; i < cantidadEstrellas; i++) {
+                let estrella = document.createElement('div');
+                estrella.className = `estrella-cayendo ${direcciones[Math.floor(Math.random() * direcciones.length)]}`;
+                estrella.style.width = estrella.style.height = `${Math.random() * 10 + 8}px`;
+                estrella.style.left = `${Math.random() * 100}vw`;
+                estrella.style.animationDuration = `${Math.random() * 10 + 15}s`;
+                estrella.style.animationDelay = `-${Math.random() * 25}s`;
+                escenario.appendChild(estrella);
+            }
+
+            const cantidadPalabras = 15;
+            const estilosTexto = ['texto-tenue', 'texto-tenue', 'texto-claro'];
+            for (let i = 0; i < cantidadPalabras; i++) {
+                let palabra = document.createElement('div');
+                palabra.innerText = "Oyhee";
+                palabra.className = `palabra-cayendo ${direcciones[Math.floor(Math.random() * direcciones.length)]} ${estilosTexto[Math.floor(Math.random() * estilosTexto.length)]}`;
+                palabra.style.fontSize = `${Math.random() * 10 + 12}px`;
+                palabra.style.left = `${Math.random() * 100}vw`;
+                palabra.style.animationDuration = `${Math.random() * 10 + 15}s`;
+                palabra.style.animationDelay = `-${Math.random() * 25}s`;
+                escenario.appendChild(palabra);
+            }
+
+            /* ====================================================
+               6. LÓGICA DE PESTAÑAS (TABS)
+               ==================================================== */
+            const botonesTabs = document.querySelectorAll('.tab-btn');
+            const panelesContenido = document.querySelectorAll('.panel-contenido');
+
+            botonesTabs.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    botonesTabs.forEach(b => b.classList.remove('activo'));
+                    panelesContenido.forEach(p => p.classList.remove('activo'));
+
+                    this.classList.add('activo');
+
+                    const idPanel = this.getAttribute('data-target');
+                    document.getElementById(idPanel).classList.add('activo');
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
