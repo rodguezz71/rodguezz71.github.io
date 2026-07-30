@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BLue azulito</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<style>
+:root {
+  --pure-white: #ffffff;
+  --white-glow: rgba(255, 255, 255, 0.6);
+}
+
+body {
+  background: #0b0f1a;
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px;
+  direction: ltr; 
+  overflow-x: hidden;
+  position: relative;
+  cursor: default;
+}
+
+/* --- CANVAS PARA LOS RAYOS DEL CURSOR (FINOS Y DINÁMICOS) --- */
+#cursor-lightning-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* --- FONDO SÚPER VISIBLE: CUADRÍCULA LÁSER Y RAYOS LUMINOSOS --- */
+.main-bg-effects {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #0f172a 0%, #070a12 100%);
+  overflow: hidden;
+}
+
+/* Rejilla futurista con perspectiva animada */
+.laser-grid {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: 
+    linear-gradient(to right, rgba(52, 152, 219, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 188, 156, 0.15) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(500px) rotateX(60deg);
+  animation: gridMove 15s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 60px;
+  }
+}
+
+/* Rayos de luz deslizantes muy visibles */
+.light-beam {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #3498db, #1abc9c, transparent);
+  box-shadow: 0 0 20px #3498db, 0 0 40px #1abc9c;
+  opacity: 0.7;
+  animation: beamSlide 6s ease-in-out infinite;
+}
+
+.beam-1 {
+  top: 20%;
+  animation-delay: 0s;
+}
+
+.beam-2 {
+  top: 75%;
+  animation-delay: 3s;
+  background: linear-gradient(90deg, transparent, #1abc9c, #3498db, transparent);
+}
+
+@keyframes beamSlide {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Pantalla de Inicio / Overlay con partículas y efecto de pulso radial */
+#start-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #131b2e 0%, #000000 100%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease-in-out;
+  overflow: hidden;
+}
+
+/* Efecto de ondas de luz expansivas de fondo */
+.pulse-ring {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  box-shadow: 0 0 30px rgba(52, 152, 219, 0.2);
+  animation: pulseWave 4s infinite linear;
+  pointer-events: none;
+}
+
+.pulse-ring:nth-child(2) {
+  animation-delay: 2s;
+}
+
+@keyframes pulseWave {
+  0% {
+    transform: scale(0.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+#particles-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.enter-btn {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(135deg, #1abc9c, #3498db);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 16px 40px;
+  font-size: 19px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(52, 152, 219, 0.6);
+  transition: all 0.3s ease;
+  font-family: 'Tajawal', sans-serif;
+  letter-spacing: 1.5px;
+}
+
+.enter-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 35px rgba(26, 188, 156, 0.9);
+}
+
+.wrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start; 
+  flex-wrap: wrap;
+}
+
+.profile-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+}
+
+.profile-pic {
+  width: 220px;
+  height: 220px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid #3498db; 
+  box-shadow: 0 0 25px #3498db80;
+  transition: 0.4s;
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.profile-pic:hover img {
+  transform: scale(1.12);
+}
+
+.text-box {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.name {
+  font-size: 26px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #1abc9c, #3498db, #1abc9c); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%; 
+  animation: gradient-slide 3s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes gradient-slide {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+.info-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 0; 
+}
+
+/* Cajas normales estándar (País, Signo, Estado) */
+.info-row {
+  background: linear-gradient(135deg, #ffffff10, #ffffff05);
+  border: 1px solid #ffffff30;
+  padding: 12px 15px;
+  border-radius: 16px;
+  width: 260px;
+  backdrop-filter: blur(6px);
+  transition: 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-row:hover {
+  transform: translateX(6px);
+  background: linear-gradient(135deg, #ffffff20, #ffffff10);
+}
+
+.info-row .q {
+  font-weight: bold;
+  color: #3498db; 
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+}
+
+.info-row .a {
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* =========================================
+   ESTILO EXCLUSIVO PARA LA CAJA USER E ID
+   ========================================= */
+.info-row-special {
+  background: linear-gradient(135deg, rgba(26, 188, 156, 0.2), rgba(52, 152, 219, 0.15));
+  border: 1px solid rgba(26, 188, 156, 0.6);
+  padding: 12px 15px;
+  border-radius: 16px;
+  width: 260px;
+  backdrop-filter: blur(8px);
+  transition: 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 15px rgba(26, 188, 156, 0.25);
+}
+
+.info-row-special:hover {
+  transform: translateX(6px);
+  background: linear-gradient(135deg, rgba(26, 188, 156, 0.3), rgba(52, 152, 219, 0.25));
+  border-color: rgba(26, 188, 156, 0.9);
+  box-shadow: 0 0 25px rgba(26, 188, 156, 0.45);
+}
+
+.info-row-special .q {
+  font-weight: bold;
+  color: #1abc9c; 
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+  text-shadow: 0 0 8px rgba(26, 188, 156, 0.5);
+}
+
+/* =========================================
+   EFECTOS DE TEXTO PARA "Oyehaa" y "(0000000)."
+   ========================================= */
+.neon-effect {
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 0 5px #3498db, 0 0 10px #3498db, 0 0 20px #1abc9c;
+  animation: neonPulse 2s infinite alternate;
+}
+
+@keyframes neonPulse {
+  0% {
+    text-shadow: 0 0 2px #3498db, 0 0 5px #3498db, 0 0 10px #1abc9c;
+    opacity: 0.85;
+  }
+  100% {
+    text-shadow: 0 0 8px #3498db, 0 0 15px #1abc9c, 0 0 25px #1abc9c;
+    opacity: 1;
+  }
+}
+
+.holo-effect {
+  font-weight: bold;
+  background: linear-gradient(135deg, #a29bfe, #74b9ff, #55efc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: holoShift 4s ease infinite;
+}
+
+@keyframes holoShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Estilos del Reproductor de Música */
+.audio-controls {
+    display: flex; 
+    align-items: center; 
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 10px 18px; 
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    margin-top: 20px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.audio-controls i {
+    cursor: pointer; 
+    color: var(--pure-white); 
+    font-size: 1.1rem; 
+    text-shadow: 0 0 10px var(--white-glow);
+    transition: 0.3s;
+}
+
+.audio-controls i:hover {
+    text-shadow: 0 0 15px var(--pure-white);
+    transform: scale(1.1);
+}
+
+input[type=range] { 
+    -webkit-appearance: none; 
+    width: 70px; 
+    background: transparent; 
+}
+input[type=range]::-webkit-slider-runnable-track { 
+    width: 100%; 
+    height: 3px; 
+    background: rgba(255, 255, 255, 0.3); 
+    border-radius: 5px;
+}
+input[type=range]::-webkit-slider-thumb { 
+    -webkit-appearance: none; 
+    height: 11px; 
+    width: 11px; 
+    border-radius: 50%; 
+    background: var(--pure-white); 
+    cursor: pointer; 
+    margin-top: -4px; 
+    box-shadow: 0 0 10px var(--pure-white); 
+}
+
+.quote-box {
+  background: rgba(52, 152, 219, 0.1); 
+  border: 1px solid #3498db80;
+  border-radius: 12px;
+  padding: 15px 20px;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 30px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 15px #3498db80;
+  text-align: center;
+}
+
+.quote-box p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #ecf0f1;
+  line-height: 1.5;
+}
+
+/* =========================================
+            FIRMA DEL CREADOR
+   ========================================= */
+.firma-creador {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    z-index: 50; 
+    pointer-events: none; 
+    animation: colorFirma 4s infinite alternate ease-in-out;
+}
+
+@keyframes colorFirma {
+    0% { color: #555555; opacity: 0.3; text-shadow: 0 0 2px rgba(85,85,85,0.2); } 
+    50% { color: #e0e0e0; opacity: 0.7; text-shadow: 0 0 8px rgba(224,224,224,0.6); } 
+    100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    flex-direction: column; 
+    align-items: center;
+    gap: 20px;
+  }
+
+  .info-box, .profile-pic {
+    width: 90%; 
+    max-width: 300px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 12px;  
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f1a;  
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #1abc9c, #3498db); 
+  border-radius: 6px;
+  border: 3px solid #0b0f1a;  
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #3498db, #1abc9c);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3498db #0b0f1a;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Canvas para los Rayos de Energía Finos del Cursor -->
+<canvas id="cursor-lightning-canvas"></canvas>
+
+<!-- Fondo Principal con Cuadrícula Láser y Rayos Luminosos -->
+<div class="main-bg-effects">
+  <div class="laser-grid"></div>
+  <div class="light-beam beam-1"></div>
+  <div class="light-beam beam-2"></div>
+</div>
+
+<!-- Pantalla de Inicio / Overlay con Partículas y Ondas de Luz -->
+<div id="start-screen">
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    <canvas id="particles-canvas"></canvas>
+    <button class="enter-btn" onclick="enterSite()">ENTRAR</button>
+</div>
+
+<div class="wrapper">
+
+  <div class="profile-column">
+    <div class="profile-pic">
+      <img src="https://gifsec.com/wp-content/uploads/2022/11/dark-anime-gif-16.gif" alt="perfil">
+    </div>
+
+    <div class="text-box">
+      <div class="name">Oyeaah</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-box">
+
+      <!-- Caja User e ID con estilo especial -->
+      <div class="info-row-special">
+        <div class="a neon-effect">Oyehaa</div>
+        <div class="a holo-effect">(0000000).</div>
+      </div>
+
+      <div class="info-row">
+        <div class="q"><i class="fas fa-map-marker-alt"></i> País:</div>
+        <div class="a">
+          Mexico
+          <img src="https://xat.com/images/smw/flag/mx.png" alt="MX" class="h-3.5 rounded-sm inline-block" style="height: 14px;">
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="q"><i class="fas fa-fire"></i> Signo:</div>
+        <div class="a">Aries ♈</div>
+      </div>
+
+      <!--- Seccion Estado Fijo/Manual -->
+      <div class="info-row">
+        <div class="q"><i class="fas fa-signal"></i> Estado:</div>
+        <div class="a">
+          <span id="status-indicator" class="w-2 h-2 rounded-full animate-pulse inline-block" style="width: 8px; height: 8px; background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71;"></span>
+          <span id="status-text">En Línea</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Reproductor de Música UI -->
+    <div class="audio-controls">
+        <i class="fas fa-play" id="playBtn" onclick="togglePlay()"></i>
+        <i class="fas fa-volume-up" id="muteBtn" onclick="toggleMute()"></i>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Etiqueta de Audio -->
+<audio id="bgMusic" loop>
+    <source src="https://www.image2url.com/r2/default/audio/1784864943457-5ee0de5d-32e9-4ab5-ac15-277d4aab2315.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Frases -->
+<div class="quote-box">
+  <p>Me encanta hablar contigo, aunque no tenga nada que decir.</p>
+  <p>En tu ausencia nada cambió, pero sentí que lo había perdido todo.</p>
+</div>
+
+<!-- Firma del Creador (Abajo al Centro) -->
+<div class="firma-creador">Desings: TemerX</div>
+
+<script>
+  // --- EFECTO DE RAYOS AZULES FINOS QUE SIGUEN EL CURSOR ---
+  const cursorCanvas = document.getElementById('cursor-lightning-canvas');
+  const cursorCtx = cursorCanvas.getContext('2d');
+
+  function resizeCursorCanvas() {
+      cursorCanvas.width = window.innerWidth;
+      cursorCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCursorCanvas);
+  resizeCursorCanvas();
+
+  let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  let cursorTrail = [];
+  const maxTrailLength = 20;
+
+  window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+  });
+
+  class TrailPoint {
+      constructor(x, y) {
+          this.x = x;
+          this.y = y;
+      }
+  }
+
+  function animateCursorLightning() {
+      cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+
+      if (cursorTrail.length === 0) {
+          for (let i = 0; i < maxTrailLength; i++) {
+              cursorTrail.push(new TrailPoint(mouse.x, mouse.y));
+          }
+      }
+
+      cursorTrail.unshift(new TrailPoint(mouse.x, mouse.y));
+      if (cursorTrail.length > maxTrailLength) {
+          cursorTrail.pop();
+      }
+
+      if (cursorTrail.length > 2) {
+          // Rayo sutil y delgado con doble capa (núcleo fino blanco/cian y brillo exterior)
+          for (let strand = 0; strand < 2; strand++) {
+              cursorCtx.beginPath();
+              let startPt = cursorTrail[0];
+              cursorCtx.moveTo(startPt.x, startPt.y);
+
+              for (let i = 1; i < cursorTrail.length; i++) {
+                  let pt = cursorTrail[i];
+                  // Vibración eléctrica más sutil y ligera
+                  let jitterX = pt.x + (Math.random() - 0.5) * 6;
+                  let jitterY = pt.y + (Math.random() - 0.5) * 6;
+                  cursorCtx.lineTo(jitterX, jitterY);
+              }
+
+              // Estilo de rayo fino y eléctrico
+              cursorCtx.strokeStyle = strand === 0 ? '#ffffff' : '#00d2ff';
+              cursorCtx.lineWidth = strand === 0 ? 1 : 2.5;
+              cursorCtx.shadowBlur = 10;
+              cursorCtx.shadowColor = '#3498db';
+              cursorCtx.lineCap = 'round';
+              cursorCtx.lineJoin = 'round';
+              cursorCtx.stroke();
+          }
+      }
+
+      requestAnimationFrame(animateCursorLightning);
+  }
+  animateCursorLightning();
+
+
+  // --- ANIMACIÓN DE PARTÍCULAS AZULES Y CONEXIONES EN CANVAS ---
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  const particlesArray = [];
+  const numberOfParticles = 45;
+
+  class Particle {
+      constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = (Math.random() - 0.5) * 1;
+          this.speedY = (Math.random() - 0.5) * 1;
+          this.color = Math.random() > 0.5 ? '#3498db' : '#1abc9c';
+      }
+      update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x > canvas.width) this.x = 0;
+          else if (this.x < 0) this.x = canvas.width;
+          if (this.y > canvas.height) this.y = 0;
+          else if (this.y < 0) this.y = canvas.height;
+      }
+      draw() {
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.fill();
+      }
+  }
+
+  for (let i = 0; i < numberOfParticles; i++) {
+      particlesArray.push(new Particle());
+  }
+
+  // Líneas de conexión dinámicas entre partículas cercanas
+  function connectParticles() {
+      for (let a = 0; a < particlesArray.length; a++) {
+          for (let b = a + 1; b < particlesArray.length; b++) {
+              let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                             ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+              if (distance < 12000) {
+                  let opacity = 1 - (distance / 12000);
+                  ctx.strokeStyle = `rgba(52, 152, 219, ${opacity * 0.25})`;
+                  ctx.lineWidth = 1;
+                  ctx.beginPath();
+                  ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                  ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                  ctx.stroke();
+              }
+          }
+      }
+  }
+
+  function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+          particlesArray[i].update();
+          particlesArray[i].draw();
+      }
+      connectParticles();
+      requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  // --- FUNCIÓN DE ENTRADA (Oculta overlay y activa reproductor) ---
+  function enterSite() {
+      const startScreen = document.getElementById('start-screen');
+      startScreen.style.opacity = '0';
+      setTimeout(() => {
+          startScreen.style.display = 'none';
+          document.body.style.overflow = 'auto';
+      }, 800);
+      
+      if (music.paused) {
+          music.play().then(() => {
+              playBtn.className = "fas fa-pause";
+          }).catch(e => console.log("Error al reproducir audio:", e));
+      }
+  }
+
+  // --- REPRODUCTOR DE MÚSICA SCRIPT ---
+  const music = document.getElementById('bgMusic');
+  const muteBtn = document.getElementById('muteBtn');
+  const playBtn = document.getElementById('playBtn');
+
+  music.volume = 0.5;
+
+  function togglePlay() {
+      if (music.paused) {
+          music.play();
+          playBtn.className = "fas fa-pause";
+      } else {
+          music.pause();
+          playBtn.className = "fas fa-play";
+      }
+  }
+
+  function toggleMute() {
+      if (music.muted) { 
+          music.muted = false; 
+          muteBtn.className = "fas fa-volume-up"; 
+      } else { 
+          music.muted = true; 
+          muteBtn.className = "fas fa-volume-mute"; 
+      }
+  }
+
+  function changeVolume(val) {
+      music.volume = val;
+      muteBtn.className = val == 0 ? "fas fa-volume-mute" : "fas fa-volume-up";
+      if(val > 0) music.muted = false;
+  }
+</script>
+
+</body>
+</html>
