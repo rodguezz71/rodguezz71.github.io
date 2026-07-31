@@ -553,8 +553,8 @@ input[type=range]::-webkit-slider-thumb {
       <div class="info-row">
         <div class="q"><i class="fas fa-signal"></i> Estado:</div>
         <div class="a">
-          <span id="status-indicator" class="w-2 h-2 rounded-full animate-pulse inline-block" style="width: 8px; height: 8px; background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71;"></span>
-          <span id="status-text">En Línea</span>
+          <span id="status-indicator" style="width: 8px; height: 8px; background-color: #2ecc71; border-radius: 50%; display: inline-block;"></span>
+          <span id="status-text">Verificando...</span>
         </div>
       </div>
 
@@ -583,7 +583,7 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <!-- Firma del Creador (Abajo al Centro) -->
-<div class="firma-creador">Desings: TemerX</div>
+ <div class="firma-creador">Desings:  ☬ TemerX™</div>
 
 <script>
   // --- EFECTO DE RAYOS AZULES FINOS QUE SIGUEN EL CURSOR ---
@@ -628,7 +628,6 @@ input[type=range]::-webkit-slider-thumb {
       }
 
       if (cursorTrail.length > 2) {
-          // Rayo sutil y delgado con doble capa (núcleo fino blanco/cian y brillo exterior)
           for (let strand = 0; strand < 2; strand++) {
               cursorCtx.beginPath();
               let startPt = cursorTrail[0];
@@ -636,13 +635,11 @@ input[type=range]::-webkit-slider-thumb {
 
               for (let i = 1; i < cursorTrail.length; i++) {
                   let pt = cursorTrail[i];
-                  // Vibración eléctrica más sutil y ligera
                   let jitterX = pt.x + (Math.random() - 0.5) * 6;
                   let jitterY = pt.y + (Math.random() - 0.5) * 6;
                   cursorCtx.lineTo(jitterX, jitterY);
               }
 
-              // Estilo de rayo fino y eléctrico
               cursorCtx.strokeStyle = strand === 0 ? '#ffffff' : '#00d2ff';
               cursorCtx.lineWidth = strand === 0 ? 1 : 2.5;
               cursorCtx.shadowBlur = 10;
@@ -704,12 +701,11 @@ input[type=range]::-webkit-slider-thumb {
       particlesArray.push(new Particle());
   }
 
-  // Líneas de conexión dinámicas entre partículas cercanas
   function connectParticles() {
       for (let a = 0; a < particlesArray.length; a++) {
           for (let b = a + 1; b < particlesArray.length; b++) {
               let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                             ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                           ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
               if (distance < 12000) {
                   let opacity = 1 - (distance / 12000);
                   ctx.strokeStyle = `rgba(52, 152, 219, ${opacity * 0.25})`;
@@ -733,6 +729,55 @@ input[type=range]::-webkit-slider-thumb {
       requestAnimationFrame(animateParticles);
   }
   animateParticles();
+
+  // --- FETCH ONLINE STATUS ---
+  async function fetchOnlineStatus() {
+      try {
+          const response = await fetch('https://illuxat.com/api/online/RaphaeLDRZM');
+          const text = await response.text();
+          const statusText = document.getElementById('status-text');
+          const statusIndicator = document.getElementById('status-indicator');
+          
+          let isOnline = false;
+          
+          try {
+              const data = JSON.parse(text);
+              if (data && data.data && data.data.status === "Online") {
+                  isOnline = true;
+              } else if (data && data.status === "Online") {
+                  isOnline = true;
+              } else if (data === "Online") {
+                  isOnline = true;
+              }
+          } catch (e) {
+              const cleanText = text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+              if (cleanText === "online" || cleanText === "1" || cleanText === "true") {
+                  isOnline = true;
+              }
+          }
+          
+          if (isOnline) {
+              statusText.innerText = "EN LÍNEA";
+              statusIndicator.style.backgroundColor = "#2ecc71";
+              statusIndicator.style.boxShadow = "0 0 8px #2ecc71";
+          } else {
+              statusText.innerText = "AUSENTE";
+              statusIndicator.style.backgroundColor = "#e67e22";
+              statusIndicator.style.boxShadow = "0 0 8px #e67e22";
+          }
+      } catch (error) {
+          console.error("Error fetching online status:", error);
+          const statusText = document.getElementById('status-text');
+          const statusIndicator = document.getElementById('status-indicator');
+          statusText.innerText = "DESCONECTADO";
+          statusIndicator.style.backgroundColor = "#e74c3c";
+          statusIndicator.style.boxShadow = "0 0 8px #e74c3c";
+      }
+  }
+  
+  // Ejecutar inmediatamente al cargar y actualizar cada 30 segundos
+  fetchOnlineStatus();
+  setInterval(fetchOnlineStatus, 30000);
 
   // --- FUNCIÓN DE ENTRADA (Oculta overlay y activa reproductor) ---
   function enterSite() {
