@@ -299,7 +299,7 @@
         /* --- PLAYER CONTROLS --- */
         .audio-controls {
             position: fixed;
-            bottom: 60px; /* Subido ligeramente para no chocar con la firma */
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.4);
@@ -340,8 +340,8 @@
     <div class="glass-panel">
         <!-- Indicador Online con punto parpadeante -->
         <div class="status-badge">
-            <div class="status-dot"></div>
-            <span class="status-text">Online</span>
+            <div id="status-dot" class="status-dot"></div>
+            <span id="status-text" class="status-text">Online</span>
         </div>
 
         <div class="header-container">
@@ -447,6 +447,48 @@
                 updateIcons();
             }).catch(() => console.log("Esperando click..."));
         };
+
+        // --- FETCH ONLINE STATUS ---
+        async function fetchOnlineStatus() {
+            try {
+                const response = await fetch('https://illuxat.com/api/online/RaphaeLDRZM');
+                const text = await response.text();
+                const statusText = document.getElementById('status-text');
+                const statusIndicator = document.getElementById('status-dot');
+                
+                let isOnline = false;
+                
+                try {
+                    const data = JSON.parse(text);
+                    if (data && data.data && data.data.status === "Online") {
+                        isOnline = true;
+                    } else if (data && data.status === "Online") {
+                        isOnline = true;
+                    } else if (data === "Online") {
+                        isOnline = true;
+                    }
+                } catch (e) {
+                    const cleanText = text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+                    if (cleanText === "online" || cleanText === "1" || cleanText === "true") {
+                        isOnline = true;
+                    }
+                }
+                
+                if (isOnline) {
+                    statusText.innerText = "ONLINE";
+                    statusIndicator.style.backgroundColor = "#00ff66";
+                    statusIndicator.style.boxShadow = "0 0 10px #00ff66";
+                } else {
+                    statusText.innerText = "AUSENTE";
+                    statusIndicator.style.backgroundColor = "#ff9900";
+                    statusIndicator.style.boxShadow = "0 0 10px #ff9900";
+                }
+            } catch (error) {
+                console.error("Error fetching online status:", error);
+            }
+        }
+        
+        fetchOnlineStatus();
     </script>
 </body>
 </html>
