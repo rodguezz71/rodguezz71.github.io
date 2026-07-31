@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XatSpace Lucas - Edición Premium</title>
+	<LINK REL="SHORTCUT ICON" href="https://xatimg.com/image/efqcpwxdWtTJ.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@1,600&family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #020111 0%, #0c0a25 35%, #051937 60%, #00234a 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- NIEVE --- */
+        .snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { top: -5vh; transform: translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 105vh; transform: translateX(30px); opacity: 0; }
+        }
+
+        /* --- PANEL PRINCIPAL --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 30px;
+            padding: 50px 40px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            max-width: 900px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- PUNTO PARPADEANTE ONLINE --- */
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff66;
+            animation: blink-dot 1.5s ease-in-out infinite;
+        }
+
+        .status-text {
+            color: #ffffff;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        @keyframes blink-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.85); }
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        /* --- EFECTO CÍRCULO NEÓN PARA LA IMAGEN --- */
+        .felix-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse-scale 3s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .felix-photo {
+            position: relative;
+            width: 85%;
+            height: 85%;
+            object-fit: cover;
+            border-radius: 50%;
+            z-index: 3;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .ring-outer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #00f2fe;
+            border-bottom-color: #4facfe;
+            filter: drop-shadow(0 0 8px #00f2fe);
+            animation: spin-clockwise 2s linear infinite;
+            z-index: 2;
+        }
+
+        .ring-inner {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 0, 128, 0.7);
+            filter: drop-shadow(0 0 6px #ff007f);
+            animation: spin-counter 3s linear infinite;
+            z-index: 1;
+        }
+
+        .ring-aura {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00f2fe, #4facfe, #ee0979, #ff6a00);
+            opacity: 0.4;
+            filter: blur(15px);
+            z-index: 0;
+            animation: hue-rotate 5s linear infinite;
+        }
+
+        @keyframes spin-clockwise {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-counter {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes hue-rotate {
+            0% { filter: blur(15px) hue-rotate(0deg); }
+            100% { filter: blur(15px) hue-rotate(360deg); }
+        }
+
+        .name-wave {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 72px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background-size: 400% 400%;
+            animation: namewave 6s ease infinite;
+            background-image: linear-gradient(-45deg, #00f2fe, #4facfe, #ee0979, #ff6a00, #00f2fe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes namewave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .inspirational-phrase {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-style: italic;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 2px 2px 4px rgba(0, 0, 0, 0.9);
+            opacity: 0.95;
+            animation: textGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 2px 2px 4px rgba(0, 0, 0, 0.9); }
+            to { text-shadow: 0 0 20px rgba(79, 172, 254, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.9); }
+        }
+
+        /* --- TRES RECUADROS INFERIORES --- */
+        .info-cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            max-width: 900px;
+            width: 90%;
+            margin-top: 20px;
+            z-index: 2;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 15px;
+            color: #ffffff;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            flex: 1;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(79, 172, 254, 0.4);
+        }
+
+        .info-card span {
+            color: #4facfe;
+            font-weight: 600;
+        }
+
+        /* --- FIRMA DEL CREADOR --- */
+        .firma-creador {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            z-index: 50; 
+            pointer-events: none; 
+            animation: colorFirma 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes colorFirma {
+            0% { color: #555555; opacity: 0.3; text-shadow: 0 0 2px rgba(85,85,85,0.2); } 
+            50% { color: #e0e0e0; opacity: 0.7; text-shadow: 0 0 8px rgba(224,224,224,0.6); } 
+            100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
+        }
+
+        /* --- PLAYER CONTROLS --- */
+        .audio-controls {
+            position: fixed;
+            bottom: 60px; /* Subido ligeramente para no chocar con la firma */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .active-icon { color: #4facfe !important; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+
+        @media (max-width: 700px) {
+            .name-wave { font-size: 45px; }
+            .inspirational-phrase { font-size: 18px; }
+            .felix-wrapper { width: 100px; height: 100px; }
+            .info-cards-container { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body onclick="handleFirstClick()">
+
+    <div class="snow-container" id="snow-container"></div>
+
+    <!-- PANEL PRINCIPAL -->
+    <div class="glass-panel">
+        <!-- Indicador Online con punto parpadeante -->
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            <span class="status-text">Online</span>
+        </div>
+
+        <div class="header-container">
+            <div class="felix-wrapper">
+                <div class="ring-aura"></div>
+                <div class="ring-outer"></div>
+                <div class="ring-inner"></div>
+                <img src="https://media.tenor.com/YIRrOK53KKgAAAAM/shibuya-station-haru.gif" alt="Félix" class="felix-photo">
+            </div>
+            <h1 class="name-wave">Temer.</h1>
+        </div>
+        <p class="inspirational-phrase">"En medio del cruce más caótico del mundo, donde miles de pasos se cruzan sin mirarse, mi corazón siempre se detiene exactamente en el mismo lugar: esperándote."</p>
+    </div>
+
+    <!-- TRES RECUADROS INFERIORES -->
+    <div class="info-cards-container">
+        <div class="info-card">ID: <span>000000</span></div>
+        <div class="info-card">User: <span>Gato</span></div>
+        <div class="info-card">Signo: <span>Aries</span></div>
+    </div>
+
+    <!-- FIRMA DEL CREADOR -->
+    <div class="firma-creador">Desings:  ☬ TemerX™</div>
+
+    <div class="audio-controls">
+        <button class="audio-btn" onclick="togglePlay(event)">
+            <i class="fas fa-play" id="play-icon"></i>
+        </button>
+        <button class="audio-btn" onclick="toggleMute(event)">
+            <i class="fas fa-volume-up" id="volume-icon"></i>
+        </button>
+    </div>
+
+    <audio id="main-audio" loop>
+        <source src="https://www.image2url.com/r2/default/audio/1785475401390-61b1c014-cfaf-4a85-befb-7129a8f858ed.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // NIEVE
+        function createSnowflake() {
+            const container = document.getElementById('snow-container');
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            const size = Math.random() * 3 + 1 + 'px';
+            snowflake.style.width = size;
+            snowflake.style.height = size;
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 6 + 4 + 's';
+            snowflake.style.animationDuration = duration;
+            container.appendChild(snowflake);
+            setTimeout(() => snowflake.remove(), parseFloat(duration) * 1000);
+        }
+        setInterval(createSnowflake, 120);
+
+        // AUDIO LOGIC
+        const audio = document.getElementById('main-audio');
+        const playIcon = document.getElementById('play-icon');
+        const volumeIcon = document.getElementById('volume-icon');
+        let interactionDone = false;
+
+        function handleFirstClick() {
+            if (!interactionDone) {
+                audio.play();
+                interactionDone = true;
+                updateIcons();
+            }
+        }
+
+        function togglePlay(e) {
+            e.stopPropagation();
+            if (audio.paused) audio.play(); else audio.pause();
+            updateIcons();
+        }
+
+        function toggleMute(e) {
+            e.stopPropagation();
+            audio.muted = !audio.muted;
+            updateIcons();
+        }
+
+        function updateIcons() {
+            if (audio.paused) {
+                playIcon.className = "fas fa-play";
+                playIcon.classList.remove('active-icon');
+            } else {
+                playIcon.className = "fas fa-pause";
+                playIcon.classList.add('active-icon');
+            }
+
+            if (audio.muted) {
+                volumeIcon.className = "fas fa-volume-mute";
+                volumeIcon.classList.remove('active-icon');
+            } else {
+                volumeIcon.className = "fas fa-volume-up";
+                if (!audio.paused) volumeIcon.classList.add('active-icon');
+                else volumeIcon.classList.remove('active-icon');
+            }
+        }
+
+        window.onload = () => {
+            audio.play().then(() => {
+                interactionDone = true;
+                updateIcons();
+            }).catch(() => console.log("Esperando click..."));
+        };
+    </script>
+</body>
+</html>
