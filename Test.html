@@ -444,16 +444,16 @@
                     <p class="bio">“No importa cuánto tiempo tome, haré que te conviertas en un demonio completo.”</p>
                     <div class="datos">
                         <div class="dato-item">
-                            <span class="dato-num">Nacionalidad</span>
-                            <span class="dato-text">Mex</span>
+                            <span class="dato-num">Ciudad</span>
+                            <span class="dato-text">Saitama</span>
                         </div>
                         <div class="dato-item">
                             <span class="dato-num">Signo</span>
-                            <span class="dato-text">Libra</span>
+                            <span class="dato-text">Geminis</span>
                         </div>
                         <div class="dato-item">
-                            <span class="dato-num">Edad</span>
-                            <span class="dato-text">31</span>
+                            <span class="dato-num">Cumpleaños</span>
+                            <span class="dato-text">********</span>
                         </div>
                     </div>
 
@@ -467,12 +467,13 @@
 <!---Amigos--->
                 <div id="tab-amigos" class="tab">
                     <div class="amigo-item clikable">
-                        <img src="https://i.pinimg.com/736x/a2/cf/01/a2cf01719bfb5db39824fb7e671a3360.jpg" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
+                        <img src="https://xatimg.com/image/yLXeAZnrGZKr.png" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
                         <div>
-                            <div style="font-weight:600; font-size:14px;">Amigo 1</div>
-                            <div style="font-size:11px; color:var(--oro);">000000</div>
+                            <div style="font-weight:600; font-size:14px;">TemerX</div>
+                            <div style="font-size:11px; color:var(--oro);">1506439507</div>
                         </div>
                     </div>
+                    <!---Amigos Pendiente 
                     <div class="amigo-item clikable">
                         <img src="https://i.pinimg.com/736x/a2/cf/01/a2cf01719bfb5db39824fb7e671a3360.jpg" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
                         <div>
@@ -494,6 +495,7 @@
                             <div style="font-size:11px; color:var(--oro);">000000</div>
                         </div>
                     </div>
+                      Amigos Pendiente --->
                 </div>
     <!---Amigos--->
 
@@ -503,7 +505,7 @@
 
     <!-- Etiqueta de Audio -->
     <audio id="bgMusic" loop>
-        <source src="https://www.image2url.com/r2/default/audio/1785836405512-49f21424-d409-444e-b95f-9aa2437019da.mp3" type="audio/mpeg">
+        <source src="https://www.image2url.com/r2/default/audio/1785838315184-5a06837a-9ca5-495c-a7dd-09cdca915ff9.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -594,7 +596,7 @@
         /* --- FETCH ONLINE STATUS --- */
         async function fetchOnlineStatus() {
             try {
-                const response = await fetch('https://illuxat.com/api/online/RaphaeLDRZM');
+                const response = await fetch('https://illuxat.com/api/online/jinkitarma');
                 const text = await response.text();
                 const statusText = document.getElementById('status-text');
                 const statusIndicator = document.getElementById('status-indicator');
