@@ -25,8 +25,6 @@
         }
 
         /* ─ CAPAS DE FONDO ANIMADAS MEJORADAS ─ */
-
-        /* Capa 0: Color base negro azulado muy oscuro con parpadeo cósmico sutil */
         .deep-space-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -40,7 +38,6 @@
             100% { background-color: #080512; }
         }
 
-        /* Capa 1: Estrellas Dinámicas Multicapa con Parallax */
         .estrellas, .estrellas-2, .estrellas-3 {
             position: fixed;
             top: 0; left: 0; width: 200%; height: 200%;
@@ -48,7 +45,6 @@
             z-index: -9;
         }
 
-        /* Estrellas cercanas (rápidas y grandes) */
         .estrellas {
             background-image: 
                 radial-gradient(white, rgba(255,255,255,.9) 1.5px, transparent 2px),
@@ -59,7 +55,6 @@
             opacity: 0.9;
         }
 
-        /* Estrellas medianas (velocidad media) */
         .estrellas-2 {
             background-image: 
                 radial-gradient(#00ffff, rgba(0,255,255,.5) 1px, transparent 2px),
@@ -70,7 +65,6 @@
             opacity: 0.7;
         }
 
-        /* Estrellas lejanas (lentas y sutiles) */
         .estrellas-3 {
             background-image: 
                 radial-gradient(white, rgba(255,255,255,.3) 0.8px, transparent 1.2px);
@@ -80,7 +74,6 @@
             opacity: 0.4;
         }
 
-        /* Capa 2: Nebulosa Dinámica con Movimiento Orgánico Extendido y Rotación */
         .nebulosa {
             position: fixed;
             top: -50%; left: -50%;
@@ -96,7 +89,6 @@
             opacity: 0.85;
         }
 
-        /* Nuevas animaciones fluidas y de gran dinamismo */
         @keyframes estrellaAnimFast {
             from { transform: translateY(0) translateX(0); }
             to { transform: translateY(-300px) translateX(-150px); }
@@ -129,7 +121,6 @@
         }
 
         /* ─ ANIMACIONES DE TEXTO Y TÍTULOS ─ */
-
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -144,7 +135,6 @@
         .delay-2 { animation-delay: 0.5s; }
         .delay-3 { animation-delay: 0.7s; }
 
-        /* Título principal con degradado animado */
         .brand-title {
             font-family: 'Bodoni Moda', serif;
             font-size: 72px;
@@ -214,6 +204,25 @@
             line-height: 1.6;
             border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .logo-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .custom-logo-img {
+            width: 18px; 
+            height: 18px; 
+            object-fit: contain;
+            filter: drop-shadow(0 0 4px rgba(255, 224, 102, 0.4));
         }
 
         /* ─ Panel Central (Chat) ─ */
@@ -241,12 +250,41 @@
             height: 100%;
             border-radius: 14px;
             overflow: hidden;
+            background-image: url('https://xatimg.com/image/pyaOiXKhV4GS.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.86;
+            position: relative;
         }
 
-        .chat-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        /* ─ Logo superior xat ─ */
+        .logo-tabs {
+            position: absolute;
+            top: -24px;
+            right: 20px;
+            z-index: 11;
+            text-align: right;
+            background: rgba(15, 25, 40, 0.9);
+            padding: 4px 16px;
+            border-radius: 10px 10px 0 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo-tabs .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .x-logo-svg {
+            width: 12px;
+            height: 12px;
+            fill: #fff;
         }
 
         /* ─ Panel Derecho (Reglas) ─ */
@@ -257,6 +295,8 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
         }
 
         .rules-list {
@@ -264,7 +304,12 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
+        .rules-list::-webkit-scrollbar { width: 3px; }
+        .rules-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
         .rule-item {
             font-size: 13px;
@@ -275,10 +320,64 @@
             gap: 10px;
         }
 
-        .rule-icon {
+        .rule-num {
             color: #ffe066;
             font-weight: bold;
-            margin-top: 2px;
+            font-size: 12px;
+            min-width: 20px;
+            margin-top: 1px;
+        }
+
+        .rule-content h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .rule-content p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.65);
+            font-weight: 300;
+        }
+
+        .rules-footer {
+            margin-top: 18px;
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .rules-lang {
+            display: flex;
+            gap: 6px;
+        }
+
+        .lang-btn {
+            background: rgba(15, 25, 40, 0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.8);
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .lang-btn.active {
+            background: rgba(255, 224, 102, 0.25);
+            border-color: rgba(255, 224, 102, 0.5);
+            color: #fff;
+        }
+
+        .rule-credit {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.3);
         }
 
         /* ─ Responsive Design ─ */
@@ -331,52 +430,132 @@
     <!-- Contenedor Central Principal -->
     <div class="main-scene">
 
-        <!-- Panel Izquierdo: Branding e Info (Animado) -->
+        <!-- Panel Izquierdo: Branding e Info -->
         <aside class="side-panel">
             <div class="clean-card animate-fade-in delay-1">
                 <div class="brand-eyebrow">GLOBAL COMMUNITY</div>
                 <h1 class="brand-title">Nest</h1>
-                <p class="brand-subtitle">Un espacio digital diseñado para la interacción fluida y el encuentro global.</p>
+                <div class="brand-subtitle">
+                    <span>Un espacio digital diseñado para la interacción fluida y el encuentro global.</span>
+                    <span class="logo-sub">xat.com/Nest</span>
+                    <span class="logo-sub">
+                        <img src="https://xatimg.com/image/H8ycu2lrAFG5.png" alt="Logo" class="custom-logo-img">
+                        EvX.Net
+                    </span>
+                </div>
             </div>
             <div class="clean-card animate-fade-in delay-2" style="padding: 15px; text-align: center; font-size: 11px; color: #aaa;">
                 NEST PLATFORM © 2026
             </div>
         </aside>
 
-        <!-- Panel Central: Chat (Animado) -->
+        <!-- Panel Central: Chat con Fondo de Nest e Icono de X (Twitter) -->
         <main class="chat-container">
-            <div class="chat-wrapper">
-                <!-- Iframe con colores ajustados al tema oscuro -->
-                  <!--  <iframe src="https://xat.com/embed/chat.php#id=220536079&gn=Nest" scrolling="no" frameborder="0"></iframe> -->
+            <div class="logo-tabs">
+                <svg class="x-logo-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                </svg>
+                <div class="logo-text">NEST</div>
+            </div>
+            <div class="chat-wrapper" role="img" aria-label="Chat background preview">
+                <!-- <iframe src="https://xat.com/embed/chat.php#id=220536079&gn=Nest" scrolling="no" frameborder="0"></iframe> -->
             </div>
         </main>
 
-        <!-- Panel Derecho: Reglas y Protocolo (Animado) -->
+        <!-- Panel Derecho: Reglas y Protocolo -->
         <aside class="side-panel animate-fade-in delay-3">
             <div class="clean-card">
-                <h2 class="rules-title">Protocolo</h2>
+                <h2 class="rules-title" id="rulesTitle">Protocolo</h2>
                 <ul class="rules-list">
                     <li class="rule-item">
-                        <span class="rule-icon">◆</span>
-                        <span><strong>Respeto:</strong> Mantén un trato cordial y constructivo con todos los usuarios.</span>
+                        <span class="rule-num">01</span>
+                        <div class="rule-content">
+                            <h3>Respeto</h3>
+                            <p>Mantén un trato cordial y constructivo con todos los usuarios.</p>
+                        </div>
                     </li>
                     <li class="rule-item">
-                        <span class="rule-icon">◆</span>
-                        <span><strong>Contenido:</strong> Evita el spam, flood o material inapropiado para todas las edades.</span>
+                        <span class="rule-num">02</span>
+                        <div class="rule-content">
+                            <h3>Contenido</h3>
+                            <p>Evita el spam, flood o material inapropiado para todas las edades.</p>
+                        </div>
                     </li>
                     <li class="rule-item">
-                        <span class="rule-icon">◆</span>
-                        <span><strong>Moderación:</strong> Las indicaciones del Staff son definitivas para el buen funcionamiento.</span>
+                        <span class="rule-num">03</span>
+                        <div class="rule-content">
+                            <h3>Moderación</h3>
+                            <p>Las indicaciones del Staff son definitivas para el buen funcionamiento.</p>
+                        </div>
                     </li>
                     <li class="rule-item">
-                        <span class="rule-icon">◆</span>
-                        <span><strong>Seguridad:</strong> No compartas información personal sensible en público.</span>
+                        <span class="rule-num">04</span>
+                        <div class="rule-content">
+                            <h3>Seguridad</h3>
+                            <p>No compartas información personal sensible en público.</p>
+                        </div>
                     </li>
                 </ul>
+
+                <div class="rules-footer">
+                    <div class="rules-lang" role="tablist" aria-label="Rules language">
+                        <a class="lang-btn active" href="#" data-lang="es" onclick="applyRulesLang('es'); return false;">ES</a>
+                        <a class="lang-btn" href="#" data-lang="en" onclick="applyRulesLang('en'); return false;">EN</a>
+                    </div>
+                    <div class="rule-credit">© NEST</div>
+                </div>
             </div>
         </aside>
 
     </div>
 
+    <script>
+        var rulesData = {
+            es: {
+                title: "Protocolo",
+                items: [
+                    { h: "Respeto", p: "Mantén un trato cordial y constructivo con todos los usuarios." },
+                    { h: "Contenido", p: "Evita el spam, flood o material inapropiado para todas las edades." },
+                    { h: "Moderación", p: "Las indicaciones del Staff son definitivas para el buen funcionamiento." },
+                    { h: "Seguridad", p: "No compartas información personal sensible en público." }
+                ]
+            },
+            en: {
+                title: "Protocol",
+                items: [
+                    { h: "Respect", p: "Keep a cordial and constructive attitude with all users." },
+                    { h: "Content", p: "Avoid spam, flood, or inappropriate material for all ages." },
+                    { h: "Moderation", p: "Staff instructions are final for proper room management." },
+                    { h: "Security", p: "Do not share sensitive personal information in public." }
+                ]
+            }
+        };
+
+        function applyRulesLang(lang) {
+            var data = rulesData[lang] || rulesData.es;
+            var titleEl = document.getElementById("rulesTitle");
+            if (titleEl) titleEl.textContent = data.title;
+            var items = document.querySelectorAll(".rules-list .rule-item");
+            for (var i = 0; i < items.length && i < data.items.length; i++) {
+                var h = items[i].querySelector(".rule-content h3");
+                var p = items[i].querySelector(".rule-content p");
+                if (h) h.textContent = data.items[i].h;
+                if (p) p.textContent = data.items[i].p;
+            }
+            var btns = document.querySelectorAll(".rules-lang .lang-btn");
+            for (var j = 0; j < btns.length; j++) {
+                btns[j].classList.toggle("active", btns[j].getAttribute("data-lang") === lang);
+            }
+        }
+        window.applyRulesLang = applyRulesLang;
+
+        var langBtns = document.querySelectorAll(".rules-lang .lang-btn");
+        for (var k = 0; k < langBtns.length; k++) {
+            langBtns[k].addEventListener("click", function () {
+                applyRulesLang(this.getAttribute("data-lang") || "es");
+            });
+        }
+        applyRulesLang("es");
+    </script>
 </body>
 </html>
