@@ -6,7 +6,7 @@
     <title>Nest // Deep Space</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz@6..96..1WY&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz@6..96..1VF&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         /* ─ Reset y Estilos Base ─ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -225,11 +225,11 @@
             filter: drop-shadow(0 0 4px rgba(255, 224, 102, 0.4));
         }
 
-        /* ─ Panel Central (Chat) ─ */
+        /* ─ Panel Central (Chat ajustado a altura total solicitada) ─ */
         .chat-container {
             flex: 0 0 auto;
             width: 736px;
-            height: 494px;
+            height: 590px;
             background-color: #000;
             border-radius: 18px;
             padding: 4px;
@@ -250,12 +250,15 @@
             height: 100%;
             border-radius: 14px;
             overflow: hidden;
-            background-image: url('https://xatimg.com/image/pyaOiXKhV4GS.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.86;
+            background-color: #000;
             position: relative;
+        }
+
+        .chat-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
         }
 
         /* ─ Logo superior xat ─ */
@@ -411,7 +414,7 @@
             }
             
             .chat-container {
-                height: 350px;
+                height: 480px;
             }
             
             .brand-title { font-size: 50px; }
@@ -449,7 +452,7 @@
             </div>
         </aside>
 
-        <!-- Panel Central: Chat con Fondo de Nest e Icono de X (Twitter) -->
+        <!-- Panel Central: Chat integrado con iframe activo -->
         <main class="chat-container">
             <div class="logo-tabs">
                 <svg class="x-logo-svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -457,8 +460,8 @@
                 </svg>
                 <div class="logo-text">NEST</div>
             </div>
-            <div class="chat-wrapper" role="img" aria-label="Chat background preview">
-                <!-- <iframe src="https://xat.com/embed/chat.php#id=220536079&gn=Nest" scrolling="no" frameborder="0"></iframe> -->
+            <div class="chat-wrapper" role="region" aria-label="Xat Embed Chat">
+           <!---     <iframe src="https://xat.com/embed/chat.php#id=220536079&gn=Nest" scrolling="no" allowtransparency="true"></iframe>-->
             </div>
         </main>
 
