@@ -1,36 +1,382 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-    <head>
-        <meta charset="utf-8">
-        <title>TemerX</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="TemerX">
-        <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Open+Sans&family=Oswald:wght@200;400&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <div class="jd-xatframe">
-            <div class="jd-content">
-                <aside>
-                    <div class="jd-title">
-                        <span>Bienvenidos</span>
-                        <div class="jd-env">
-                            <span style="--i:1">N</span>
-                            <span style="--i:2">E</span>
-                            <span style="--i:3">S</span>
-                            <span style="--i:4">T</span>
-                            
-                        </div>
-                        <div class="jd-pd"><h1>Chat <div><span class="jd-white">Info</span></div></h1></div>
-                        <div class="jd-desc">Dejanos tu dudas!.</div>
-                    </div>
-                </aside>
-                <section>
-                    <div class="jd-inner"></div>
-                </section>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociale | Nest // Deep Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz@6..96..1WY&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ─ Reset y Estilos Base ─ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background: transparent;
+            color: #e0e0e0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* ─ CAPAS DE FONDO ANIMADAS MEJORADAS ─ */
+
+        /* Capa 0: Color base negro azulado muy oscuro con parpadeo cósmico sutil */
+        .deep-space-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #030307;
+            z-index: -10;
+            animation: deepSpacePulse 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes deepSpacePulse {
+            0% { background-color: #030307; }
+            100% { background-color: #080512; }
+        }
+
+        /* Capa 1: Estrellas Dinámicas Multicapa con Parallax */
+        .estrellas, .estrellas-2, .estrellas-3 {
+            position: fixed;
+            top: 0; left: 0; width: 200%; height: 200%;
+            pointer-events: none;
+            z-index: -9;
+        }
+
+        /* Estrellas cercanas (rápidas y grandes) */
+        .estrellas {
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.9) 1.5px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.6) 1px, transparent 1.5px);
+            background-size: 300px 300px, 180px 180px;
+            background-position: 0 0, 20px 30px;
+            animation: estrellaAnimFast 45s linear infinite, twinkle 3s ease-in-out infinite alternate;
+            opacity: 0.9;
+        }
+
+        /* Estrellas medianas (velocidad media) */
+        .estrellas-2 {
+            background-image: 
+                radial-gradient(#00ffff, rgba(0,255,255,.5) 1px, transparent 2px),
+                radial-gradient(#ffe066, rgba(255,224,102,.4) 1px, transparent 1.5px);
+            background-size: 500px 500px, 350px 350px;
+            background-position: 50px 80px, 150px 100px;
+            animation: estrellaAnimMid 90s linear infinite, twinkle 5s ease-in-out infinite alternate-reverse;
+            opacity: 0.7;
+        }
+
+        /* Estrellas lejanas (lentas y sutiles) */
+        .estrellas-3 {
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.3) 0.8px, transparent 1.2px);
+            background-size: 700px 700px;
+            background-position: 200px 150px;
+            animation: estrellaAnimSlow 180s linear infinite;
+            opacity: 0.4;
+        }
+
+        /* Capa 2: Nebulosa Dinámica con Movimiento Orgánico Extendido y Rotación */
+        .nebulosa {
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background-image: 
+                radial-gradient(circle at 30% 40%, rgba(0, 255, 255, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 75% 25%, rgba(255, 215, 0, 0.16) 0%, transparent 50%),
+                radial-gradient(circle at 25% 75%, rgba(255, 0, 255, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(100, 50, 255, 0.15) 0%, transparent 55%);
+            filter: blur(65px);
+            animation: nebulaAnim 14s ease-in-out infinite alternate, nebulaRotate 40s linear infinite;
+            z-index: -8;
+            opacity: 0.85;
+        }
+
+        /* Nuevas animaciones fluidas y de gran dinamismo */
+        @keyframes estrellaAnimFast {
+            from { transform: translateY(0) translateX(0); }
+            to { transform: translateY(-300px) translateX(-150px); }
+        }
+
+        @keyframes estrellaAnimMid {
+            from { transform: translateY(0) translateX(0); }
+            to { transform: translateY(-500px) translateX(250px); }
+        }
+
+        @keyframes estrellaAnimSlow {
+            from { transform: translateY(0) translateX(0); }
+            to { transform: translateY(-700px) translateX(-350px); }
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes nebulaAnim {
+            0% { transform: translate(-8%, -8%) scale(1); filter: blur(55px); }
+            50% { transform: translate(8%, 6%) scale(1.25); filter: blur(75px); }
+            100% { transform: translate(-6%, 8%) scale(1.1); filter: blur(65px); }
+        }
+
+        @keyframes nebulaRotate {
+            from { transform: rotate(0deg) scale(1.1); }
+            to { transform: rotate(360deg) scale(1.1); }
+        }
+
+        /* ─ ANIMACIONES DE TEXTO Y TÍTULOS ─ */
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .delay-1 { animation-delay: 0.3s; }
+        .delay-2 { animation-delay: 0.5s; }
+        .delay-3 { animation-delay: 0.7s; }
+
+        /* Título principal con degradado animado */
+        .brand-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 72px;
+            font-weight: 400;
+            line-height: 0.9;
+            background: linear-gradient(90deg, #ffffff, #ffe066, #00ffff, #ffffff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientText 6s ease infinite;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(255, 224, 102, 0.3);
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ─ Contenedor Principal ─ */
+        .main-scene {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            width: 95%;
+            max-width: 1280px;
+            height: 90vh;
+            max-height: 650px;
+            z-index: 1;
+        }
+
+        /* ─ Paneles Laterales ─ */
+        .side-panel {
+            flex: 1;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .clean-card {
+            background: rgba(20, 20, 30, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* ─ Panel Izquierdo (Branding) ─ */
+        .brand-eyebrow {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #aaa;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .brand-subtitle {
+            font-size: 14px;
+            color: #ccc;
+            font-weight: 300;
+            line-height: 1.6;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+        }
+
+        /* ─ Panel Central (Chat) ─ */
+        .chat-container {
+            flex: 0 0 auto;
+            width: 736px;
+            height: 494px;
+            background-color: #000;
+            border-radius: 18px;
+            padding: 4px;
+            border: 1px solid rgba(255, 235, 59, 0.15);
+            box-shadow: 0 0 40px rgba(255, 235, 59, 0.2);
+            overflow: hidden;
+            position: relative;
+            animation: softGlow 6s infinite alternate;
+        }
+        
+        @keyframes softGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 235, 59, 0.15); border-color: rgba(255, 235, 59, 0.15); }
+            50% { box-shadow: 0 0 50px rgba(255, 235, 59, 0.3); border-color: rgba(255, 235, 59, 0.4); }
+        }
+
+        .chat-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .chat-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ─ Panel Derecho (Reglas) ─ */
+        .rules-title {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .rules-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .rule-item {
+            font-size: 13px;
+            color: #ddd;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .rule-icon {
+            color: #ffe066;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        /* ─ Responsive Design ─ */
+        @media (max-width: 1300px) {
+            .main-scene {
+                flex-direction: column;
+                height: auto;
+                max-height: none;
+                padding: 40px 20px;
+            }
+
+            .side-panel {
+                order: 2;
+                max-width: 736px;
+                flex-direction: row;
+                justify-content: center;
+                margin-top: 30px;
+            }
+
+            .chat-container {
+                order: 1;
+                width: 100%;
+                max-width: 736px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .side-panel {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .chat-container {
+                height: 350px;
+            }
+            
+            .brand-title { font-size: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CAPAS DE FONDO MEJORADAS CON MÁS MOVIMIENTO -->
+    <div class="deep-space-bg"></div>
+    <div class="estrellas"></div>
+    <div class="estrellas-2"></div>
+    <div class="estrellas-3"></div>
+    <div class="nebulosa"></div>
+
+    <!-- Contenedor Central Principal -->
+    <div class="main-scene">
+
+        <!-- Panel Izquierdo: Branding e Info (Animado) -->
+        <aside class="side-panel">
+            <div class="clean-card animate-fade-in delay-1">
+                <div class="brand-eyebrow">GLOBAL COMMUNITY</div>
+                <h1 class="brand-title">Nest</h1>
+                <p class="brand-subtitle">Un espacio digital diseñado para la interacción fluida y el encuentro global.</p>
             </div>
-        </div>
-        <canvas></canvas>
-        <script src="script.js"></script>
-    </body>
+            <div class="clean-card animate-fade-in delay-2" style="padding: 15px; text-align: center; font-size: 11px; color: #aaa;">
+                NEST PLATFORM © 2026
+            </div>
+        </aside>
+
+        <!-- Panel Central: Chat (Animado) -->
+        <main class="chat-container">
+            <div class="chat-wrapper">
+                <!-- Iframe con colores ajustados al tema oscuro -->
+                <iframe src="https://xat.com/embed/chat.php#id=220536079&gn=Nest" scrolling="no" frameborder="0"></iframe>
+            </div>
+        </main>
+
+        <!-- Panel Derecho: Reglas y Protocolo (Animado) -->
+        <aside class="side-panel animate-fade-in delay-3">
+            <div class="clean-card">
+                <h2 class="rules-title">Protocolo</h2>
+                <ul class="rules-list">
+                    <li class="rule-item">
+                        <span class="rule-icon">◆</span>
+                        <span><strong>Respeto:</strong> Mantén un trato cordial y constructivo con todos los usuarios.</span>
+                    </li>
+                    <li class="rule-item">
+                        <span class="rule-icon">◆</span>
+                        <span><strong>Contenido:</strong> Evita el spam, flood o material inapropiado para todas las edades.</span>
+                    </li>
+                    <li class="rule-item">
+                        <span class="rule-icon">◆</span>
+                        <span><strong>Moderación:</strong> Las indicaciones del Staff son definitivas para el buen funcionamiento.</span>
+                    </li>
+                    <li class="rule-item">
+                        <span class="rule-icon">◆</span>
+                        <span><strong>Seguridad:</strong> No compartas información personal sensible en público.</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+</body>
 </html>
