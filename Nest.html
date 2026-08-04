@@ -3,595 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nest // Deep Space2.3</title>
+    <title>NEST - International Room</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz@6..96..1VF&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Fonturi moderne si elegante -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        /* ─ Reset y Estilos Base ─ */
+        :root {
+            --glass-bg: rgba(15, 25, 40, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+            --accent-glow: #4a90e2;
+            --shimmer-a: rgba(255, 255, 255, 0.72);
+            --shimmer-b: rgba(125, 211, 252, 0.95);
+            --shimmer-c: rgba(255, 255, 255, 0.96);
+            --edge-glow: rgba(96, 165, 250, 0.55);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body, html {
-            height: 100%;
-            width: 100%;
-            font-family: 'Montserrat', sans-serif;
+        html, body {
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: 'Outfit', sans-serif; color: var(--text-primary);
             background: transparent;
-            color: #e0e0e0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        }
+
+        #bgPhoto { position: fixed; inset: 0; background: url("https://wallpaperaccess.com/full/20457670.gif") center/cover no-repeat; z-index: 0; }
+        #bgOverlay { position: fixed; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(12, 19, 37, 0.15), rgba(8, 13, 24, 0.78) 55%, rgba(8, 13, 24, 0.92)); z-index: 1; }
+
+        @keyframes textShimmer { 0% { background-position: 0% 50%; } 55% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes borderFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes panelSheen { 0% { transform: translateX(-45%) rotate(8deg); opacity: 0; } 12% { opacity: 0.7; } 45% { opacity: 0.08; } 100% { transform: translateX(45%) rotate(8deg); opacity: 0; } }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.22; } 55% { opacity: 0.45; } }
+
+        .scene {
+            position: relative; width: 100vw; height: 100vh; overflow: hidden;
+            z-index: 2;
+        }
+
+        /* ── Moon ────────────────────────────────── */
+        .moon, .moon-glow {
+            position: absolute; top: 5%; left: 18%; width: 220px; height: 220px;
+            border-radius: 50%; pointer-events: none; z-index: 2;
+        }
+        .moon {
+            background: radial-gradient(circle at 40% 38%, #e8e4d8 0%, #c9c4b0 30%, #a09880 60%, #6b6350 100%);
+            box-shadow: 0 0 40px rgba(200, 195, 170, 0.25), 0 0 100px rgba(180, 175, 150, 0.12), 0 0 200px rgba(160, 155, 130, 0.06);
+        }
+        .moon::before {
+            content: ""; position: absolute; top: 25%; left: 30%; width: 30px; height: 28px;
+            border-radius: 50%; background: rgba(100, 95, 75, 0.25);
+            box-shadow: 45px 15px 0 8px rgba(100, 95, 75, 0.15), -10px 40px 0 4px rgba(100, 95, 75, 0.2), 30px 50px 0 12px rgba(100, 95, 75, 0.12), 60px -10px 0 6px rgba(100, 95, 75, 0.18), -5px -5px 0 15px rgba(100, 95, 75, 0.08);
+        }
+        .moon-glow {
+            background: radial-gradient(circle, rgba(200, 195, 170, 0.08) 0%, transparent 70%);
+            transform: scale(2.5);
+        }
+
+        /* ── Fog layers ─────── */
+        .fog { position: absolute; pointer-events: none; filter: blur(35px); z-index: 3; }
+        .fog-1 { top: 2%; left: -5%; width: 60%; height: 150px; background: radial-gradient(ellipse at 50% 50%, rgba(140, 150, 180, 0.25) 0%, transparent 70%); animation: fogFloat1 25s ease-in-out infinite; }
+        .fog-2 { top: 10%; left: 30%; width: 55%; height: 120px; background: radial-gradient(ellipse at 50% 50%, rgba(160, 165, 195, 0.22) 0%, transparent 65%); animation: fogFloat2 30s ease-in-out infinite; }
+        .fog-3 { top: 6%; left: 10%; width: 50%; height: 180px; background: radial-gradient(ellipse at 50% 50%, rgba(120, 130, 165, 0.18) 0%, transparent 65%); z-index: 4; animation: fogFloat3 20s ease-in-out infinite; }
+
+        @keyframes fogFloat1 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(200px); } }
+        @keyframes fogFloat2 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-250px); } }
+        @keyframes fogFloat3 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(180px); } }
+
+        /* ── Stars ───────────────────────────────── */
+        .stars, #shootingStars { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+        .star { position: absolute; border-radius: 50%; background: #fff; will-change: opacity, transform; }
+        @keyframes twinkle { 0%, 100% { opacity: var(--base-opacity, 0.3); } 50% { opacity: var(--peak-opacity, 1); } }
+
+        /* ── Shooting star ──────────────────────── */
+        .shooting-star {
+            position: absolute; width: 80px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8));
+            border-radius: 1px; opacity: 0; z-index: 2; transform: rotate(35deg);
+            animation: shoot 1.2s ease-out forwards;
+        }
+        .shooting-star::before {
+            content: ""; position: absolute; right: 0; top: -1px; width: 4px; height: 3px;
+            border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(200, 210, 255, 0.6);
+        }
+        @keyframes shoot { 0% { transform: rotate(var(--angle, 35deg)) translateX(0); opacity: 0; } 5% { opacity: 1; } 70% { opacity: 0.6; } 100% { transform: rotate(var(--angle, 35deg)) translateX(350px); opacity: 0; } }
+
+        /* ── Lightning ──────────────────────── */
+        .lightning-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+        .flash-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 50% 20%, rgba(160, 180, 255, 0.25), transparent 70%); opacity: 0; pointer-events: none; z-index: 6; transition: opacity 0.05s ease-out; }
+
+        /* ── Chat backdrop (STRUCTURA ORIGINALĂ PĂSTRATĂ) ───────────────── */
+        .chat-backdrop {
+            position: absolute; top: 93px; left: 50.25%; transform: translateX(-50%);
+            width: 728px; height: 486px; border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Bordura de sticlă */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            z-index: 10; pointer-events: none; overflow: hidden; 
+            background-image: url('https://xatimg.com/image/IYW3LlkEK3X6.png');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            position: absolute;
+            opacity: 0.86;
+        }
+
+        /* ── Logo de sus (Pentru xat) ───────────────────────── */
+        .logo-tabs {
+            position: absolute; right: calc(50.25% - 189px + 10px); top: 446px;
+            transform: translateY(-50%); z-index: 11; text-align: right;
+            background: rgba(15, 25, 40, 0.8); padding: 4px 16px;
+            border-radius: 10px 10px 0 0; border: 1px solid rgba(255,255,255,0.1); border-bottom: none;
+            isolation: isolate;
+        }
+        .logo-tabs .logo-text {
+            font-family: 'Outfit', sans-serif; font-size: 0.8rem; letter-spacing: 2px; font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
             position: relative;
+            z-index: 2;
         }
 
-        /* ─ CAPAS DE FONDO ANIMADAS MEJORADAS ─ */
-        .deep-space-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #030307;
-            z-index: -10;
-            animation: deepSpacePulse 12s ease-in-out infinite alternate;
+        /* ── Panou Stanga: Logo ─────────────────────────────── */
+        .logo-area { 
+            position:absolute; left:80px; top:50%; transform:translateY(-50%); 
+            z-index:15; text-align:left; color:#fff; 
+        }
+        .eyebrow { 
+            font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; 
+            color: var(--accent-glow); font-weight: 500; margin-bottom: 10px; 
+        }
+        h1.logo-text { 
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(48px, 5vw, 72px); font-weight: 600; line-height: 0.9;
+            background: linear-gradient(90deg, var(--shimmer-a) 0%, var(--shimmer-b) 35%, var(--shimmer-c) 50%, var(--shimmer-b) 65%, var(--shimmer-a) 100%);
+            background-size: 240% 100%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: textShimmer 75s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(74, 144, 226, 0.32), 0 0 90px rgba(96, 165, 250, 0.12);
+            margin-bottom: 10px;
+        }
+        .logo-sub { 
+            font-size: 1rem; font-weight: 300; color: var(--text-secondary); 
+            display: flex; align-items: center; gap: 8px; margin-top: 10px; 
+        }
+        .mewbots-icon { 
+            width: 18px; height: 18px; stroke: var(--accent-glow); 
+            fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; 
         }
 
-        @keyframes deepSpacePulse {
-            0% { background-color: #030307; }
-            100% { background-color: #080512; }
+        /* ── Panou Dreapta: Reguli (Sticla) ─────────────────── */
+        .rules-panel {
+            position: absolute; top: 449px; right: 5%;
+            transform: translateY(-50%) perspective(800px) rotateY(-10deg);
+            transform-origin: left center; width: clamp(240px, 18vw, 310px); z-index: 15;
+            display: flex; flex-direction: column; padding: 24px;
+            background: rgba(15, 25, 40, 0.45); /* Glassmorphism */
+            backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
+            overflow: hidden;
+            isolation: isolate;
+            pointer-events: auto;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
         }
-
-        .estrellas, .estrellas-2, .estrellas-3 {
-            position: fixed;
-            top: 0; left: 0; width: 200%; height: 200%;
+        .rules-panel:hover { transform: translateY(-50%) perspective(800px) rotateY(-6deg) translateZ(0); box-shadow: 0 28px 80px rgba(0,0,0,0.48), inset 0 1px 1px rgba(255,255,255,0.1); }
+        .rules-panel > * { position: relative; z-index: 2; }
+        .rules-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(110deg, rgba(96, 165, 250, 0.0), var(--edge-glow), rgba(255, 255, 255, 0.14), var(--edge-glow), rgba(96, 165, 250, 0.0));
+            background-size: 280% 280%;
+            animation: borderFlow 9.2s ease-in-out infinite;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
             pointer-events: none;
-            z-index: -9;
-        }
-
-        .estrellas {
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.9) 1.5px, transparent 2px),
-                radial-gradient(white, rgba(255,255,255,.6) 1px, transparent 1.5px);
-            background-size: 300px 300px, 180px 180px;
-            background-position: 0 0, 20px 30px;
-            animation: estrellaAnimFast 45s linear infinite, twinkle 3s ease-in-out infinite alternate;
             opacity: 0.9;
+            z-index: 0;
         }
-
-        .estrellas-2 {
-            background-image: 
-                radial-gradient(#00ffff, rgba(0,255,255,.5) 1px, transparent 2px),
-                radial-gradient(#ffe066, rgba(255,224,102,.4) 1px, transparent 1.5px);
-            background-size: 500px 500px, 350px 350px;
-            background-position: 50px 80px, 150px 100px;
-            animation: estrellaAnimMid 90s linear infinite, twinkle 5s ease-in-out infinite alternate-reverse;
-            opacity: 0.7;
-        }
-
-        .estrellas-3 {
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.3) 0.8px, transparent 1.2px);
-            background-size: 700px 700px;
-            background-position: 200px 150px;
-            animation: estrellaAnimSlow 180s linear infinite;
-            opacity: 0.4;
-        }
-
-        .nebulosa {
-            position: fixed;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background-image: 
-                radial-gradient(circle at 30% 40%, rgba(0, 255, 255, 0.22) 0%, transparent 45%),
-                radial-gradient(circle at 75% 25%, rgba(255, 215, 0, 0.16) 0%, transparent 50%),
-                radial-gradient(circle at 25% 75%, rgba(255, 0, 255, 0.18) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(100, 50, 255, 0.15) 0%, transparent 55%);
-            filter: blur(65px);
-            animation: nebulaAnim 14s ease-in-out infinite alternate, nebulaRotate 40s linear infinite;
-            z-index: -8;
-            opacity: 0.85;
-        }
-
-        @keyframes estrellaAnimFast {
-            from { transform: translateY(0) translateX(0); }
-            to { transform: translateY(-300px) translateX(-150px); }
-        }
-
-        @keyframes estrellaAnimMid {
-            from { transform: translateY(0) translateX(0); }
-            to { transform: translateY(-500px) translateX(250px); }
-        }
-
-        @keyframes estrellaAnimSlow {
-            from { transform: translateY(0) translateX(0); }
-            to { transform: translateY(-700px) translateX(-350px); }
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes nebulaAnim {
-            0% { transform: translate(-8%, -8%) scale(1); filter: blur(55px); }
-            50% { transform: translate(8%, 6%) scale(1.25); filter: blur(75px); }
-            100% { transform: translate(-6%, 8%) scale(1.1); filter: blur(65px); }
-        }
-
-        @keyframes nebulaRotate {
-            from { transform: rotate(0deg) scale(1.1); }
-            to { transform: rotate(360deg) scale(1.1); }
-        }
-
-        /* ─ ANIMACIONES DE TEXTO Y TÍTULOS ─ */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade-in {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-        }
-        
-        .delay-1 { animation-delay: 0.3s; }
-        .delay-2 { animation-delay: 0.5s; }
-        .delay-3 { animation-delay: 0.7s; }
-
-        .brand-title {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 72px;
-            font-weight: 400;
-            line-height: 0.9;
-            background: linear-gradient(90deg, #ffffff, #ffe066, #00ffff, #ffffff);
-            background-size: 300% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: gradientText 6s ease infinite;
-            margin-bottom: 15px;
-            text-shadow: 0 0 30px rgba(255, 224, 102, 0.3);
-        }
-
-        @keyframes gradientText {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* ─ Contenedor Principal ─ */
-        .main-scene {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-            justify-content: center;
-            width: 95%;
-            max-width: 1280px;
-            height: 90vh;
-            max-height: 650px;
+        .rules-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: linear-gradient(110deg, transparent 42%, rgba(255, 255, 255, 0.07) 50%, transparent 58%);
+            mix-blend-mode: screen;
+            animation: panelSheen 7.8s ease-in-out infinite;
+            pointer-events: none;
             z-index: 1;
         }
 
-        /* ─ Paneles Laterales ─ */
-        .side-panel {
-            flex: 1;
-            max-width: 320px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .rules-header {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic;
+            margin-bottom: 24px;
+            background: linear-gradient(90deg, var(--shimmer-a) 0%, var(--shimmer-b) 35%, var(--shimmer-c) 50%, var(--shimmer-b) 65%, var(--shimmer-a) 100%);
+            background-size: 220% 100%;
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+            animation: textShimmer 90s ease-in-out infinite;
+            text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
         }
-
-        .clean-card {
-            background: rgba(20, 20, 30, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        /* ─ Panel Izquierdo (Branding) ─ */
-        .brand-eyebrow {
-            font-size: 11px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #aaa;
-            font-weight: 400;
-            margin-bottom: 5px;
-        }
-
-        .brand-subtitle {
-            font-size: 14px;
-            color: #ccc;
-            font-weight: 300;
-            line-height: 1.6;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .logo-sub {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.65);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        .custom-logo-img {
-            width: 18px; 
-            height: 18px; 
-            object-fit: contain;
-            filter: drop-shadow(0 0 4px rgba(255, 224, 102, 0.4));
-        }
-
-        /* ─ Columna Central (Agrupa el chat y el bloque de publicidad inferior por separado manteniendo el tamaño original del chat) ─ */
-        .center-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            flex: 0 0 auto;
-        }
-
-        /* ─ Panel Central (Dimensiones originales restauradas) ─ */
-        .chat-container {
-            width: 736px;
-            height: 494px;
-            background-color: #000;
-            border-radius: 18px;
-            padding: 4px;
-            border: 1px solid rgba(255, 235, 59, 0.15);
-            box-shadow: 0 0 40px rgba(255, 235, 59, 0.2);
-            overflow: hidden;
-            position: relative;
-            animation: softGlow 6s infinite alternate;
-        }
-        
-        @keyframes softGlow {
-            0%, 100% { box-shadow: 0 0 30px rgba(255, 235, 59, 0.15); border-color: rgba(255, 235, 59, 0.15); }
-            50% { box-shadow: 0 0 50px rgba(255, 235, 59, 0.3); border-color: rgba(255, 235, 59, 0.4); }
-        }
-
-        .chat-wrapper {
-            width: 100%;
-            height: 100%;
-            border-radius: 14px;
-            overflow: hidden;
-            background-image: url('https://xatimg.com/image/pyaOiXKhV4GS.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.86;
-            position: relative;
-        }
-
-        .chat-wrapper iframe#embedframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        /* ─ Recuadro Adicional de Publicidad Inferior ─ */
-        .promo-container {
-            width: 736px;
-            background: rgba(20, 20, 30, 0.6);
-            border: 1px solid rgba(255, 235, 59, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 14px;
-            padding: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .promo-container iframe#promoframe {
-            width: 728px;
-            height: 90px;
-            border: none;
-            display: block;
-            border-radius: 8px;
-        }
-
-        #space16 {
-            display: none; /* Reemplazado por el gap ordenado de la columna */
-        }
-
-        /* ─ Logo superior xat ─ */
-        .logo-tabs {
-            position: absolute;
-            top: -24px;
-            right: 20px;
-            z-index: 11;
-            text-align: right;
-            background: rgba(15, 25, 40, 0.9);
-            padding: 4px 16px;
-            border-radius: 10px 10px 0 0;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-bottom: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .logo-tabs .logo-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            font-weight: 700;
-            color: #fff;
-        }
-        .x-logo-svg {
-            width: 12px;
-            height: 12px;
-            fill: #fff;
-        }
-
-        /* ─ Panel Derecho (Reglas) ─ */
-        .rules-title {
-            font-size: 18px;
-            color: #fff;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            font-family: 'Bodoni Moda', serif;
-            font-style: italic;
-        }
-
-        .rules-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            max-height: 320px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .rules-list::-webkit-scrollbar { width: 3px; }
-        .rules-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-        .rule-item {
-            font-size: 13px;
-            color: #ddd;
-            line-height: 1.6;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .rule-num {
-            color: #ffe066;
-            font-weight: bold;
-            font-size: 12px;
-            min-width: 20px;
-            margin-top: 1px;
-        }
-
-        .rule-content h3 {
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 2px;
-        }
-
-        .rule-content p {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.65);
-            font-weight: 300;
-        }
-
-        .rules-footer {
-            margin-top: 18px;
-            padding-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 1px solid rgba(255,255,255,0.08);
-        }
-
         .rules-lang {
             display: flex;
             gap: 6px;
+            justify-content: center;
+            margin: 0;
+            pointer-events: auto;
+            position: relative;
+            z-index: 3;
         }
-
         .lang-btn {
-            background: rgba(15, 25, 40, 0.5);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.8);
-            padding: 4px 9px;
+            appearance: none;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(15, 25, 40, 0.35);
+            color: rgba(255,255,255,0.85);
+            padding: 6px 10px;
             border-radius: 999px;
-            font-size: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 650;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
+            cursor: pointer;
+            backdrop-filter: blur(10px) saturate(140%);
+            -webkit-backdrop-filter: blur(10px) saturate(140%);
+            text-decoration: none;
+            line-height: 1;
         }
-
         .lang-btn.active {
-            background: rgba(255, 224, 102, 0.25);
-            border-color: rgba(255, 224, 102, 0.5);
+            background: rgba(74, 144, 226, 0.22);
+            border-color: rgba(74, 144, 226, 0.4);
             color: #fff;
+            box-shadow: 0 0 0 1px rgba(74, 144, 226, 0.18), 0 10px 24px rgba(0,0,0,0.28);
         }
-
-        .rule-credit {
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.3);
+        .rule-item { display: flex; gap: 14px; margin-bottom: 20px; transition: transform 0.3s ease; }
+        .rule-item:hover { transform: none; }
+        .rule-num {
+            font-size: 1rem; font-weight: 800; min-width: 20px; letter-spacing: 0.02em;
+            background: linear-gradient(90deg, rgba(96, 165, 250, 0.65) 0%, var(--shimmer-b) 45%, rgba(255, 255, 255, 0.85) 55%, var(--shimmer-b) 70%, rgba(96, 165, 250, 0.55) 100%);
+            background-size: 220% 100%;
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+            animation: textShimmer 105s ease-in-out infinite;
+            text-shadow: 0 0 14px rgba(96, 165, 250, 0.25);
+            opacity: 0.95;
         }
+        .rule-content p { font-size: 0.75rem; font-weight: 300; line-height: 1.5; color: var(--text-secondary); }
+        .rules-footer { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.08); }
+        .rule-credit { text-align: right; font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); }
 
-        /* ─ Responsive Design ─ */
-        @media (max-width: 1350px) {
-            .main-scene {
-                flex-direction: column;
-                height: auto;
-                max-height: none;
-                padding: 40px 20px;
-            }
 
-            .side-panel {
-                order: 2;
-                max-width: 736px;
-                flex-direction: row;
-                justify-content: center;
-                margin-top: 20px;
-            }
-
-            .center-column {
-                order: 1;
-                width: 100%;
-                max-width: 736px;
-            }
+        @media (prefers-reduced-motion: reduce) {
+            .rules-panel, .rules-panel::before, .rules-panel::after,
+            .logo-tabs .logo-text, h1.logo-text, .rules-header, .rule-num { animation: none !important; transition: none !important; }
+            .logo-tabs .logo-text, h1.logo-text, .rules-header, .rule-num { background-position: 50% 50% !important; }
+            .rules-panel::before { background-position: 50% 50% !important; }
+            .rules-panel::after { transform: translateX(0) rotate(8deg) !important; opacity: 0.12 !important; }
         }
+        html { --fx-play: running; }
+        .eco { --fx-play: paused; }
+        .eco.fx-active { --fx-play: running; }
+        .fog, .star, .shooting-star,
+        .rules-panel::before, .rules-panel::after,
+        h1.logo-text, .rules-header, .rule-num { animation-play-state: var(--fx-play) !important; }
 
-        @media (max-width: 768px) {
-            .side-panel {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .chat-container {
-                height: 350px;
-            }
-
-            .chat-container, .promo-container {
-                width: 100%;
-            }
-
-            .promo-container iframe#promoframe {
-                width: 100%;
-            }
-            
-            .brand-title { font-size: 50px; }
+        /* ── Responsive ─────────────────────────────────── */
+        @media (max-width: 960px) {
+            .rules-panel { display: none; }
+            .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
         }
+        @media (max-aspect-ratio: 3/4) {
+            .moon, .moon-glow, .fog { display: none !important; }
+            .rules-panel { display: none !important; }
+            .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
+        }
+        @media (min-aspect-ratio: 10/9) and (max-aspect-ratio: 16/10) {
+            .moon, .moon-glow, .fog { display: none !important; }
+            .rules-panel { display: none !important; }
+            .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
+        }
+        .paused, .paused *, .paused::before, .paused::after, .paused *::before, .paused *::after { animation-play-state: paused !important; }
     </style>
 </head>
 <body>
+    <div id="bgPhoto"></div>
+    <div id="bgOverlay"></div>
 
-    <!-- CAPAS DE FONDO MEJORADAS CON MÁS MOVIMIENTO -->
-    <div class="deep-space-bg"></div>
-    <div class="estrellas"></div>
-    <div class="estrellas-2"></div>
-    <div class="estrellas-3"></div>
-    <div class="nebulosa"></div>
+    <div class="scene">
+        <!-- Elemente Atmosferice (Stele, Luna, Ceața, Fulgere) -->
+        <div class="moon-glow" aria-hidden="true"></div>
+        <div class="moon" aria-hidden="true"></div>
+        <div class="stars" id="stars" aria-hidden="true"></div>
+        <div id="shootingStars" aria-hidden="true"></div>
+        <div class="flash-overlay" id="flashOverlay" aria-hidden="true"></div>
+        <div class="lightning-container" id="lightningContainer" aria-hidden="true"></div>
+        <div class="fog fog-1" aria-hidden="true"></div>
+        <div class="fog fog-2" aria-hidden="true"></div>
+        <div class="fog fog-3" aria-hidden="true"></div>
 
-    <!-- Contenedor Central Principal -->
-    <div class="main-scene">
-
-        <!-- Panel Izquierdo: Branding e Info -->
-        <aside class="side-panel">
-            <div class="clean-card animate-fade-in delay-1">
-                <div class="brand-eyebrow">GLOBAL COMMUNITY</div>
-                <h1 class="brand-title">Nest</h1>
-                <div class="brand-subtitle">
-                    <span>Un espacio digital diseñado para la interacción fluida y el encuentro global.</span>
-                    <span class="logo-sub">xat.com/Nest</span>
-                    <span class="logo-sub">
-                        <img src="https://xatimg.com/image/H8ycu2lrAFG5.png" alt="Logo" class="custom-logo-img">
-                        EvX.Net
-                    </span>
-                </div>
-            </div>
-            <div class="clean-card animate-fade-in delay-2" style="padding: 15px; text-align: center; font-size: 11px; color: #aaa;">
-                NEST PLATFORM © 2026
-            </div>
-        </aside>
-
-        <!-- Columna Central: Contiene el chat en sus dimensiones originales intactas y añade el recuadro separado para la publicidad abajo -->
-        <div class="center-column">
-            <main class="chat-container">
-                <div class="logo-tabs">
-                    <svg class="x-logo-svg" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                    </svg>
-                    <div class="logo-text">NEST</div>
-                </div>
-                <div class="chat-wrapper" role="region" aria-label="Chat container preview">
-                    <iframe name="box" id="embedframe"></iframe>
-                </div>
-            </main>
-
-            <!-- Recuadro Adicional Exclusivo para la Publicidad -->
-            <div class="promo-container">
-                <iframe id="promoframe" src="/content/web/R00248/apps/abx/abx.html" scrolling="no" sandbox="allow-scripts allow-same-origin allow-top-navigation" allowtransparency="true"></iframe>
+        <!-- Logo (Stânga) -->
+        <div class="logo-area">
+            <div class="eyebrow">International Room</div>
+            <h1 class="logo-text">NEST</h1>
+            <div class="logo-sub">xat.com/NEST</div>
+            <div class="logo-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="mewbots-icon" aria-hidden="true">
+                    <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z"></path>
+                    <path d="M8 14v.5"></path><path d="M16 14v.5"></path><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"></path>
+                </svg>
+                MewBots.com
             </div>
         </div>
 
-        <!-- Panel Derecho: Reglas y Protocolo -->
-        <aside class="side-panel animate-fade-in delay-3">
-            <div class="clean-card">
-                <h2 class="rules-title" id="rulesTitle">Protocolo</h2>
-                <ul class="rules-list">
-                    <li class="rule-item">
-                        <span class="rule-num">01</span>
-                        <div class="rule-content">
-                            <h3>Respeto</h3>
-                            <p>Mantén un trato cordial y constructivo con todos los usuarios.</p>
-                        </div>
-                    </li>
-                    <li class="rule-item">
-                        <span class="rule-num">02</span>
-                        <div class="rule-content">
-                            <h3>Contenido</h3>
-                            <p>Evita el spam, flood o material inapropiado para todas las edades.</p>
-                        </div>
-                    </li>
-                    <li class="rule-item">
-                        <span class="rule-num">03</span>
-                        <div class="rule-content">
-                            <h3>Moderación</h3>
-                            <p>Las indicaciones del Staff son definitivas para el buen funcionamiento.</p>
-                        </div>
-                    </li>
-                    <li class="rule-item">
-                        <span class="rule-num">04</span>
-                        <div class="rule-content">
-                            <h3>Seguridad</h3>
-                            <p>No compartas información personal sensible en público.</p>
-                        </div>
-                    </li>
-                </ul>
+        <!-- Chat backdrop (La locul lui, fix ca în xat) -->
+        <div class="chat-backdrop" role="img" aria-label="Chat background preview"></div>
 
-                <div class="rules-footer">
-                    <div class="rules-lang" role="tablist" aria-label="Rules language">
-                        <a class="lang-btn active" href="#" data-lang="es" onclick="applyRulesLang('es'); return false;">ES</a>
-                        <a class="lang-btn" href="#" data-lang="en" onclick="applyRulesLang('en'); return false;">EN</a>
-                    </div>
-                    <div class="rule-credit">© NEST</div>
+        <!-- Logo de sus (Pentru xat) -->
+        <div class="logo-tabs">
+            <div class="logo-text">NEST</div>
+        </div>
+
+        <!-- Reguli (Dreapta - Efect Sticlă) -->
+        <aside class="rules-panel">
+            <div class="rules-header" id="rulesTitle">Community Rules</div>
+            
+            <div class="rule-item">
+                <div class="rule-num">01</div>
+                <div class="rule-content">
+                    <h3>Freedom of Expression</h3>
+                    <p>Feel free to chat and express yourself. All languages are allowed.</p>
                 </div>
             </div>
-        </aside>
+            <div class="rule-item">
+                <div class="rule-num">02</div>
+                <div class="rule-content">
+                    <h3>Mutual Respect</h3>
+                    <p>Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-num">03</div>
+                <div class="rule-content">
+                    <h3>Respect for the Staff</h3>
+                    <p>All staff members must be treated with respect. Disrespect or undermining staff may result in a ban.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-num">04</div>
+                <div class="rule-content">
+                    <h3>Transparency</h3>
+                    <p>Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+    <div class="rule-num">05</div>
+    <div class="rule-content">
+        <h3>Staff Impartiality</h3>
+        <p>Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial.</p>
+    </div>
+</div>
 
+<div class="rule-item">
+    <div class="rule-num">06</div>
+    <div class="rule-content">
+        <h3>Anti-Spam</h3>
+        <p>Users who spam the chat with emojis or multiple consecutive messages will receive a permanent XP ban.</p>
+    </div>
+</div>
+
+            <div class="rules-footer">
+                <div class="rules-lang" role="tablist" aria-label="Rules language">
+                    <a class="lang-btn active" href="#" data-lang="en" onclick="applyRulesLang('en'); return false;">EN</a>
+                    <a class="lang-btn" href="#" data-lang="ro" onclick="applyRulesLang('ro'); return false;">RO</a>
+                    <a class="lang-btn" href="#" data-lang="it" onclick="applyRulesLang('it'); return false;">IT</a>
+                    <a class="lang-btn" href="#" data-lang="es" onclick="applyRulesLang('es'); return false;">ES</a>
+                </div>
+                <div class="rule-credit">© NEST</div>
+            </div>
+        </aside>
     </div>
 
     <script>
+        var eco = false;
+        try {
+            eco = window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+                (navigator.connection && navigator.connection.saveData);
+        } catch (e) {}
+        if (eco) document.documentElement.classList.add("eco");
+
         var rulesData = {
-            es: {
-                title: "Protocolo",
+            en: {
+                title: "Community Rules",
                 items: [
-                    { h: "Respeto", p: "Mantén un trato cordial y constructivo con todos los usuarios." },
-                    { h: "Contenido", p: "Evita el spam, flood o material inapropiado para todas las edades." },
-                    { h: "Moderación", p: "Las indicaciones del Staff son definitivas para el buen funcionamiento." },
-                    { h: "Seguridad", p: "No compartas información personal sensible en público." }
+                    { h: "Freedom of Expression", p: "Feel free to chat and express yourself. All languages are allowed." },
+                    { h: "Mutual Respect", p: "Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated." },
+                    { h: "Respect for the Staff", p: "All staff members must be treated with respect. Disrespect or undermining staff may result in a ban." },
+                    { h: "Transparency", p: "Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt." },
+                    { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." },
+                    { h: "Anti-Spam", p: "Users who spam the chat with emojis or multiple consecutive messages will receive a permanent XP ban." }
                 ]
             },
-            en: {
-                title: "Protocol",
+            ro: {
+                title: "Regulile Comunității",
                 items: [
-                    { h: "Respect", p: "Keep a cordial and constructive attitude with all users." },
-                    { h: "Content", p: "Avoid spam, flood, or inappropriate material for all ages." },
-                    { h: "Moderation", p: "Staff instructions are final for proper room management." },
-                    { h: "Security", p: "Do not share sensitive personal information in public." }
+                    { h: "Libertate de exprimare", p: "Poți discuta liber și să te exprimi. Toate limbile sunt permise." },
+                    { h: "Respect reciproc", p: "Insultele personale, limbajul excesiv de vulgar, provocările constante sau hărțuirea nu vor fi tolerate." },
+                    { h: "Respect față de staff", p: "Toți membrii staff-ului trebuie tratați cu respect. Disprețul sau subminarea staff-ului poate duce la ban." },
+                    { h: "Transparență", p: "Banurile mai lungi de 10 ore trebuie însoțite de dovezi (screenshot). Banurile de 1 oră sunt exceptate." },
+                    { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." },
+                    { h: "Anti-Spam", p: "Utilizatorii care fac spam în chat cu emoji-uri sau mesaje consecutive vor primi XP ban permanent." }
+                ]
+            },
+            it: {
+                title: "Regole della Community",
+                items: [
+                    { h: "Libertà di espressione", p: "Sentiti liberi di chattare ed esprimervi. Tutte le lingue sono consentite." },
+                    { h: "Rispetto reciproco", p: "Insulti personali, linguaggio eccessivamente volgare, provocazioni continue o molestie non saranno tollerati." },
+                    { h: "Rispetto per lo staff", p: "Tutti i membri dello staff devono essere trattati con rispetto. Mancanza di rispetto o sabotaggio può portare al ban." },
+                    { h: "Trasparenza", p: "I ban superiori a 10 ore devono essere accompagnati da prove (screenshot). I ban di 1 ora sono esenti." },
+                    { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." },
+                    { h: "Anti-Spam", p: "Gli utenti che fanno spam in chat con emoji o messaggi consecutivi riceveranno un XP ban permanente." }
+                ]
+            },
+            es: {
+                title: "Reglas de la Comunidad",
+                items: [
+                    { h: "Libertad de expresión", p: "Siéntete libre de chatear y expresarte. Se permiten todos los idiomas." },
+                    { h: "Respeto mutuo", p: "No se tolerarán insultos personales, lenguaje excesivamente vulgar, provocación constante ni acoso." },
+                    { h: "Respeto al staff", p: "Todo el staff debe ser tratado con respeto. La falta de respeto o el sabotaje puede resultar en ban." },
+                    { h: "Transparencia", p: "Los bans de más de 10 horas deben ir acompañados de pruebas (capturas). Los bans de 1 hora están exentos." },
+                    { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." },
+                    { h: "Anti-Spam", p: "Los usuarios que hagan spam en el chat con emojis o mensajes consecutivos recibirán un XP ban permanente." }
                 ]
             }
         };
 
         function applyRulesLang(lang) {
-            var data = rulesData[lang] || rulesData.es;
+            var data = rulesData[lang] || rulesData.en;
             var titleEl = document.getElementById("rulesTitle");
             if (titleEl) titleEl.textContent = data.title;
-            var items = document.querySelectorAll(".rules-list .rule-item");
+            var items = document.querySelectorAll(".rules-panel .rule-item");
             for (var i = 0; i < items.length && i < data.items.length; i++) {
                 var h = items[i].querySelector(".rule-content h3");
                 var p = items[i].querySelector(".rule-content p");
@@ -608,10 +468,118 @@
         var langBtns = document.querySelectorAll(".rules-lang .lang-btn");
         for (var k = 0; k < langBtns.length; k++) {
             langBtns[k].addEventListener("click", function () {
-                applyRulesLang(this.getAttribute("data-lang") || "es");
+                applyRulesLang(this.getAttribute("data-lang") || "en");
             });
         }
-        applyRulesLang("es");
+        applyRulesLang("en");
+
+        /* ── Stars ───────────────────────────────── */
+        var starsEl = document.getElementById("stars");
+        for (var i = 0; i < 180; i++) {
+            var s = document.createElement("div");
+            s.className = "star";
+            var size = Math.random() < 0.6 ? 1 : (Math.random() < 0.75 ? 1.5 : 2.5);
+            s.style.width = size + "px"; s.style.height = size + "px";
+            s.style.top = (Math.random() * 80) + "%"; s.style.left = (Math.random() * 100) + "%";
+            var baseOp = 0.2 + Math.random() * 0.3;
+            s.style.setProperty("--base-opacity", baseOp);
+            s.style.setProperty("--peak-opacity", Math.min(baseOp + 0.5 + Math.random() * 0.3, 1));
+            if (Math.random() < 0.6) {
+                var speed = Math.random() < 0.33 ? "2.5s" : (Math.random() < 0.5 ? "1.8s" : "4s");
+                s.style.animation = `twinkle ${speed} ease-in-out infinite`;
+                s.style.animationDelay = (Math.random() * 6) + "s";
+            } else {
+                s.style.opacity = baseOp;
+            }
+            if (size >= 2) s.style.boxShadow = "0 0 " + (2 + Math.random() * 3) + "px rgba(180, 190, 255, 0.5)";
+            starsEl.appendChild(s);
+        }
+
+        /* ── Shooting stars & Lightning ── */
+        var isWidescreen = window.matchMedia("(min-aspect-ratio: 16/10)").matches;
+        var isSplit = window.matchMedia("(min-aspect-ratio: 3/4) and (max-aspect-ratio: 10/9)").matches;
+
+        if (isWidescreen || isSplit) {
+            var shootEl = document.getElementById("shootingStars");
+            function spawnShootingStar() {
+                if (!shootEl) return;
+                var el = document.createElement("div"); el.className = "shooting-star";
+                el.style.top = (3 + Math.random() * 55) + "%"; el.style.left = (5 + Math.random() * 85) + "%";
+                var angle = 25 + Math.random() * 30;
+                el.style.setProperty("--angle", angle + "deg"); el.style.transform = "rotate(" + angle + "deg)";
+                el.style.width = (60 + Math.random() * 60) + "px"; shootEl.appendChild(el);
+                setTimeout(function () { el.remove(); }, 1500);
+            }
+
+            var lightCont = document.getElementById("lightningContainer");
+            var flashEl = document.getElementById("flashOverlay");
+            var svgNS = "http://www.w3.org/2000/svg";
+            function generateBoltPoints(startX, startY, endY) {
+                var points = startX + "," + startY; var y = startY; var x = startX;
+                while (y < endY) { y += 15 + Math.random() * 40; x += (Math.random() - 0.5) * 80; points += " " + x + "," + y; }
+                return points;
+            }
+            function spawnLightning() {
+                if (!lightCont || !flashEl) return;
+                var svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("width", "100%"); svg.setAttribute("height", "100%");
+                svg.style.cssText = "position:absolute; top:0; left:0; filter:drop-shadow(0 0 6px rgba(150,180,255,0.9)) drop-shadow(0 0 15px rgba(100,140,255,0.5)); opacity:0;";
+                var bolt = document.createElementNS(svgNS, "polyline");
+                var startX = window.innerWidth * (0.1 + Math.random() * 0.8);
+                var endY = window.innerHeight * (0.4 + Math.random() * 0.4);
+                bolt.setAttribute("points", generateBoltPoints(startX, 0, endY));
+                bolt.setAttribute("fill", "none"); bolt.setAttribute("stroke", "rgba(210, 220, 255, 0.9)");
+                bolt.setAttribute("stroke-width", "1.5"); bolt.setAttribute("stroke-linecap", "round"); bolt.setAttribute("stroke-linejoin", "round");
+                svg.appendChild(bolt); lightCont.appendChild(svg);
+                flashEl.style.opacity = "1";
+                setTimeout(function() { flashEl.style.opacity = "0.2"; }, 60);
+                setTimeout(function() { flashEl.style.opacity = "0.8"; }, 120);
+                setTimeout(function() { flashEl.style.opacity = "0"; }, 250);
+                svg.animate([
+                    { opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 0.2, offset: 0.2 }, { opacity: 0.9, offset: 0.3 }, { opacity: 0 }
+                ], { duration: 500, easing: "ease-out" }).onfinish = function() { svg.remove(); };
+            }
+
+            if (eco) {
+                function ecoBurst() {
+                    if (document.hidden) return;
+                    document.documentElement.classList.add("fx-active");
+                    spawnShootingStar();
+                    if (Math.random() < 0.18) spawnLightning();
+                    setTimeout(function () { document.documentElement.classList.remove("fx-active"); }, 1200);
+                }
+                function scheduleEcoBurst() {
+                    var delay = 6500 + Math.random() * 9000;
+                    setTimeout(function () { ecoBurst(); scheduleEcoBurst(); }, delay);
+                }
+                setTimeout(function () { ecoBurst(); scheduleEcoBurst(); }, 1200);
+            } else {
+                function scheduleShoot() {
+                    var delay = 3000 + Math.random() * 5000;
+                    setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, delay);
+                }
+                setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, 1500 + Math.random() * 1500);
+                setTimeout(function () {
+                    function scheduleShoot2() {
+                        var delay = 4000 + Math.random() * 7000;
+                        setTimeout(function () { spawnShootingStar(); scheduleShoot2(); }, delay);
+                    }
+                    spawnShootingStar(); scheduleShoot2();
+                }, 3000 + Math.random() * 2000);
+
+                function scheduleLightning() {
+                    var delay = 8000 + Math.random() * 15000;
+                    setTimeout(function() { spawnLightning(); scheduleLightning(); }, delay);
+                }
+                setTimeout(function() { spawnLightning(); scheduleLightning(); }, 6000 + Math.random() * 2000);
+            }
+        }
+
+        /* ── Pause when tab hidden ────────────────── */
+        var sceneEl = document.querySelector(".scene");
+        document.addEventListener("visibilitychange", function () {
+            sceneEl.classList.toggle("paused", document.hidden);
+        });
     </script>
 </body>
 </html>
