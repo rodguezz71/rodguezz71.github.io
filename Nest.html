@@ -17,7 +17,19 @@
             background-position: center;
             background-repeat: no-repeat;
             cursor: none;
-            perspective: 1200px;
+        }
+
+        /* --- CONTENEDOR 3D INDEPENDIENTE (Asegura perspectiva en iframe) --- */
+        .scene-3d-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            perspective-origin: 50% 50%;
+            pointer-events: none;
+            z-index: 10;
         }
 
         canvas {
@@ -38,7 +50,7 @@
             height: 486px; 
             border-radius: 16px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            z-index: 10; 
+            z-index: 5; 
             pointer-events: none; 
             overflow: hidden; 
             background-image: url('https://xatimg.com/image/r154ucQ2qNWe.jpg');
@@ -46,7 +58,6 @@
             background-position: center; 
             background-repeat: no-repeat;
             opacity: 0.86;
-            
             isolation: isolate;
         }
 
@@ -115,13 +126,11 @@
             letter-spacing: 4px;
             line-height: 1;
             margin: 0 0 5px 0;
-            
             background: linear-gradient(270deg, #ff0055, #00aeff, #00ffcc, #ff0055);
             background-size: 400% 400%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: coloresEnMovimiento 6s ease infinite;
-            
             filter: drop-shadow(0 0 15px rgba(0, 174, 255, 0.6));
         }
 
@@ -152,7 +161,6 @@
                 0 30px 60px rgba(0, 0, 0, 0.7), 
                 0 0 25px rgba(255, 0, 85, 0.3),
                 inset 0 0 15px rgba(255, 0, 85, 0.15);
-            z-index: 10;
             padding: 18px;
             box-sizing: border-box;
             color: #ffffff;
@@ -162,8 +170,9 @@
             flex-direction: column;
 
             transform-style: preserve-3d;
-            transform: rotateY(8deg) rotateX(4deg);
+            transform: rotateY(12deg) rotateX(4deg);
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            will-change: transform;
         }
 
         .news-backdrop:hover {
@@ -224,7 +233,6 @@
                 0 30px 60px rgba(0, 0, 0, 0.7), 
                 0 0 25px rgba(0, 174, 255, 0.35),
                 inset 0 0 15px rgba(0, 174, 255, 0.15);
-            z-index: 10;
             padding: 20px;
             box-sizing: border-box;
             color: #ffffff;
@@ -234,8 +242,9 @@
             flex-direction: column;
 
             transform-style: preserve-3d;
-            transform: rotateY(-8deg) rotateX(4deg);
+            transform: rotateY(-12deg) rotateX(4deg);
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            will-change: transform;
         }
 
         .rules-backdrop:hover {
@@ -281,7 +290,7 @@
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* --- BOTONES DE IDIOMA EN LA PARTE INFERIOR --- */
+        /* --- BOTONES DE IDIOMA --- */
         .lang-buttons-container {
             display: flex;
             justify-content: space-between;
@@ -289,7 +298,7 @@
             margin-top: 15px;
             border-top: 1px solid rgba(0, 174, 255, 0.3);
             padding-top: 12px;
-            transform: translateZ(15px);
+            transform: translateZ(25px);
         }
 
         .lang-btn {
@@ -311,7 +320,7 @@
         .lang-btn:hover {
             background: rgba(0, 174, 255, 0.4);
             box-shadow: 0 0 12px rgba(0, 174, 255, 0.8), 0 6px 12px rgba(0,0,0,0.4);
-            transform: translateY(-2px) translateZ(5px);
+            transform: translateY(-2px);
         }
 
         .lang-btn.active {
@@ -385,7 +394,7 @@
             100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
         }
 
-        /* --- ESTILOS DEL CURSOR NEÓN Y RASTRO --- */
+        /* --- CURSOR NEÓN Y RASTRO --- */
         #cursor-punto {
             position: fixed;
             top: 0;
@@ -396,12 +405,10 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            
             box-shadow: 
                 0 0 6px rgba(255, 255, 255, 0.9),
                 0 0 12px rgba(255, 255, 255, 0.5),
                 0 0 20px rgba(0, 174, 255, 0.6);
-                
             transition: transform 0.05s ease-out;
             will-change: transform;
         }
@@ -435,43 +442,41 @@
 </head>
 <body>
 
-    <!-- Elemento Chat Backdrop con borde animado -->
+    <!-- Chat Backdrop -->
     <div class="chat-backdrop"></div>
 
-    <!-- Bloque de Logo Izquierdo -->
+    <!-- Bloque Logo Izquierdo -->
     <div class="left-logo-container">
         <div class="left-logo-subtitle">INTERNATIONAL ROOM</div>
         <h1 class="left-logo-title">NEST</h1>
         <div class="left-logo-url">xat.com/NEST</div>
     </div>
 
-    <!-- Nuevo Recuadro de Noticias a la izquierda -->
-    <div class="news-backdrop">
-        <div class="news-header">
-            <h3 id="news-title">NOTICIAS</h3>
+    <!-- ENVOLTORIO CON PERSPECTIVA 3D DEDICADA PARA XAT -->
+    <div class="scene-3d-wrapper">
+        <!-- Recuadro Noticias -->
+        <div class="news-backdrop">
+            <div class="news-header">
+                <h3 id="news-title">NOTICIAS</h3>
+            </div>
+            <div class="news-content">
+                <ul id="news-list"></ul>
+            </div>
         </div>
-        <div class="news-content">
-            <ul id="news-list">
-                <!-- Se llenará dinámicamente mediante JavaScript -->
-            </ul>
-        </div>
-    </div>
 
-    <!-- Recuadro de Reglas con efecto 3D (Derecha) -->
-    <div class="rules-backdrop">
-        <div class="rules-header">
-            <h3 id="rules-title">REGLAS</h3>
-        </div>
-        <div class="rules-content">
-            <ul id="rules-list">
-                <!-- Se llenará dinámicamente mediante JavaScript -->
-            </ul>
-        </div>
-        <!-- Botones inferiores de idioma -->
-        <div class="lang-buttons-container">
-            <button class="lang-btn active" id="btn-es" onclick="cambiarIdioma('es')">ESP</button>
-            <button class="lang-btn" id="btn-en" onclick="cambiarIdioma('en')">ENG</button>
-            <button class="lang-btn" id="btn-pt" onclick="cambiarIdioma('pt')">POR</button>
+        <!-- Recuadro Reglas -->
+        <div class="rules-backdrop">
+            <div class="rules-header">
+                <h3 id="rules-title">REGLAS</h3>
+            </div>
+            <div class="rules-content">
+                <ul id="rules-list"></ul>
+            </div>
+            <div class="lang-buttons-container">
+                <button class="lang-btn active" id="btn-es" onclick="cambiarIdioma('es')">ESP</button>
+                <button class="lang-btn" id="btn-en" onclick="cambiarIdioma('en')">ENG</button>
+                <button class="lang-btn" id="btn-pt" onclick="cambiarIdioma('pt')">POR</button>
+            </div>
         </div>
     </div>
 
@@ -482,18 +487,16 @@
         </div>
     </div>
 
-    <!-- Firma del creador -->
-    <div class="firma-creador">Desings:  ☬ TemerX™</div>
+    <!-- Firma -->
+    <div class="firma-creador">Desings: ☬ TemerX™</div>
 
-    <!-- Elementos del cursor personalizado -->
+    <!-- Cursor y Red -->
     <div id="cursor-punto"></div>
     <div id="rastro-contenedor"></div>
-
-    <!-- Canvas de la red neón -->
     <canvas id="canvas"></canvas>
 
     <script>
-        // --- DICCIONARIO DE IDIOMAS (REGLAS Y NOTICIAS) ---
+        // --- DICCIONARIO DE IDIOMAS ---
         const contenidoTraducciones = {
             es: {
                 reglasTitulo: "REGLAS DEL SITIO",
@@ -548,7 +551,6 @@
         function cambiarIdioma(lang) {
             const data = contenidoTraducciones[lang];
             
-            // Actualizar Reglas
             document.getElementById('rules-title').innerText = data.reglasTitulo;
             const listaReglas = document.getElementById('rules-list');
             listaReglas.innerHTML = '';
@@ -558,7 +560,6 @@
                 listaReglas.appendChild(li);
             });
 
-            // Actualizar Noticias
             document.getElementById('news-title').innerText = data.noticiasTitulo;
             const listaNoticias = document.getElementById('news-list');
             listaNoticias.innerHTML = '';
@@ -574,8 +575,7 @@
 
         cambiarIdioma('es');
 
-
-        // --- SCRIPT DEL CURSOR Y RASTRO ---
+        // --- SCRIPT CURSOR ---
         const cursorPunto = document.getElementById('cursor-punto');
         const rastroContenedor = document.getElementById('rastro-contenedor');
         
@@ -587,7 +587,6 @@
             cursorX = e.clientX;
             cursorY = e.clientY;
             ratonDentro = true;
-            
             cursorPunto.style.transform = `translate(${cursorX - 4}px, ${cursorY - 4}px)`;
         });
 
@@ -605,10 +604,8 @@
             if (ratonDentro) {
                 const rastroPunto = document.createElement('div');
                 rastroPunto.classList.add('rastro-punto');
-                
                 rastroPunto.style.left = `${cursorX - 3}px`;
                 rastroPunto.style.top = `${cursorY - 3}px`;
-                
                 rastroContenedor.appendChild(rastroPunto);
                 
                 setTimeout(() => {
@@ -619,11 +616,9 @@
         }
         gestionarRastro();
 
-
-        // --- SCRIPT DE LA RED NEÓN ---
+        // --- SCRIPT CANVAS NEÓN ---
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-
         let nodes = [];
         const numNodes = 160; 
 
@@ -671,7 +666,6 @@
             nodes = [];
             const w = canvas.width;
             const h = canvas.height;
-
             const cols = Math.floor(Math.sqrt(numNodes * w / h));
             const rows = Math.ceil(numNodes / cols);
             const cellW = w / cols;
@@ -693,7 +687,6 @@
                 for (let j = i + 1; j < nodes.length; j++) {
                     let n1 = nodes[i];
                     let n2 = nodes[j];
-
                     let dx = n1.x - n2.x;
                     let dy = n1.y - n2.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
@@ -703,7 +696,6 @@
                         ctx.beginPath();
                         ctx.moveTo(n1.x, n1.y);
                         ctx.lineTo(n2.x, n2.y);
-                        
                         ctx.strokeStyle = n1.color === '#ff0055' 
                             ? `rgba(255, 0, 85, ${alpha})` 
                             : `rgba(0, 174, 255, ${alpha})`;
