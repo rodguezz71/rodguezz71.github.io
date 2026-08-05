@@ -19,15 +19,17 @@
             cursor: none;
         }
 
+        /* Canvas ajustado para que no interfiera con los elementos interactivos inferiores */
         canvas {
             display: block;
             position: absolute;
             top: 0;
             left: 0;
             z-index: 1;
+            pointer-events: none;
         }
 
-        /* --- CHAT BACKDROP CON BORDE GIRATORIO FINO Y ELEGANTE --- */
+        /* --- CHAT BACKDROP --- */
         .chat-backdrop {
             position: absolute; 
             top: 93px; 
@@ -132,7 +134,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- RECUADRO NOTICIAS (3D INTERACTIVO) --- */
+        /* --- RECUADRO NOTICIAS --- */
         .news-backdrop {
             position: absolute;
             top: 260px;
@@ -153,6 +155,7 @@
             transform: perspective(1000px) rotateX(4deg) rotateY(12deg);
             transition: transform 0.1s ease-out, box-shadow 0.3s ease;
             will-change: transform;
+            pointer-events: auto;
         }
 
         .news-header {
@@ -185,7 +188,7 @@
             margin-bottom: 10px;
         }
 
-        /* --- RECUADRO REGLAS (3D INTERACTIVO) --- */
+        /* --- RECUADRO REGLAS --- */
         .rules-backdrop {
             position: absolute;
             top: 93px;
@@ -206,6 +209,7 @@
             transform: perspective(1000px) rotateX(4deg) rotateY(-12deg);
             transition: transform 0.1s ease-out, box-shadow 0.3s ease;
             will-change: transform;
+            pointer-events: auto;
         }
 
         .rules-header {
@@ -238,7 +242,7 @@
             margin-bottom: 10px;
         }
 
-        /* --- BOTONES DE IDIOMA --- */
+        /* --- BOTONES DE IDIOMA (PRIORIDAD MÁXIMA DE CLIC) --- */
         .lang-buttons-container {
             display: flex;
             justify-content: space-between;
@@ -247,7 +251,8 @@
             border-top: 1px solid rgba(0, 174, 255, 0.3);
             padding-top: 12px;
             position: relative;
-            z-index: 30;
+            z-index: 99999;
+            pointer-events: auto;
         }
 
         .lang-btn {
@@ -255,10 +260,10 @@
             background: rgba(0, 174, 255, 0.25);
             border: 1px solid rgba(0, 174, 255, 0.7);
             color: #ffffff;
-            padding: 8px 0;
+            padding: 10px 0;
             border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
             cursor: pointer;
             outline: none;
             transition: all 0.2s ease;
@@ -268,13 +273,13 @@
         }
 
         .lang-btn:hover {
-            background: rgba(0, 174, 255, 0.6);
+            background: rgba(0, 174, 255, 0.7);
             box-shadow: 0 0 15px rgba(0, 174, 255, 0.9);
             transform: translateY(-2px);
         }
 
         .lang-btn.active {
-            background: rgba(0, 174, 255, 0.9);
+            background: rgba(0, 174, 255, 1);
             border-color: #00aeff;
             box-shadow: 0 0 18px rgba(0, 174, 255, 1);
         }
@@ -304,7 +309,7 @@
             background-color: white;
             border-radius: 50%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 999999;
             box-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 20px rgba(0, 174, 255, 0.6);
         }
     </style>
