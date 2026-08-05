@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEST3</title>
+    <title>NEST</title>
     <style>
         body, html {
             margin: 0;
@@ -27,7 +27,7 @@
             z-index: 1;
         }
 
-        /* --- CHAT BACKDROP --- */
+        /* --- ESTILO CHAT BACKDROP CON BORDE ANIMADO AZUL --- */
         .chat-backdrop {
             position: absolute; 
             top: 93px; 
@@ -45,6 +45,7 @@
             background-position: center; 
             background-repeat: no-repeat;
             opacity: 0.86;
+            isolation: isolate;
         }
 
         .chat-backdrop::before {
@@ -54,9 +55,25 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(transparent, transparent, transparent, rgba(0, 174, 255, 0.9));
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                transparent, 
+                rgba(0, 174, 255, 0.9)
+            );
             animation: girarBorde 4s linear infinite;
             z-index: -2;
+        }
+
+        .chat-backdrop::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 15px;
+            background: inherit;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
         }
 
         @keyframes girarBorde {
@@ -64,7 +81,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* --- LOGO IZQUIERDO --- */
+        /* --- LOGO IZQUIERDO ANIMADO --- */
         .left-logo-container {
             position: absolute;
             top: 85px;
@@ -116,7 +133,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- RECUADRO NOTICIAS CON EFECTO 3D --- */
+        /* --- RECUADRO DE NOTICIAS A LA IZQUIERDA --- */
         .news-backdrop {
             position: absolute;
             top: 260px;
@@ -125,25 +142,31 @@
             height: 318px;
             border-radius: 16px;
             border: 1px solid rgba(255, 0, 85, 0.4);
-            background: rgba(20, 0, 25, 0.85);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 0, 85, 0.3);
+            background: rgba(20, 0, 25, 0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.7), 
+                0 0 25px rgba(255, 0, 85, 0.3),
+                inset 0 0 15px rgba(255, 0, 85, 0.15);
             z-index: 20;
             padding: 18px;
             box-sizing: border-box;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            pointer-events: auto;
             display: flex;
             flex-direction: column;
 
-            /* Propiedades 3D */
-            transform: perspective(900px) rotateY(10deg) rotateX(4deg);
-            transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            transform: perspective(800px) rotateY(10deg) rotateX(4deg);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .news-backdrop:hover {
-            transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateZ(25px);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 0, 85, 0.6);
+            transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1.02);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.9), 
+                0 0 35px rgba(255, 0, 85, 0.6),
+                inset 0 0 20px rgba(255, 0, 85, 0.3);
         }
 
         .news-header {
@@ -151,20 +174,19 @@
             padding-bottom: 8px;
             margin-bottom: 12px;
             text-align: center;
-            transform: translateZ(15px);
         }
 
         .news-backdrop h3 {
             margin: 0;
             color: #ff0055;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.9);
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.9), 0 2px 4px rgba(0,0,0,0.8);
             font-size: 1.1rem;
+            letter-spacing: 1px;
         }
 
         .news-content {
             flex-grow: 1;
             overflow-y: auto;
-            transform: translateZ(10px);
         }
 
         .news-backdrop ul {
@@ -172,13 +194,15 @@
             margin: 0;
             font-size: 0.85rem;
             line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .news-backdrop li {
             margin-bottom: 10px;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* --- RECUADRO REGLAS CON EFECTO 3D --- */
+        /* --- RECUADRO DE REGLAS CON EFECTO 3D (Derecha) --- */
         .rules-backdrop {
             position: absolute;
             top: 93px;
@@ -187,25 +211,31 @@
             height: 486px;
             border-radius: 16px;
             border: 1px solid rgba(0, 174, 255, 0.4);
-            background: rgba(0, 20, 40, 0.85);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 174, 255, 0.35);
+            background: rgba(0, 20, 40, 0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.7), 
+                0 0 25px rgba(0, 174, 255, 0.35),
+                inset 0 0 15px rgba(0, 174, 255, 0.15);
             z-index: 20;
             padding: 20px;
             box-sizing: border-box;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            pointer-events: auto;
             display: flex;
             flex-direction: column;
 
-            /* Propiedades 3D */
-            transform: perspective(900px) rotateY(-10deg) rotateX(4deg);
-            transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            transform: perspective(800px) rotateY(-10deg) rotateX(4deg);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .rules-backdrop:hover {
-            transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateZ(25px);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 174, 255, 0.7);
+            transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1.02);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.9), 
+                0 0 35px rgba(0, 174, 255, 0.7),
+                inset 0 0 20px rgba(0, 174, 255, 0.3);
         }
 
         .rules-header {
@@ -213,20 +243,19 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
             text-align: center;
-            transform: translateZ(15px);
         }
 
         .rules-backdrop h3 {
             margin: 0;
             color: #00aeff;
-            text-shadow: 0 0 10px rgba(0, 174, 255, 0.9);
+            text-shadow: 0 0 10px rgba(0, 174, 255, 0.9), 0 2px 4px rgba(0,0,0,0.8);
             font-size: 1.1rem;
+            letter-spacing: 1px;
         }
 
         .rules-content {
             flex-grow: 1;
             overflow-y: auto;
-            transform: translateZ(10px);
         }
 
         .rules-backdrop ul {
@@ -234,10 +263,12 @@
             margin: 0;
             font-size: 0.9rem;
             line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .rules-backdrop li {
             margin-bottom: 10px;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0,0,0,0.8);
         }
 
         /* --- BOTONES DE IDIOMA --- */
@@ -248,8 +279,8 @@
             margin-top: 15px;
             border-top: 1px solid rgba(0, 174, 255, 0.3);
             padding-top: 12px;
-            transform: translateZ(20px);
-            pointer-events: auto;
+            position: relative;
+            z-index: 30;
         }
 
         .lang-btn {
@@ -266,6 +297,7 @@
             transition: all 0.2s ease;
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            pointer-events: auto;
         }
 
         .lang-btn:hover {
@@ -280,7 +312,52 @@
             box-shadow: 0 0 15px rgba(0, 174, 255, 0.9);
         }
 
-        /* --- FIRMA --- */
+        /* --- LOGO TABS SUPERIOR CENTRO --- */
+        .logo-tabs {
+            position: absolute; 
+            right: calc(50.25% - 189px + 10px); 
+            top: 446px;
+            transform: translateY(-50%); 
+            z-index: 11; 
+            text-align: right;
+            background: rgba(15, 25, 40, 0.8); 
+            padding: 4px 16px;
+            border-radius: 10px 10px 0 0; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-bottom: none;
+            isolation: isolate;
+        }
+        
+        .logo-tabs .logo-text {
+            font-family: 'Outfit', sans-serif; 
+            font-size: 0.8rem; 
+            letter-spacing: 2px; 
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
+            position: relative;
+            z-index: 2;
+            display: inline-flex; 
+        }
+
+        .logo-tabs .logo-text span {
+            display: inline-block;
+            animation: escribirYBrincarSutil 5s infinite ease-in-out;
+        }
+
+        .logo-tabs .logo-text span:nth-child(1) { animation-delay: 0.0s; }
+        .logo-tabs .logo-text span:nth-child(2) { animation-delay: 0.1s; }
+        .logo-tabs .logo-text span:nth-child(3) { animation-delay: 0.2s; }
+        .logo-tabs .logo-text span:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes escribirYBrincarSutil {
+            0% { opacity: 0; transform: translateY(6px) scale(0.95); }
+            10% { opacity: 1; transform: translateY(-2px) scale(1.03); }
+            20% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* --- FIRMA DEL CREADOR --- */
         .firma-creador {
             position: fixed;
             bottom: 20px;
@@ -291,11 +368,16 @@
             letter-spacing: 2px;
             z-index: 50; 
             pointer-events: none; 
-            color: #999999;
-            opacity: 0.6;
+            animation: colorFirma 4s infinite alternate ease-in-out;
         }
 
-        /* --- CURSOR --- */
+        @keyframes colorFirma {
+            0% { color: #555555; opacity: 0.3; text-shadow: 0 0 2px rgba(85,85,85,0.2); } 
+            50% { color: #e0e0e0; opacity: 0.7; text-shadow: 0 0 8px rgba(224,224,224,0.6); } 
+            100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
+        }
+
+        /* --- CURSOR NEÓN Y RASTRO --- */
         #cursor-punto {
             position: fixed;
             top: 0;
@@ -306,21 +388,54 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            box-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 20px rgba(0, 174, 255, 0.6);
+            box-shadow: 
+                0 0 6px rgba(255, 255, 255, 0.9),
+                0 0 12px rgba(255, 255, 255, 0.5),
+                0 0 20px rgba(0, 174, 255, 0.6);
+            transition: transform 0.05s ease-out;
+            will-change: transform;
+        }
+
+        #rastro-contenedor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .rastro-punto {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+            animation: fadeOut 0.5s forwards ease-out;
+        }
+
+        @keyframes fadeOut {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(0.1); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Chat Backdrop -->
     <div class="chat-backdrop"></div>
 
+    <!-- Bloque Logo Izquierdo -->
     <div class="left-logo-container">
         <div class="left-logo-subtitle">INTERNATIONAL ROOM</div>
         <h1 class="left-logo-title">NEST</h1>
         <div class="left-logo-url">xat.com/NEST</div>
     </div>
 
-    <!-- Noticias (Con 3D) -->
+    <!-- Recuadro Noticias -->
     <div class="news-backdrop">
         <div class="news-header">
             <h3 id="news-title">NOTICIAS</h3>
@@ -330,7 +445,7 @@
         </div>
     </div>
 
-    <!-- Reglas (Con 3D) -->
+    <!-- Recuadro Reglas -->
     <div class="rules-backdrop">
         <div class="rules-header">
             <h3 id="rules-title">REGLAS</h3>
@@ -339,17 +454,29 @@
             <ul id="rules-list"></ul>
         </div>
         <div class="lang-buttons-container">
-            <button class="lang-btn active" id="btn-es" data-lang="es">ESP</button>
-            <button class="lang-btn" id="btn-en" data-lang="en">ENG</button>
-            <button class="lang-btn" id="btn-pt" data-lang="pt">POR</button>
+            <button class="lang-btn active" id="btn-es" onclick="cambiarIdioma('es')">ESP</button>
+            <button class="lang-btn" id="btn-en" onclick="cambiarIdioma('en')">ENG</button>
+            <button class="lang-btn" id="btn-pt" onclick="cambiarIdioma('pt')">POR</button>
         </div>
     </div>
 
+    <!-- Logo Tabs -->
+    <div class="logo-tabs">
+        <div class="logo-text">
+            <span>N</span><span>E</span><span>S</span><span>T</span>
+        </div>
+    </div>
+
+    <!-- Firma -->
     <div class="firma-creador">Desings: ☬ TemerX™</div>
+
+    <!-- Cursor y Red -->
     <div id="cursor-punto"></div>
+    <div id="rastro-contenedor"></div>
     <canvas id="canvas"></canvas>
 
     <script>
+        // --- DICCIONARIO DE IDIOMAS ---
         const contenidoTraducciones = {
             es: {
                 reglasTitulo: "REGLAS DEL SITIO",
@@ -403,7 +530,6 @@
 
         function cambiarIdioma(lang) {
             const data = contenidoTraducciones[lang];
-            if (!data) return;
             
             document.getElementById('rules-title').innerText = data.reglasTitulo;
             const listaReglas = document.getElementById('rules-list');
@@ -424,29 +550,57 @@
             });
 
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById(`btn-${lang}`);
-            if (activeBtn) activeBtn.classList.add('active');
+            document.getElementById(`btn-${lang}`).classList.add('active');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.lang-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const lang = e.target.getAttribute('data-lang');
-                    cambiarIdioma(lang);
-                });
-            });
-            cambiarIdioma('es');
-        });
+        cambiarIdioma('es');
 
+        // --- SCRIPT CURSOR ---
         const cursorPunto = document.getElementById('cursor-punto');
+        const rastroContenedor = document.getElementById('rastro-contenedor');
+        
+        let cursorX = 0;
+        let cursorY = 0;
+        let ratonDentro = false;
+
         document.addEventListener('mousemove', (e) => {
-            cursorPunto.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+            ratonDentro = true;
+            cursorPunto.style.transform = `translate(${cursorX - 4}px, ${cursorY - 4}px)`;
         });
 
+        document.addEventListener('mouseleave', () => {
+            ratonDentro = false;
+            cursorPunto.style.opacity = '0';
+        });
+        
+        document.addEventListener('mouseenter', () => {
+            ratonDentro = true;
+            cursorPunto.style.opacity = '1';
+        });
+
+        function gestionarRastro() {
+            if (ratonDentro) {
+                const rastroPunto = document.createElement('div');
+                rastroPunto.classList.add('rastro-punto');
+                rastroPunto.style.left = `${cursorX - 3}px`;
+                rastroPunto.style.top = `${cursorY - 3}px`;
+                rastroContenedor.appendChild(rastroPunto);
+                
+                setTimeout(() => {
+                    rastroPunto.remove();
+                }, 500);
+            }
+            requestAnimationFrame(gestionarRastro);
+        }
+        gestionarRastro();
+
+        // --- SCRIPT CANVAS NEÓN ---
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let nodes = [];
-        const numNodes = 80;
+        const numNodes = 160; 
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -472,6 +626,9 @@
                 this.angle += this.speed;
                 this.x = this.baseX + Math.cos(this.angle) * this.range;
                 this.y = this.baseY + Math.sin(this.angle * 1.5) * this.range;
+
+                if(this.x < 0 || this.x > canvas.width) this.speed *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.speed *= -1;
             }
 
             draw() {
@@ -496,8 +653,8 @@
 
             for (let i = 0; i < cols; i++) {
                 for (let j = 0; j < rows; j++) {
-                    const x = i * cellW + cellW / 2;
-                    const y = j * cellH + cellH / 2;
+                    const x = i * cellW + cellW / 2 + (Math.random() - 0.5) * cellW * 0.5;
+                    const y = j * cellH + cellH / 2 + (Math.random() - 0.5) * cellH * 0.5;
                     nodes.push(new Node(x, y));
                 }
             }
@@ -505,6 +662,7 @@
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             for (let i = 0; i < nodes.length; i++) {
                 for (let j = i + 1; j < nodes.length; j++) {
                     let n1 = nodes[i];
@@ -513,8 +671,8 @@
                     let dy = n1.y - n2.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 120) { 
-                        let alpha = (1 - (dist / 120)) * 0.2;
+                    if (dist < 150) { 
+                        let alpha = (1 - (dist / 150)) * 0.25;
                         ctx.beginPath();
                         ctx.moveTo(n1.x, n1.y);
                         ctx.lineTo(n2.x, n2.y);
@@ -531,6 +689,7 @@
                 nodes[i].update();
                 nodes[i].draw();
             }
+
             requestAnimationFrame(animate);
         }
 
