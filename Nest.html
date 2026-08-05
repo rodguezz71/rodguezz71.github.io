@@ -19,7 +19,6 @@
             cursor: none;
         }
 
-        /* Canvas ajustado para que no interfiera con los elementos interactivos inferiores */
         canvas {
             display: block;
             position: absolute;
@@ -152,9 +151,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            transform: perspective(1000px) rotateX(4deg) rotateY(12deg);
-            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-            will-change: transform;
             pointer-events: auto;
         }
 
@@ -188,7 +184,7 @@
             margin-bottom: 10px;
         }
 
-        /* --- RECUADRO REGLAS --- */
+        /* --- RECUADRO REGLAS (POSICIÓN FIJA Y SEGURA PARA CLICS) --- */
         .rules-backdrop {
             position: absolute;
             top: 93px;
@@ -197,18 +193,15 @@
             height: 486px;
             border-radius: 16px;
             border: 1px solid rgba(0, 174, 255, 0.4);
-            background: rgba(0, 20, 40, 0.9);
+            background: rgba(0, 20, 40, 0.95);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 174, 255, 0.4);
-            z-index: 20;
+            z-index: 100;
             padding: 20px;
             box-sizing: border-box;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            transform: perspective(1000px) rotateX(4deg) rotateY(-12deg);
-            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-            will-change: transform;
             pointer-events: auto;
         }
 
@@ -229,6 +222,7 @@
         .rules-content {
             flex-grow: 1;
             overflow-y: auto;
+            max-height: 310px;
         }
 
         .rules-backdrop ul {
@@ -242,17 +236,15 @@
             margin-bottom: 10px;
         }
 
-        /* --- BOTONES DE IDIOMA (PRIORIDAD MÁXIMA DE CLIC) --- */
+        /* --- BOTONES DE IDIOMA (ACCESIBLES AL 100%) --- */
         .lang-buttons-container {
             display: flex;
             justify-content: space-between;
             gap: 8px;
-            margin-top: 15px;
+            margin-top: auto;
             border-top: 1px solid rgba(0, 174, 255, 0.3);
             padding-top: 12px;
-            position: relative;
-            z-index: 99999;
-            pointer-events: auto;
+            z-index: 101;
         }
 
         .lang-btn {
@@ -269,7 +261,6 @@
             transition: all 0.2s ease;
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            pointer-events: auto;
         }
 
         .lang-btn:hover {
@@ -325,7 +316,7 @@
     </div>
 
     <!-- Noticias -->
-    <div class="news-backdrop" id="newsBox">
+    <div class="news-backdrop">
         <div class="news-header">
             <h3 id="news-title">NOTICIAS</h3>
         </div>
@@ -335,7 +326,7 @@
     </div>
 
     <!-- Reglas -->
-    <div class="rules-backdrop" id="rulesBox">
+    <div class="rules-backdrop">
         <div class="rules-header">
             <h3 id="rules-title">REGLAS</h3>
         </div>
@@ -441,23 +432,9 @@
         });
         cambiarIdioma('es');
 
-        const newsBox = document.getElementById('newsBox');
-        const rulesBox = document.getElementById('rulesBox');
-
+        const cursorPunto = document.getElementById('cursor-punto');
         document.addEventListener('mousemove', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            
-            const cursorPunto = document.getElementById('cursor-punto');
-            cursorPunto.style.transform = `translate(${x - 4}px, ${y - 4}px)`;
-
-            const xCenter = window.innerWidth / 2;
-            const yCenter = window.innerHeight / 2;
-            const mouseXOffset = (x - xCenter) / xCenter;
-            const mouseYOffset = (y - yCenter) / yCenter;
-
-            newsBox.style.transform = `perspective(1000px) rotateX(${4 + (-mouseYOffset * 5)}deg) rotateY(${12 + (mouseXOffset * 5)}deg)`;
-            rulesBox.style.transform = `perspective(1000px) rotateX(${4 + (-mouseYOffset * 5)}deg) rotateY(${-12 + (mouseXOffset * 5)}deg)`;
+            cursorPunto.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
         });
 
         const canvas = document.getElementById('canvas');
