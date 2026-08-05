@@ -12,7 +12,7 @@
             height: 100%;
             overflow: hidden;
             background-color: #000000;
-            background-image: url('https://img.magnific.com/vector-gratis/diseno-futurista-fondo_23-2148503793.jpg?t=st=1785899759~exp=1785903359~hmac=169a5a3b4d143aa5db2795bdad6406aee1cf0f70cceb2051c807b78bb5656a8a&w=1480');
+            background-image: url('https://xatimg.com/image/kDW0ybwbs5LP.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -137,15 +137,15 @@
             letter-spacing: 1px;
         }
 
-        /* --- NUEVO: RECUADRO DE NOTICIAS A LA IZQUIERDA (Estilo similar al derecho) --- */
+        /* --- RECUADRO DE NOTICIAS A LA IZQUIERDA --- */
         .news-backdrop {
             position: absolute;
-            top: 260px; /* Ubicado debajo del bloque del logo izquierdo */
+            top: 260px;
             left: 40px;
             width: 280px;
-            height: 318px; /* Altura ajustada para equilibrar con el espacio inferior */
+            height: 318px;
             border-radius: 16px;
-            border: 1px solid rgba(255, 0, 85, 0.4); /* Toque magenta/rosa acorde a la gama neón */
+            border: 1px solid rgba(255, 0, 85, 0.4);
             background: rgba(20, 0, 25, 0.6);
             backdrop-filter: blur(12px);
             box-shadow: 
@@ -365,6 +365,26 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* --- FIRMA DEL CREADOR --- */
+        .firma-creador {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            z-index: 50; 
+            pointer-events: none; 
+            animation: colorFirma 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes colorFirma {
+            0% { color: #555555; opacity: 0.3; text-shadow: 0 0 2px rgba(85,85,85,0.2); } 
+            50% { color: #e0e0e0; opacity: 0.7; text-shadow: 0 0 8px rgba(224,224,224,0.6); } 
+            100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
+        }
+
         /* --- ESTILOS DEL CURSOR NEÓN Y RASTRO --- */
         #cursor-punto {
             position: fixed;
@@ -461,6 +481,9 @@
             <span>N</span><span>E</span><span>S</span><span>T</span>
         </div>
     </div>
+
+    <!-- Firma del creador -->
+    <div class="firma-creador">Desings:  ☬ TemerX™</div>
 
     <!-- Elementos del cursor personalizado -->
     <div id="cursor-punto"></div>
