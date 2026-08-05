@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEST</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: #050203 url('https://xatimg.com/image/18yw1iTMCNkk.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f8fafc;
+        }
+
+        .scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: rgba(5, 2, 3, 0.45);
+        }
+
+        /* ── Minimalist Immersive Background Effects ── */
+        .ambient-mesh {
+            position: absolute;
+            inset: -50%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(136, 19, 55, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 80% 70%, rgba(76, 5, 25, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(225, 29, 72, 0.1) 0%, transparent 60%);
+            animation: meshFloat 20s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes meshFloat {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(25px, -15px); }
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.45;
+            animation: orbPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes orbPulse {
+            0% { transform: scale(1); opacity: 0.35; }
+            100% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        /* ── Dynamic Floating Ember Particles ── */
+        #stars {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .star {
+            position: absolute;
+            background: #ff758c;
+            border-radius: 50%;
+            animation: starTwinkle linear infinite;
+        }
+
+        @keyframes starTwinkle {
+            0% { opacity: 0.1; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(225, 29, 72, 0.8); }
+            100% { opacity: 0.1; transform: scale(0.8); }
+        }
+
+        /* ── Chat Backdrop (Cuadro principal con la imagen solicitada) ── */
+        .chat-backdrop {
+            position: absolute;
+            top: 93px;
+            left: 50.25%;
+            transform: translateX(-50%);
+            width: 728px;
+            height: 486px;
+            background: url('https://xatimg.com/image/elY0y7rDXXoR.png') no-repeat center center;
+            background-size: cover;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(225, 29, 72, 0.25);
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 117, 140, 0.2);
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        /* ── Now playing overlay strip ── */
+        .now-playing {
+            position: absolute;
+            top: 585px;
+            left: 50.25%;
+            transform: translateX(-50%);
+            width: 728px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            z-index: 21;
+            pointer-events: none;
+            background: rgba(18, 5, 8, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(225, 29, 72, 0.15);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #f1f5f9;
+            opacity: 0;
+            transition: opacity 380ms ease;
+        }
+
+        .now-playing.ready { opacity: 1; }
+
+        .np-icon-wrap {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: rgba(225, 29, 72, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff758c;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(225, 29, 72, 0.3);
+        }
+
+        .np-text {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .np-sep {
+            color: #7f1d1d;
+            flex-shrink: 0;
+        }
+
+        .np-listeners {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .np-listeners::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #e11d48;
+            box-shadow: 0 0 8px #e11d48;
+            animation: livePulse 2s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ── Logo at tabs height con efecto de brinco suave cada 5 segundos ── */
+        .logo-tabs {
+            position: absolute;
+            right: calc(50.25% - 189px + 10px);
+            top: 439px;
+            transform: translateY(-50%);
+            z-index: 21;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .logo-tabs .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            display: inline-flex;
+            gap: 0.05em;
+            text-shadow: none;
+        }
+
+        .logo-tabs .logo-text span {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffffff, #fda4af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: subtleBounceFlash 5s ease-in-out infinite;
+        }
+
+        .logo-tabs .logo-text span:nth-child(1)  { animation-delay: 0.0s; }
+        .logo-tabs .logo-text span:nth-child(2)  { animation-delay: 0.1s; }
+        .logo-tabs .logo-text span:nth-child(3)  { animation-delay: 0.2s; }
+        .logo-tabs .logo-text span:nth-child(4)  { animation-delay: 0.3s; }
+        .logo-tabs .logo-text span:nth-child(5)  { animation-delay: 0.4s; }
+        .logo-tabs .logo-text span:nth-child(6)  { animation-delay: 0.5s; }
+        .logo-tabs .logo-text span:nth-child(7)  { animation-delay: 0.6s; }
+        .logo-tabs .logo-text span:nth-child(8)  { animation-delay: 0.7s; }
+        .logo-tabs .logo-text span:nth-child(9)  { animation-delay: 0.8s; }
+        .logo-tabs .logo-text span:nth-child(10) { animation-delay: 0.9s; }
+        .logo-tabs .logo-text span:nth-child(11) { animation-delay: 1.0s; }
+
+        @keyframes subtleBounceFlash {
+            0%, 80%, 100% {
+                transform: translateY(0) scale(1);
+                filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+            }
+            88% {
+                transform: translateY(-3px) scale(1.03);
+                filter: drop-shadow(0 0 4px rgba(255, 117, 140, 0.6)) brightness(1.15);
+            }
+        }
+
+        /* ── Logo Principal a la izquierda en 2 líneas ── */
+        .logo-area {
+            position: absolute;
+            left: 4%;
+            top: calc(50% - 100px);
+            transform: translateY(-50%);
+            z-index: 5;
+            max-width: 320px;
+            animation: logoFloat 5.5s ease-in-out infinite;
+        }
+
+        .logo-line {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 3.8vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            display: flex;
+            gap: 0.08em;
+            line-height: 1.1;
+            user-select: text;
+            filter: drop-shadow(0 15px 35px rgba(136, 19, 55, 0.4));
+        }
+
+        .logo-line.indent {
+            padding-left: 1.2rem;
+        }
+
+        .logo-line span {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffffff 15%, #ff758c 50%, #e11d48 85%, #881337 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: letterBounceFlash 2.5s ease-in-out infinite;
+        }
+
+        .logo-line span:nth-child(1)  { animation-delay: 0.0s; }
+        .logo-line span:nth-child(2)  { animation-delay: 0.08s; }
+        .logo-line span:nth-child(3)  { animation-delay: 0.16s; }
+        .logo-line span:nth-child(4)  { animation-delay: 0.24s; }
+        .logo-line span:nth-child(5)  { animation-delay: 0.32s; }
+        .logo-line span:nth-child(6)  { animation-delay: 0.40s; }
+        .logo-line span:nth-child(7)  { animation-delay: 0.48s; }
+        .logo-line span:nth-child(8)  { animation-delay: 0.56s; }
+        .logo-line span:nth-child(9)  { animation-delay: 0.64s; }
+        .logo-line span:nth-child(10) { animation-delay: 0.72s; }
+
+        @keyframes letterBounceFlash {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+            }
+            30% {
+                transform: translateY(-14px) scale(1.12);
+                filter: drop-shadow(0 0 14px rgba(255, 117, 140, 0.95)) brightness(1.35);
+            }
+            60% {
+                transform: translateY(0) scale(1);
+                filter: drop-shadow(0 0 4px rgba(225, 29, 72, 0.4));
+            }
+        }
+
+        .logo-sub {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #fda4af;
+            letter-spacing: 3px;
+            margin-top: 12px;
+            margin-left: 2px;
+            text-transform: uppercase;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(-50%); }
+            50%      { transform: translateY(calc(-50% - 8px)); }
+        }
+
+        /* ── Glassmorphic Rules panel ── */
+        .rules-panel {
+            position: absolute;
+            top: 336px;
+            right: 5%;
+            transform: translateY(-50%);
+            width: clamp(240px, 18vw, 300px);
+            z-index: 10;
+        }
+
+        .rules-card {
+            background: rgba(18, 5, 8, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(225, 29, 72, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 
+                0 24px 64px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 117, 140, 0.15);
+            overflow: hidden;
+            transition: border-color 0.4s;
+        }
+
+        .rules-card:hover {
+            border-color: rgba(225, 29, 72, 0.4);
+        }
+
+        .rules-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fda4af;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-align: center;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(225, 29, 72, 0.15);
+        }
+
+        .rule-viewport {
+            height: 170px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .rule-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .rule-content.out {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+
+        .rule-content.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rule-num {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e11d48;
+            line-height: 1;
+            opacity: 0.9;
+        }
+
+        .rule-txt {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #cbd5e1;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .rule-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .rule-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .rule-dot.on {
+            width: 18px;
+            border-radius: 3px;
+            background: #e11d48;
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.6);
+        }
+
+        .rule-bar-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .rule-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e11d48, #881337);
+            border-radius: 2px;
+            width: 0;
+        }
+
+        .rule-bar-fill.running {
+            animation: barFill 10s linear forwards;
+        }
+
+        .rule-credit {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-align: right;
+            margin-top: 8px;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes barFill {
+            from { width: 0; }
+            to   { width: 100%; }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1100px) {
+            .rules-panel { display: none; }
+            .logo-area {
+                left: 50%;
+                text-align: center;
+                transform: translate(-50%, -50%);
+            }
+            .logo-line {
+                justify-content: center;
+            }
+            .logo-line.indent {
+                padding-left: 0;
+            }
+            @keyframes logoFloat {
+                0%, 100% { transform: translate(-50%, -50%); }
+                50%      { transform: translate(-50%, calc(-50% - 8px)); }
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-backdrop, .now-playing, .logo-tabs { display: none; }
+        }
+
+        .paused,
+        .paused *,
+        .paused::before,
+        .paused::after {
+            animation-play-state: paused !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <!-- Minimalist Visual Effects Background Layers (Burgundy / Red tones) -->
+        <div class="ambient-mesh"></div>
+        <div class="glow-orb" style="width: 500px; height: 500px; background: rgba(136, 19, 55, 0.25); top: -10%; left: -10%;"></div>
+        <div class="glow-orb" style="width: 400px; height: 400px; background: rgba(76, 5, 25, 0.3); bottom: -10%; right: -10%;"></div>
+
+        <!-- Dynamic Floating Ember Particles -->
+        <div id="stars" aria-hidden="true"></div>
+
+        <!-- Logo principal a la izquierda en 2 líneas -->
+        <div class="logo-area">
+            <div class="logo-line" aria-label="Legion">
+                <span>L</span><span>e</span><span>g</span><span>i</span><span>o</span><span>n</span>
+            </div>
+            <div class="logo-line indent" aria-label="Radio">
+                <span>R</span><span>a</span><span>d</span><span>i</span><span>o</span>
+            </div>
+            <div class="logo-sub">xat.com/NEST</div>
+        </div>
+
+        <!-- Chat backdrop con la imagen solicitada -->
+        <div class="chat-backdrop"></div>
+
+        <!-- Now playing overlay -->
+        <div class="now-playing" id="nowPlaying" aria-live="polite">
+            <div class="np-icon-wrap" id="npIcon"><i class="fa-solid fa-music"></i></div>
+            <span class="np-text" id="npText">Cargando transmisión...</span>
+            <span class="np-sep" id="npSep" hidden>·</span>
+            <span class="np-listeners" id="npListenersWrap" hidden><span id="npListeners">0</span> oyentes</span>
+        </div>
+
+        <!-- Logo at tabs height con efecto de brinco suave cada 5 segundos -->
+        <div class="logo-tabs">
+            <div class="logo-text" aria-label="LegionRadio">
+                <span>L</span><span>e</span><span>g</span><span>i</span><span>o</span><span>n</span><span>R</span><span>a</span><span>d</span><span>i</span><span>o</span>
+            </div>
+        </div>
+
+        <!-- Rules -->
+        <div class="rules-panel">
+            <div class="rules-card">
+                <div class="rules-header">Directrices</div>
+                <div class="rule-viewport">
+                    <div class="rule-content in" id="ruleContent">
+                        <div class="rule-num" id="ruleNum">01</div>
+                        <div class="rule-txt" id="ruleTxt"></div>
+                    </div>
+                </div>
+                <div class="rule-dots" id="ruleDots"></div>
+                <div class="rule-bar-track">
+                    <div class="rule-bar-fill" id="ruleBar"></div>
+                </div>
+                <div class="rule-credit">©TemerX</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ── Dynamic Ember Particle Generator ── */
+        const starContainer = document.getElementById("stars");
+        const starCount = 35;
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement("div");
+            star.className = "star";
+            const size = Math.random() * 2.5 + 1;
+            star.style.width = size + "px";
+            star.style.height = size + "px";
+            star.style.top = Math.random() * 100 + "%";
+            star.style.left = Math.random() * 100 + "%";
+            star.style.animationDuration = (Math.random() * 4 + 2) + "s";
+            star.style.animationDelay = (Math.random() * 5) + "s";
+            starContainer.appendChild(star);
+        }
+
+        /* ── Rules carousel ── */
+        const rules = [
+            "Spam: Prohibido, lo que incluye, pero no se limita a, mensajes, links, GIFs y emojis repetitivos.",
+            "Datos personales: No se debe revelar información personal, incluida, pero no limitada a, la de los usuarios de LegionRadio o sus familiares.",
+            "Clonación: Prohibido clonar cuentas de usuario.",
+            "Menores de edad: Queda prohibido mencionar, involucrar o hacer referencia a hijos, niños o menores de edad de cualquier usuario o en general con el fin de provocar, insultar o molestar.",
+        ];
+
+        const INTERVAL = 10000;
+        const FADE_MS  = 350;
+
+        const elContent = document.getElementById("ruleContent");
+        const elNum     = document.getElementById("ruleNum");
+        const elTxt     = document.getElementById("ruleTxt");
+        const elDots    = document.getElementById("ruleDots");
+        const elBar     = document.getElementById("ruleBar");
+
+        let cur = 0;
+
+        rules.forEach(function (_, i) {
+            var d = document.createElement("span");
+            d.className = "rule-dot" + (i === 0 ? " on" : "");
+            d.addEventListener("click", function () {
+                goToRule(i);
+            });
+            elDots.appendChild(d);
+        });
+
+        function setRule(index) {
+            elNum.textContent = String(index + 1).padStart(2, "0");
+            elTxt.textContent = rules[index];
+            var dots = elDots.children;
+            for (var i = 0; i < dots.length; i++) {
+                dots[i].classList.toggle("on", i === index);
+            }
+        }
+
+        function restartBar() {
+            elBar.classList.remove("running");
+            void elBar.offsetWidth;
+            elBar.classList.add("running");
+        }
+
+        function nextRule() {
+            elContent.classList.remove("in");
+            elContent.classList.add("out");
+
+            setTimeout(function () {
+                cur = (cur + 1) % rules.length;
+                setRule(cur);
+
+                elContent.classList.remove("out");
+                elContent.classList.add("in");
+
+                restartBar();
+            }, FADE_MS);
+        }
+
+        function goToRule(index) {
+            if (index === cur) return;
+            clearInterval(autoTimer);
+            elContent.classList.remove("in");
+            elContent.classList.add("out");
+            setTimeout(function () {
+                cur = index;
+                setRule(cur);
+                elContent.classList.remove("out");
+                elContent.classList.add("in");
+                restartBar();
+            }, FADE_MS);
+            autoTimer = setInterval(nextRule, INTERVAL);
+        }
+
+        setRule(0);
+        restartBar();
+        var autoTimer = setInterval(nextRule, INTERVAL);
+
+        /* ── Now playing ── */
+        var NP_URL      = "https://technoplayerserver.net/cp/get_info.php?p=8118";
+        var NP_INTERVAL = 10000;
+
+        var npEl        = document.getElementById("nowPlaying");
+        var npIcon      = document.getElementById("npIcon");
+        var npText      = document.getElementById("npText");
+        var npSep       = document.getElementById("npSep");
+        var npListWrap  = document.getElementById("npListenersWrap");
+        var npListeners = document.getElementById("npListeners");
+        var npTimer     = null;
+
+        function formatTitle(raw) {
+            if (!raw) return "";
+            var s = String(raw).trim();
+            var idx = s.indexOf(" - ");
+            if (idx < 0) return s;
+            var artist = s.slice(0, idx).trim();
+            var title  = s.slice(idx + 3).trim();
+            if (!artist || !title) return s;
+            return title + " \u2014 " + artist;
+        }
+
+        function fetchNowPlaying() {
+            fetch(NP_URL, { cache: "no-store" })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var dj = data && data.djusername ? String(data.djusername).trim() : "";
+                    var pretty;
+                    var iconClass;
+                    if (dj) {
+                        pretty = "AL AIRE: " + dj;
+                        iconClass = "fa-solid fa-microphone-lines";
+                    } else {
+                        pretty = formatTitle(data && data.title);
+                        iconClass = "fa-solid fa-music";
+                    }
+                    if (pretty) {
+                        npText.textContent = pretty;
+                        npIcon.innerHTML = '<i class="' + iconClass + '"></i>';
+                    }
+                    var listeners = data && data.listeners;
+                    if (listeners != null && listeners !== "") {
+                        npListeners.textContent = listeners;
+                        npSep.hidden = false;
+                        npListWrap.hidden = false;
+                    }
+                    if (pretty) npEl.classList.add("ready");
+                })
+                .catch(function () { });
+        }
+
+        function startNowPlaying() {
+            if (npTimer) return;
+            fetchNowPlaying();
+            npTimer = setInterval(fetchNowPlaying, NP_INTERVAL);
+        }
+
+        function stopNowPlaying() {
+            if (!npTimer) return;
+            clearInterval(npTimer);
+            npTimer = null;
+        }
+
+        startNowPlaying();
+
+        var sceneEl = document.querySelector(".scene");
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                sceneEl.classList.add("paused");
+                clearInterval(autoTimer);
+                stopNowPlaying();
+            } else {
+                sceneEl.classList.remove("paused");
+                autoTimer = setInterval(nextRule, INTERVAL);
+                startNowPlaying();
+            }
+        });
+    </script>
+</body>
+</html>
