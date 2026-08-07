@@ -17,16 +17,23 @@
 			--red-glow: #ff0000;
 		}
 
-		body {
+		body, html {
 			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
 			overflow: hidden;
 			background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXogj_rWMdSxyaqzbURuxJnP4ozEjgZUogMsXNPfPSyQ&s=10");
 			background-size: cover;
 			background-repeat: no-repeat;
+			background-position: center;
+			cursor: none;
+			perspective: 1200px;
 		}
 
 		#main-canvas {
-			position: fixed;
+			display: block;
+			position: absolute;
 			top: 0;
 			left: 0;
 			z-index: 1;
@@ -36,8 +43,8 @@
 			position: fixed;
 			top: 0;
 			left: 0;
-			width: 100dvw;
-			height: 100dvh;
+			width: 100vw;
+			height: 100vh;
 			pointer-events: none;
 			background:
 				radial-gradient(circle at 50% 50%,
@@ -56,32 +63,6 @@
 				opacity: 0.8;
 				filter: blur(35px);
 			}
-		}
-
-		/* Contenedor principal que unifica la estructura sobre el canvas */
-		.wrapper {
-			width: 100vw;
-			height: 100vh;
-			position: relative;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-			z-index: 3;
-		}
-
-		/* Grid optimizado para colocar las bocinas muy grandes en las esquinas */
-		.screen-layout {
-			display: grid;
-			grid-template-columns: 320px 1fr 320px;
-			grid-template-rows: 320px 320px;
-			gap: 10px;
-			width: 98vw;
-			height: 98vh;
-			max-width: 1800px;
-			align-items: center;
-			justify-items: center;
-			position: relative;
 		}
 
 		/* --- ESTILO CHAT BACKDROP CON BORDE ANIMADO DORADO Y ROJO (Posición del primer código) --- */
@@ -140,6 +121,51 @@
 			100% { transform: rotate(360deg); }
 		}
 
+		/* --- LOGO TABS SUPERIOR CENTRO (Posición del primer código) --- */
+		.logo-tabs {
+			position: absolute; 
+			right: calc(50.25% - 189px + 10px); 
+			top: 446px;
+			transform: translateY(-50%); 
+			z-index: 11; 
+			text-align: right;
+			background: rgba(15, 25, 40, 0.8); 
+			padding: 4px 16px;
+			border-radius: 10px 10px 0 0; 
+			border: 1px solid rgba(255,255,255,0.1); 
+			border-bottom: none;
+			isolation: isolate;
+		}
+		
+		.logo-tabs .logo-text {
+			font-family: 'Outfit', sans-serif; 
+			font-size: 0.8rem; 
+			letter-spacing: 2px; 
+			font-weight: 700;
+			color: #fff;
+			text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
+			position: relative;
+			z-index: 2;
+			display: inline-flex; 
+		}
+
+		.logo-tabs .logo-text span {
+			display: inline-block;
+			animation: escribirYBrincarSutil 5s infinite ease-in-out;
+		}
+
+		.logo-tabs .logo-text span:nth-child(1) { animation-delay: 0.0s; }
+		.logo-tabs .logo-text span:nth-child(2) { animation-delay: 0.1s; }
+		.logo-tabs .logo-text span:nth-child(3) { animation-delay: 0.2s; }
+		.logo-tabs .logo-text span:nth-child(4) { animation-delay: 0.3s; }
+
+		@keyframes escribirYBrincarSutil {
+			0% { opacity: 0; transform: translateY(6px) scale(0.95); }
+			10% { opacity: 1; transform: translateY(-2px) scale(1.03); }
+			20% { opacity: 1; transform: translateY(0) scale(1); }
+			100% { opacity: 1; transform: translateY(0) scale(1); }
+		}
+
 		/* --- ESTILO TEXTO INFERIOR EXTREMADAMENTE MÁS GRANDE Y LLAMATIVO --- */
 		.bottom-text-container {
 			position: absolute;
@@ -163,18 +189,15 @@
 			letter-spacing: 6px;
 			color: #ffffff;
 
-			/* Gradiente cromado metálico dorado en el texto */
 			background: linear-gradient(180deg, #ffffff 0%, #ffdf73 35%, #d4af37 60%, #ff1100 100%);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 
-			/* Triple capa de resplandor Neón Intenso */
 			filter: drop-shadow(0 0 10px #ffffff)
 			        drop-shadow(0 0 25px var(--gold-glow))
 			        drop-shadow(0 0 50px var(--red-glow))
 			        drop-shadow(0 0 90px var(--red-glow));
 
-			/* Animación de palpitación y parpadeo de neón */
 			animation: neon-flicker-beat 2s infinite alternate;
 		}
 
@@ -210,7 +233,24 @@
 			}
 		}
 
-		/* Estilos generales de las bocinas */
+		/* Contenedor Grid general para las 4 bocinas en las esquinas */
+		.screen-layout {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			display: grid;
+			grid-template-columns: 320px 1fr 320px;
+			grid-template-rows: 320px 320px;
+			gap: 10px;
+			max-width: 100%;
+			align-items: center;
+			justify-items: center;
+			z-index: 5;
+			pointer-events: none;
+		}
+
 		.speaker {
 			border-radius: 100%;
 			background: linear-gradient(#333, black);
@@ -219,24 +259,23 @@
 			align-items: center;
 			justify-content: center;
 			box-shadow: 0 15px 30px rgba(0,0,0,0.7);
-			z-index: 5;
+			pointer-events: auto;
 		}
 
-		/* Bocinas Superiores (Mucho más grandes) */
+		/* Bocinas Superiores */
 		.speaker-top {
 			--speaker-size: 320px;
 			width: var(--speaker-size);
 			height: var(--speaker-size);
 		}
 
-		/* Bocinas Inferiores (Un poco más chicas que las superiores pero aún grandes) */
+		/* Bocinas Inferiores */
 		.speaker-bottom {
 			--speaker-size: 260px;
 			width: var(--speaker-size);
 			height: var(--speaker-size);
 		}
 
-		/* Decoraciones esquineras dinámicas basadas en tamaño */
 		.speaker-top .decoration:nth-of-type(1) { left: 45px; top: 45px; }
 		.speaker-top .decoration:nth-of-type(2) { right: 45px; top: 45px; left: auto; }
 		.speaker-top .decoration:nth-of-type(3) { right: 45px; bottom: 45px; left: auto; top: auto; }
@@ -348,6 +387,53 @@
 			10% { transform: scale(1.05); }
 			100% { transform: scale(1); }
 		}
+
+		/* --- ESTILOS DEL CURSOR NEÓN Y RASTRO --- */
+		#cursor-punto {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 8px;
+			height: 8px;
+			background-color: white;
+			border-radius: 50%;
+			pointer-events: none;
+			z-index: 9999;
+			
+			box-shadow: 
+				0 0 6px rgba(255, 255, 255, 0.9),
+				0 0 12px rgba(255, 255, 255, 0.5),
+				0 0 20px rgba(255, 215, 0, 0.6);
+				
+			transition: transform 0.05s ease-out;
+			will-change: transform;
+		}
+
+		#rastro-contenedor {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: 9998;
+		}
+
+		.rastro-punto {
+			position: absolute;
+			width: 6px;
+			height: 6px;
+			background-color: rgba(255, 215, 0, 0.6);
+			border-radius: 50%;
+			pointer-events: none;
+			box-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+			animation: fadeOut 0.5s forwards ease-out;
+		}
+
+		@keyframes fadeOut {
+			0% { transform: scale(1); opacity: 0.6; }
+			100% { transform: scale(0.1); opacity: 0; }
+		}
 	</style>
 </head>
 
@@ -355,68 +441,121 @@
 	<canvas id="main-canvas"></canvas>
 	<div class="neon-overlay"></div>
 
-	<div class="wrapper">
-		<!-- Elemento Chat Backdrop con posición exacta copiada -->
-		<div class="chat-backdrop"></div>
+	<!-- Elemento Chat Backdrop con borde animado en dorado y rojo -->
+	<div class="chat-backdrop"></div>
 
-		<div class="screen-layout">
-
-			<!-- Bocina Superior Izquierda (Muy Grande) -->
-			<div class="speaker speaker-top" style="grid-column: 1; grid-row: 1;">
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="inner">
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="cone"></div>
-				</div>
+	<!-- Las 4 Bocinas distribuidas en las esquinas como el segundo código -->
+	<div class="screen-layout">
+		<!-- Bocina Superior Izquierda -->
+		<div class="speaker speaker-top" style="grid-column: 1; grid-row: 1;">
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="inner">
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="cone"></div>
 			</div>
-
-			<!-- Celda Vacía Central para mantener el Grid -->
-			<div style="grid-column: 2; grid-row: 1 / span 2;"></div>
-
-			<!-- Bocina Superior Derecha (Muy Grande) -->
-			<div class="speaker speaker-top" style="grid-column: 3; grid-row: 1;">
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="inner">
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="cone"></div>
-				</div>
-			</div>
-
-			<!-- Bocina Inferior Izquierda (Grande, ligeramente menor a la superior) -->
-			<div class="speaker speaker-bottom" style="grid-column: 1; grid-row: 2;">
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="inner">
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="cone"></div>
-				</div>
-			</div>
-
-			<!-- Bocina Inferior Derecha (Grande, ligeramente menor a la superior) -->
-			<div class="speaker speaker-bottom" style="grid-column: 3; grid-row: 2;">
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="decoration"></div><div class="decoration"></div>
-				<div class="inner">
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-					<div class="spring"></div><div class="cone"></div>
-				</div>
-			</div>
-
 		</div>
 
-		<!-- Texto con efecto neón de alto impacto -->
-		<div class="bottom-text-container">
-			<h1 class="neon-title">LEGION RADIO</h1>
+		<!-- Celda Vacía Central -->
+		<div style="grid-column: 2; grid-row: 1 / span 2;"></div>
+
+		<!-- Bocina Superior Derecha -->
+		<div class="speaker speaker-top" style="grid-column: 3; grid-row: 1;">
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="inner">
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="cone"></div>
+			</div>
+		</div>
+
+		<!-- Bocina Inferior Izquierda -->
+		<div class="speaker speaker-bottom" style="grid-column: 1; grid-row: 2;">
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="inner">
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="cone"></div>
+			</div>
+		</div>
+
+		<!-- Bocina Inferior Derecha -->
+		<div class="speaker speaker-bottom" style="grid-column: 3; grid-row: 2;">
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="decoration"></div><div class="decoration"></div>
+			<div class="inner">
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+				<div class="spring"></div><div class="cone"></div>
+			</div>
 		</div>
 	</div>
 
+	<!-- Logo Tabs -->
+	<div class="logo-tabs">
+		<div class="logo-text">
+			<span>L</span><span>E</span><span>G</span><span>I</span><span>O</span><span>N1</span>
+		</div>
+	</div>
+
+	<!-- Texto con efecto neón de alto impacto -->
+	<div class="bottom-text-container">
+		<h1 class="neon-title">LEGION RADIO</h1>
+	</div>
+
+	<!-- Elementos del cursor personalizado -->
+	<div id="cursor-punto"></div>
+	<div id="rastro-contenedor"></div>
+
 	<script>
+		// --- SCRIPT DEL CURSOR Y RASTRO ---
+		const cursorPunto = document.getElementById('cursor-punto');
+		const rastroContenedor = document.getElementById('rastro-contenedor');
+		
+		let cursorX = 0;
+		let cursorY = 0;
+		let ratonDentro = false;
+
+		document.addEventListener('mousemove', (e) => {
+			cursorX = e.clientX;
+			cursorY = e.clientY;
+			ratonDentro = true;
+			
+			cursorPunto.style.transform = `translate(${cursorX - 4}px, ${cursorY - 4}px)`;
+		});
+
+		document.addEventListener('mouseleave', () => {
+			ratonDentro = false;
+			cursorPunto.style.opacity = '0';
+		});
+		
+		document.addEventListener('mouseenter', () => {
+			ratonDentro = true;
+			cursorPunto.style.opacity = '1';
+		});
+
+		function gestionarRastro() {
+			if (ratonDentro) {
+				const rastroPunto = document.createElement('div');
+				rastroPunto.classList.add('rastro-punto');
+				
+				rastroPunto.style.left = `${cursorX - 3}px`;
+				rastroPunto.style.top = `${cursorY - 3}px`;
+				
+				rastroContenedor.appendChild(rastroPunto);
+				
+				setTimeout(() => {
+					rastroPunto.remove();
+				}, 500);
+			}
+			requestAnimationFrame(gestionarRastro);
+		}
+		gestionarRastro();
+
+		// --- SCRIPT DE LOS HACES DE LUZ / CANVAS ---
 		const canvas = document.getElementById('main-canvas');
 		const ctx = canvas.getContext('2d');
 
@@ -430,7 +569,7 @@
 		class NeonBeam {
 			constructor() {
 				this.reset();
-				this.hue = Math.random() < 0.4 ? (Math.random() < 0.5 ? 45 : 0) : (200 + Math.random() * 160); // Tonos dorados, rojos y neón
+				this.hue = Math.random() < 0.4 ? (Math.random() < 0.5 ? 45 : 0) : (200 + Math.random() * 160); 
 				this.glowColor = `hsla(${this.hue}, 100%, 50%, 0.5)`;
 			}
 			reset() {
@@ -483,7 +622,6 @@
 				ctx.fill();
 				ctx.restore();
 				
-				// Partículas de luz extra
 				if (Math.random() < 0.25) {
 					ctx.beginPath();
 					ctx.arc(
@@ -498,7 +636,6 @@
 			}
 		}
 
-		// 30 haces de luz activos para efecto lleno e intenso
 		const beams = Array.from({
 			length: 30
 		}, () => new NeonBeam());
