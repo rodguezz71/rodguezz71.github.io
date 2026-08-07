@@ -1,703 +1,524 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jinki XatSpace PRO</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Oswald:wght@500;700&family=Space+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Xatframe Backxatbox - Legion Radio</title>
+	<!-- Fuente impactante y moderna desde Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+	
+	<style>
+		:root {
+			--decoration-size: 16px;
+			--gold-glow: #ffd700;
+			--red-glow: #ff0000;
+		}
 
-    <style>
-        :root {
-            --azul-pumas: #002D62; 
-            --azul-brillo: #00d2ff;
-            --oro: #C5B078;
-            --bg-cristal: rgba(10, 15, 25, 0.85);
-            --borde-cristal: rgba(0, 210, 255, 0.2);
-            --pure-white: #ffffff;
-            --white-glow: rgba(255, 255, 255, 0.6);
-        }
+		body {
+			margin: 0;
+			overflow: hidden;
+			background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXogj_rWMdSxyaqzbURuxJnP4ozEjgZUogMsXNPfPSyQ&s=10");
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
 
-        body {
-            margin: 0;
-            padding: 10px;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Poppins', sans-serif;
-            /* Degradado oscuro de abajo hacia arriba combinado con la imagen de fondo */
-            background: linear-gradient(to top, rgba(2, 4, 8, 0.95) 0%, rgba(5, 10, 20, 0.7) 50%, rgba(10, 15, 25, 0.4) 100%), 
-                        url('https://i.pinimg.com/1200x/e5/02/53/e5025381bcba06490647cf356bc5db05.jpg') center/cover no-repeat fixed;
-            color: #fff;
-            box-sizing: border-box;
-            overflow: hidden;
-            cursor: none;
-        }
+		#main-canvas {
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
 
-        /* --- CONTENEDOR DE PARTÍCULAS DE FONDO --- */
-        .particles-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
+		.neon-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100dvw;
+			height: 100dvh;
+			pointer-events: none;
+			background:
+				radial-gradient(circle at 50% 50%,
+					rgba(255, 50, 150, 0.15),
+					transparent 70%);
+			animation: neon-pulse 3s infinite;
+			z-index: 2;
+		}
 
-        .particle {
-            position: absolute;
-            background: var(--azul-brillo);
-            border-radius: 50%;
-            animation: floatParticle linear infinite;
-            opacity: 0;
-            box-shadow: 0 0 6px var(--azul-brillo);
-        }
+		@keyframes neon-pulse {
+			0%, 100% {
+				opacity: 0.4;
+				filter: blur(20px);
+			}
+			50% {
+				opacity: 0.8;
+				filter: blur(35px);
+			}
+		}
 
-        @keyframes floatParticle {
-            0% {
-                transform: translateY(105vh) scale(0);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.9;
-            }
-            80% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1);
-                opacity: 0;
-            }
-        }
+		/* Contenedor principal que unifica la estructura sobre el canvas */
+		.wrapper {
+			width: 100vw;
+			height: 100vh;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			z-index: 3;
+		}
 
-        /* --- CURSOR BRILLANTE PERSONALIZADO --- */
-        .cursor-glow {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle, rgba(0, 210, 255, 0.8) 0%, rgba(0, 210, 255, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 999999;
-            transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
-            mix-blend-mode: screen;
-        }
+		/* Grid optimizado para colocar las bocinas muy grandes en las esquinas */
+		.screen-layout {
+			display: grid;
+			grid-template-columns: 320px 1fr 320px;
+			grid-template-rows: 320px 320px;
+			gap: 10px;
+			width: 98vw;
+			height: 98vh;
+			max-width: 1800px;
+			align-items: center;
+			justify-items: center;
+			position: relative;
+		}
 
-        .cursor-dot {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: #fff;
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 1000000;
-            box-shadow: 0 0 10px #fff;
-        }
+		/* --- ESTILO CHAT BACKDROP CON BORDE ANIMADO DORADO Y ROJO --- */
+		.chat-backdrop {
+			position: absolute; 
+			top: 42%; 
+			left: 50%; 
+			transform: translate(-50%, -50%);
+			width: 728px; 
+			height: 486px; 
+			border-radius: 16px;
+			box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 35px rgba(255, 215, 0, 0.3);
+			z-index: 10; 
+			pointer-events: none; 
+			overflow: hidden; 
+			background-image: url(' https://xatimg.com/image/elY0y7rDXXoR.png');
+			background-size: cover; 
+			background-position: center; 
+			background-repeat: no-repeat;
+			opacity: 0.86;
+			isolation: isolate;
+		}
 
-        /* --- PANTALLA DE INICIO (INTRO) --- */
-        #pantalla-intro {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: all 0.5s ease;
-        }
+		.chat-backdrop::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: conic-gradient(
+				transparent, 
+				transparent, 
+				rgba(255, 0, 0, 0.9), 
+				rgba(255, 215, 0, 0.9),
+				transparent
+			);
+			animation: girarBorde 4s linear infinite;
+			z-index: -2;
+		}
 
-        .intro-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: inherit; filter: grayscale(100%) blur(5px);
-            z-index: -1; transition: opacity 2s ease;
-        }
-        
-        .intro-bg-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); z-index: -1; transition: opacity 2s ease;
-        }
+		.chat-backdrop::after {
+			content: '';
+			position: absolute;
+			inset: 1px;
+			border-radius: 15px;
+			background: inherit;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			z-index: -1;
+		}
 
-        .intro-contenido { text-align: center; transition: opacity 0.5s ease, transform 0.5s ease; }
+		@keyframes girarBorde {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
 
-        .intro-titulo {
-            font-family: 'Oswald', sans-serif; font-size: 5rem; color: #fff; margin: 0;
-            text-transform: uppercase; letter-spacing: 5px;
-            text-shadow: 0 0 30px var(--azul-brillo); animation: latido 2s infinite alternate;
-        }
+		/* --- ESTILO TEXTO INFERIOR EXTREMADAMENTE MÁS GRANDE Y LLAMATIVO --- */
+		.bottom-text-container {
+			position: absolute;
+			bottom: 15px;
+			left: 50%;
+			transform: translateX(-50%);
+			text-align: center;
+			z-index: 25;
+			pointer-events: none;
+			width: 100%;
+		}
 
-        .intro-sub {
-            font-size: 14px; color: var(--oro); margin-top: 10px; letter-spacing: 2px;
-            animation: parpadeo 1.5s infinite;
-        }
+		.neon-title {
+			font-family: 'Kanit', sans-serif;
+			font-size: 110px;
+			font-weight: 900;
+			font-style: italic;
+			text-transform: uppercase;
+			margin: 0;
+			line-height: 1;
+			letter-spacing: 6px;
+			color: #ffffff;
 
-        @keyframes latido {
-            0% { transform: scale(1); text-shadow: 0 0 20px var(--azul-brillo); }
-            100% { transform: scale(1.05); text-shadow: 0 0 50px var(--azul-brillo), 0 0 10px #fff; }
-        }
-        @keyframes parpadeo { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+			/* Gradiente cromado metálico dorado en el texto */
+			background: linear-gradient(180deg, #ffffff 0%, #ffdf73 35%, #d4af37 60%, #ff1100 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
 
-        /* --- CONTENEDOR PRINCIPAL CON UNA SOLA LÍNEA NEÓN GIRATORIA --- */
-        .card-wrapper {
-            position: relative;
-            width: 95vw; 
-            max-width: 360px; 
-            height: 90vh; 
-            max-height: 650px;
-            border-radius: 26px;
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            visibility: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            overflow: hidden;
-            z-index: 2;
-        }
+			/* Triple capa de resplandor Neón Intenso */
+			filter: drop-shadow(0 0 10px #ffffff)
+			        drop-shadow(0 0 25px var(--gold-glow))
+			        drop-shadow(0 0 50px var(--red-glow))
+			        drop-shadow(0 0 90px var(--red-glow));
 
-        .card-wrapper.visible {
-            opacity: 1;
-            transform: scale(1);
-            visibility: visible;
-            animation: flotar 6s ease-in-out infinite 1s; 
-        }
+			/* Animación de palpitación y parpadeo de neón */
+			animation: neon-flicker-beat 2s infinite alternate;
+		}
 
-        .card-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            right: -50%;
-            bottom: -50%;
-            background: conic-gradient(from 0deg, transparent 70%, transparent 90%, #39ff14 98%, #ffffff 100%);
-            animation: girarUnaLinea 4s linear infinite;
-            z-index: 1;
-        }
+		@keyframes neon-flicker-beat {
+			0%, 100% {
+				transform: scale(1);
+				filter: drop-shadow(0 0 10px #ffffff)
+				        drop-shadow(0 0 25px var(--gold-glow))
+				        drop-shadow(0 0 50px var(--red-glow))
+				        drop-shadow(0 0 90px var(--red-glow));
+			}
+			50% {
+				transform: scale(1.04);
+				filter: drop-shadow(0 0 15px #ffffff)
+				        drop-shadow(0 0 40px var(--gold-glow))
+				        drop-shadow(0 0 70px var(--red-glow))
+				        drop-shadow(0 0 120px var(--red-glow));
+			}
+			92% {
+				opacity: 1;
+			}
+			93% {
+				opacity: 0.4;
+			}
+			94% {
+				opacity: 1;
+			}
+			96% {
+				opacity: 0.2;
+			}
+			98% {
+				opacity: 1;
+			}
+		}
 
-        @keyframes girarUnaLinea {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+		/* Estilos generales de las bocinas */
+		.speaker {
+			border-radius: 100%;
+			background: linear-gradient(#333, black);
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+			z-index: 5;
+		}
 
-        @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+		/* Bocinas Superiores (Mucho más grandes) */
+		.speaker-top {
+			--speaker-size: 320px;
+			width: var(--speaker-size);
+			height: var(--speaker-size);
+		}
 
-        .card {
-            position: absolute;
-            inset: 2px;
-            background: var(--bg-cristal); 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 24px; 
-            border: 1px solid var(--borde-cristal);
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            z-index: 2;
-        }
+		/* Bocinas Inferiores (Un poco más chicas que las superiores pero aún grandes) */
+		.speaker-bottom {
+			--speaker-size: 260px;
+			width: var(--speaker-size);
+			height: var(--speaker-size);
+		}
 
-        /* --- PORTADA --- */
-        .portada {
-            height: 140px; min-height: 140px;
-            background: url('https://mrwallpaper.com/images/hd/powerful-sesshomaru-in-midst-of-battle-57xxs3lcy4iuhhxm.jpg') center/cover; position: relative;
-        }
-        .portada::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 70%;
-            background: linear-gradient(to top, rgba(10,15,25,0.9), transparent);
-        }
+		/* Decoraciones esquineras dinámicas basadas en tamaño */
+		.speaker-top .decoration:nth-of-type(1) { left: 45px; top: 45px; }
+		.speaker-top .decoration:nth-of-type(2) { right: 45px; top: 45px; left: auto; }
+		.speaker-top .decoration:nth-of-type(3) { right: 45px; bottom: 45px; left: auto; top: auto; }
+		.speaker-top .decoration:nth-of-type(4) { left: 45px; bottom: 45px; top: auto; }
 
-        /* --- AVATAR Y HEADER --- */
-        .perfil-header { display: flex; flex-direction: column; align-items: center; margin-top: -60px; position: relative; z-index: 2; }
-        
-        .avatar {
-            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
-            border: 3px solid rgba(10, 15, 25, 0.9); box-shadow: 0 0 20px var(--azul-brillo);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .avatar:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 0 40px var(--azul-brillo); border-color: var(--azul-brillo); }
+		.speaker-bottom .decoration:nth-of-type(1) { left: 36px; top: 36px; }
+		.speaker-bottom .decoration:nth-of-type(2) { right: 36px; top: 36px; left: auto; }
+		.speaker-bottom .decoration:nth-of-type(3) { right: 36px; bottom: 36px; left: auto; top: auto; }
+		.speaker-bottom .decoration:nth-of-type(4) { left: 36px; bottom: 36px; top: auto; }
 
-        .nombre {
-            font-family: 'Oswald', sans-serif; font-size: 26px; margin: 10px 0 2px; color: #fff;
-            text-transform: uppercase; text-shadow: 0 0 15px var(--azul-brillo); letter-spacing: 1px;
-        }
+		.decoration {
+			position: absolute;
+			width: var(--decoration-size);
+			height: var(--decoration-size);
+			border-radius: 100%;
+			background: radial-gradient(gray, black);
+			border: 2px solid #aaa;
+		}
 
-        .id-codigo {
-            font-family: 'Space Mono', monospace; font-size: 11px; color: var(--oro);
-            background: rgba(0, 0, 0, 0.6); padding: 4px 15px; border-radius: 20px;
-            border: 1px solid rgba(197, 176, 120, 0.4); margin-bottom: 5px; letter-spacing: 3px;
-            box-shadow: 0 0 10px rgba(197, 176, 120, 0.2);
-        }
+		/* Elementos Internos Bocina Superior */
+		.speaker-top .inner {
+			width: 240px;
+			height: 240px;
+			border-radius: 100%;
+			background: #333;
+			box-shadow: 0 0 30px black inset;
+			border: 5px solid black;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+		}
 
-        /* --- NAVEGACIÓN Y ESTADO --- */
-        .nav-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(0, 210, 255, 0.15);
-            background: rgba(0, 0, 0, 0.2);
-        }
+		.speaker-top .cone {
+			width: 105px;
+			height: 105px;
+			border-radius: 100%;
+			background: radial-gradient(circle at 50% 20%, #ffdf73, #d4af37 2%, #8b0000 20%, black 70%);
+			z-index: 10;
+			animation: bounce .5s infinite;
+			box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+		}
 
-        .nav { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            position: relative;
-        }
+		.speaker-top .spring {
+			position: absolute;
+			background: #333;
+			box-shadow: 0 0 25px inset black;
+			border-radius: 100%;
+			animation: spring .5s infinite;
+		}
 
-        .nav-indicator {
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            height: 3px;
-            background: var(--azul-brillo);
-            box-shadow: 0 0 10px var(--azul-brillo);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 0px;
-            transform: translateX(0);
-        }
+		.speaker-top .spring:nth-of-type(1) { width: 215px; height: 215px; }
+		.speaker-top .spring:nth-of-type(2) { width: 190px; height: 190px; }
+		.speaker-top .spring:nth-of-type(3) { width: 165px; height: 165px; }
+		.speaker-top .spring:nth-of-type(4) { width: 140px; height: 140px; }
+		.speaker-top .spring:nth-of-type(5) { width: 115px; height: 115px; }
+		.speaker-top .spring:nth-of-type(6) { width: 90px; height: 90px; }
+		.speaker-top .spring:nth-of-type(7) { width: 65px; height: 65px; }
 
-        .nav-btn {
-            background: none; border: none; color: rgba(255, 255, 255, 0.4); font-size: 22px; transition: 0.3s; position: relative; padding: 5px 10px;
-        }
-        .nav-btn.activo { color: var(--azul-brillo); transform: translateY(-2px); }
+		/* Elementos Internos Bocina Inferior */
+		.speaker-bottom .inner {
+			width: 190px;
+			height: 190px;
+			border-radius: 100%;
+			background: #333;
+			box-shadow: 0 0 30px black inset;
+			border: 4px solid black;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+		}
 
-        /* --- RECUADRO TRANSPARENTE DE ESTADO --- */
-        .status-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.03);
-        }
+		.speaker-bottom .cone {
+			width: 80px;
+			height: 80px;
+			border-radius: 100%;
+			background: radial-gradient(circle at 50% 20%, #ffdf73, #d4af37 2%, #8b0000 20%, black 70%);
+			z-index: 10;
+			animation: bounce .5s infinite;
+			box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+		}
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
+		.speaker-bottom .spring {
+			position: absolute;
+			background: #333;
+			box-shadow: 0 0 25px inset black;
+			border-radius: 100%;
+			animation: spring .5s infinite;
+		}
 
-        .status-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 1px;
-            color: #fff;
-            text-shadow: 0 0 5px rgba(255,255,255,0.3);
-        }
+		.speaker-bottom .spring:nth-of-type(1) { width: 170px; height: 170px; }
+		.speaker-bottom .spring:nth-of-type(2) { width: 150px; height: 150px; }
+		.speaker-bottom .spring:nth-of-type(3) { width: 130px; height: 130px; }
+		.speaker-bottom .spring:nth-of-type(4) { width: 110px; height: 110px; }
+		.speaker-bottom .spring:nth-of-type(5) { width: 90px; height: 90px; }
+		.speaker-bottom .spring:nth-of-type(6) { width: 70px; height: 70px; }
+		.speaker-bottom .spring:nth-of-type(7) { width: 50px; height: 50px; }
 
-        /* --- CONTENIDO INTERNO --- */
-        .contenido {
-            flex: 1; overflow-y: auto; padding: 20px; position: relative;
-            -ms-overflow-style: none; scrollbar-width: none;
-        }
-        .contenido::-webkit-scrollbar { display: none; }
-        .tab { display: none; opacity: 0; }
-        .tab.activa { display: block; animation: zoomFade 0.4s forwards; }
+		@keyframes bounce {
+			0% { transform: scale(1); }
+			10% { transform: scale(1.3); }
+			20% { transform: scale(1.2); }
+			100% { transform: scale(1); }
+		}
 
-        @keyframes zoomFade { 0% { opacity: 0; transform: scale(0.95) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-
-        /* --- SECCIONES --- */
-        .bio { font-size: 13px; color: #b0c4de; text-align: center; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);}
-        
-        .datos {
-            display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.4); border-radius: 15px;
-            padding: 15px 0; border: 1px solid rgba(0, 210, 255, 0.15); box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
-        }
-        .dato-item { text-align: center; }
-        .dato-num { font-family: 'Oswald'; font-size: 20px; color: var(--azul-brillo); display: block; text-shadow: 0 0 10px var(--azul-brillo);}
-        .dato-text { font-size: 9px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px;}
-
-        /* --- AMIGOS --- */
-        .amigo-item {
-            display:flex; gap:15px; margin-bottom:15px; background: rgba(0, 210, 255, 0.05); padding:10px; 
-            border-radius:15px; align-items:center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
-        }
-        .amigo-item:hover {
-            border-color: var(--azul-brillo); background: rgba(0, 210, 255, 0.1);
-            transform: translateX(5px); box-shadow: 0 5px 15px rgba(0, 210, 255, 0.2);
-        }
-
-        /* --- REPRODUCTOR BLANCO ESTILIZADO --- */
-        .audio-controls {
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 12px 20px; 
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
-            margin-top: 25px;
-        }
-
-        .audio-controls i {
-            cursor: pointer; 
-            color: var(--pure-white); 
-            font-size: 1.2rem; 
-            text-shadow: 0 0 10px var(--white-glow);
-            transition: 0.3s;
-        }
-
-        .audio-controls i:hover {
-            text-shadow: 0 0 15px var(--pure-white);
-            transform: scale(1.1);
-        }
-
-        input[type=range] { 
-            -webkit-appearance: none; 
-            width: 80px; 
-            background: transparent; 
-        }
-        input[type=range]::-webkit-slider-runnable-track { 
-            width: 100%; 
-            height: 3px; 
-            background: rgba(255, 255, 255, 0.3); 
-            border-radius: 5px;
-        }
-        input[type=range]::-webkit-slider-thumb { 
-            -webkit-appearance: none; 
-            height: 12px; 
-            width: 12px; 
-            border-radius: 50%; 
-            background: var(--pure-white); 
-            cursor: pointer; 
-            margin-top: -4.5px; 
-            box-shadow: 0 0 10px var(--pure-white); 
-        }
-
-        /* --- FIRMA DEL CREADOR --- */
-        .firma-creador {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 13px;
-            letter-spacing: 2px;
-            z-index: 50; 
-            pointer-events: none; 
-            animation: colorFirma 4s infinite alternate ease-in-out;
-        }
-
-        @keyframes colorFirma {
-            0% { color: #555555; opacity: 0.3; text-shadow: 0 0 2px rgba(85,85,85,0.2); } 
-            50% { color: #e0e0e0; opacity: 0.7; text-shadow: 0 0 8px rgba(224,224,224,0.6); } 
-            100% { color: #999999; opacity: 0.4; text-shadow: 0 0 4px rgba(153,153,153,0.3); } 
-        }
-
-    </style>
+		@keyframes spring {
+			0% { transform: scale(1); }
+			10% { transform: scale(1.05); }
+			100% { transform: scale(1); }
+		}
+	</style>
 </head>
+
 <body>
+	<canvas id="main-canvas"></canvas>
+	<div class="neon-overlay"></div>
 
-    <!-- Contenedor de partículas dinámicas -->
-    <div class="particles-container" id="particlesContainer"></div>
+	<div class="wrapper">
+		<div class="screen-layout">
+			
+			<!-- Elemento Chat Backdrop con borde animado en dorado y rojo -->
+			<div class="chat-backdrop"></div>
 
-    <div class="cursor-glow" id="cursor-glow"></div>
-    <div class="cursor-dot" id="cursor-dot"></div>
+			<!-- Bocina Superior Izquierda (Muy Grande) -->
+			<div class="speaker speaker-top" style="grid-column: 1; grid-row: 1;">
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="inner">
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="cone"></div>
+				</div>
+			</div>
 
-    <div class="firma-creador">Desings:  ☬ TemerX™</div>
+			<!-- Celda Vacía Central para mantener el Grid -->
+			<div style="grid-column: 2; grid-row: 1 / span 2;"></div>
 
-    <div id="pantalla-intro" onclick="entrarAlPerfil()">
-        <div class="intro-bg" id="intro-bg"></div>
-        <div class="intro-bg-overlay" id="intro-overlay"></div>
-        
-        <div class="intro-contenido" id="intro-texto">
-            <h1 class="intro-titulo">˹•ᴊɪɴᴋɪ)ᴛᴀʀᴍᴀ•˼</h1>
-            <p class="intro-sub"><i class="fa-solid fa-play"></i> Haz clic para entrar</p>
-        </div>
-    </div>
+			<!-- Bocina Superior Derecha (Muy Grande) -->
+			<div class="speaker speaker-top" style="grid-column: 3; grid-row: 1;">
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="inner">
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="cone"></div>
+				</div>
+			</div>
 
-    <div class="card-wrapper" id="tarjeta-principal">
-        <div class="card">
-            <div class="portada"></div>
-    <!----Perfil----->
-            <div class="perfil-header">
-                <img src="https://w0.peakpx.com/wallpaper/448/440/HD-wallpaper-inuyasha-anime.jpg" alt="Avatar" class="avatar">
-                <h1 class="nombre">˹•ᴊɪɴᴋɪ)ᴛᴀʀᴍᴀ•˼</h1>
-                <div class="id-codigo">444325008</div>
-            </div>
+			<!-- Bocina Inferior Izquierda (Grande, ligeramente menor a la superior) -->
+			<div class="speaker speaker-bottom" style="grid-column: 1; grid-row: 2;">
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="inner">
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="cone"></div>
+				</div>
+			</div>
 
-            <div class="nav-wrapper">
-                <div class="nav" id="nav-container">
-                    <div class="nav-indicator" id="nav-indicator"></div>
-                    <button class="nav-btn activo clikable" onclick="abrirTab('tab-perfil', this)" title="Perfil"><i class="fa-regular fa-user"></i></button>
-                    <button class="nav-btn clikable" onclick="abrirTab('tab-amigos', this)" title="Amigos"><i class="fa-solid fa-users"></i></button>
-                </div>
-                
-                <div class="status-box">
-                    <div class="status-dot" id="status-indicator"></div>
-                    <span class="status-label" id="status-text">CARGANDO...</span>
-                </div>
-            </div>
+			<!-- Bocina Inferior Derecha (Grande, ligeramente menor a la superior) -->
+			<div class="speaker speaker-bottom" style="grid-column: 3; grid-row: 2;">
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="decoration"></div><div class="decoration"></div>
+				<div class="inner">
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="spring"></div><div class="spring"></div>
+					<div class="spring"></div><div class="cone"></div>
+				</div>
+			</div>
 
-            <div class="contenido">
-                
-                <div id="tab-perfil" class="tab activa">
-                    <p class="bio">“No importa cuánto tiempo tome, haré que te conviertas en un demonio completo.”</p>
-                    <div class="datos">
-                        <div class="dato-item">
-                            <span class="dato-num">Ciudad</span>
-                            <span class="dato-text">Saitama</span>
-                        </div>
-                        <div class="dato-item">
-                            <span class="dato-num">Signo</span>
-                            <span class="dato-text">Geminis</span>
-                        </div>
-                        <div class="dato-item">
-                            <span class="dato-num">Cumpleaños</span>
-                            <span class="dato-text">********</span>
-                        </div>
-                    </div>
+		</div>
 
-                    <!-- Reproductor de Música Blanco integrado -->
-                    <div class="audio-controls">
-                        <i class="fas fa-play clikable" id="playBtn" onclick="togglePlay()"></i>
-                        <i class="fas fa-volume-up clikable" id="muteBtn" onclick="toggleMute()"></i>
-                        <input type="range" class="clikable" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
-                    </div>
-                </div>
-<!---Amigos--->
-                <div id="tab-amigos" class="tab">
-                    <div class="amigo-item clikable">
-                        <img src="https://xatimg.com/image/yLXeAZnrGZKr.png" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div style="font-weight:600; font-size:14px;">TemerX</div>
-                            <div style="font-size:11px; color:var(--oro);">1506439507</div>
-                        </div>
-                    </div>
-                    <!---Amigos Pendiente 
-                    <div class="amigo-item clikable">
-                        <img src="https://i.pinimg.com/736x/a2/cf/01/a2cf01719bfb5db39824fb7e671a3360.jpg" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div style="font-weight:600; font-size:14px;">Amigo 2</div>
-                            <div style="font-size:11px; color:var(--oro);">000000</div>
-                        </div>
-                    </div>
-                    <div class="amigo-item clikable">
-                        <img src="https://i.pinimg.com/736x/a2/cf/01/a2cf01719bfb5db39824fb7e671a3360.jpg" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div style="font-weight:600; font-size:14px;">Amigo 3</div>
-                            <div style="font-size:11px; color:var(--oro);">000000</div>
-                        </div>
-                    </div>
-                    <div class="amigo-item clikable">
-                        <img src="https://i.pinimg.com/736x/a2/cf/01/a2cf01719bfb5db39824fb7e671a3360.jpg" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div style="font-weight:600; font-size:14px;">Amigo 4 </div>
-                            <div style="font-size:11px; color:var(--oro);">000000</div>
-                        </div>
-                    </div>
-                      Amigos Pendiente --->
-                </div>
-    <!---Amigos--->
+		<!-- Texto con efecto neón de alto impacto -->
+		<div class="bottom-text-container">
+			<h1 class="neon-title">LEGION RADIO</h1>
+		</div>
+	</div>
 
-            </div>
-        </div>
-    </div>
+	<script>
+		const canvas = document.getElementById('main-canvas');
+		const ctx = canvas.getContext('2d');
 
-    <!-- Etiqueta de Audio -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.image2url.com/r2/default/audio/1785838315184-5a06837a-9ca5-495c-a7dd-09cdca915ff9.mp3" type="audio/mpeg">
-    </audio>
+		function resizeCanvas() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		window.addEventListener('resize', resizeCanvas);
+		resizeCanvas();
 
-    <script>
-        /* --- GENERADOR DE PARTÍCULAS --- */
-        function crearParticulas() {
-            const container = document.getElementById('particlesContainer');
-            const cantidad = 90; // Cantidad incrementada de partículas
+		class NeonBeam {
+			constructor() {
+				this.reset();
+				this.hue = Math.random() < 0.4 ? (Math.random() < 0.5 ? 45 : 0) : (200 + Math.random() * 160); // Tonos dorados, rojos y neón
+				this.glowColor = `hsla(${this.hue}, 100%, 50%, 0.5)`;
+			}
+			reset() {
+				this.x = Math.random() * canvas.width;
+				this.y = -50;
+				this.angle = Math.PI / 2 + (Math.random() - 0.5) * 0.8;
+				this.life = 0;
+				this.maxLife = 1.5 + Math.random() * 2.5;
+				this.speed = 1 + Math.random() * 3;
+				this.curve = Math.random() * 0.04 - 0.02;
+			}
+			update(deltaTime) {
+				this.life += deltaTime;
+				if (this.life > this.maxLife) this.reset();
+				this.x += Math.cos(this.angle) * this.speed;
+				this.y += Math.sin(this.angle) * this.speed;
+				this.angle += this.curve;
+			}
+			draw() {
+				const progress = this.life / this.maxLife;
+				const alpha = (1 - progress) * 0.9;
+				const beamLength = 350 + Math.sin(progress * Math.PI) * 150;
+				
+				const gradient = ctx.createLinearGradient(
+					this.x, this.y,
+					this.x + Math.cos(this.angle) * beamLength,
+					this.y + Math.sin(this.angle) * beamLength
+				);
+				gradient.addColorStop(0, `hsla(${this.hue}, 100%, 85%, ${alpha})`);
+				gradient.addColorStop(1, `hsla(${this.hue}, 100%, 50%, 0)`);
+				
+				ctx.save();
+				ctx.shadowColor = this.glowColor;
+				ctx.shadowBlur = 25 + 15 * Math.sin(progress * Math.PI * 2);
+				ctx.shadowOffsetX = 2;
+				ctx.shadowOffsetY = 2;
+				
+				ctx.beginPath();
+				ctx.moveTo(this.x, this.y);
+				ctx.lineTo(
+					this.x + Math.cos(this.angle - 0.12) * beamLength,
+					this.y + Math.sin(this.angle - 0.12) * beamLength
+				);
+				ctx.lineTo(
+					this.x + Math.cos(this.angle + 0.12) * beamLength,
+					this.y + Math.sin(this.angle + 0.12) * beamLength
+				);
+				ctx.closePath();
+				ctx.fillStyle = gradient;
+				ctx.fill();
+				ctx.restore();
+				
+				// Partículas de luz extra
+				if (Math.random() < 0.25) {
+					ctx.beginPath();
+					ctx.arc(
+						this.x + Math.cos(this.angle) * beamLength * Math.random(),
+						this.y + Math.sin(this.angle) * beamLength * Math.random(),
+						1.5 + Math.random() * 3.5,
+						0, Math.PI * 2
+					);
+					ctx.fillStyle = `hsla(${this.hue}, 100%, 95%, ${alpha * 0.8})`;
+					ctx.fill();
+				}
+			}
+		}
 
-            for (let i = 0; i < cantidad; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Posición y tamaño aleatorio
-                const size = Math.random() * 3.5 + 1; // entre 1px y 4.5px
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}vw`;
-                
-                // Duración y retraso aleatorio para el movimiento fluido
-                const duration = Math.random() * 6 + 3; // entre 3s y 9s
-                const delay = Math.random() * 5;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
+		// 30 haces de luz activos para efecto lleno e intenso
+		const beams = Array.from({
+			length: 30
+		}, () => new NeonBeam());
+		let lastTime = 0;
 
-                container.appendChild(particle);
-            }
-        }
-        crearParticulas();
-
-        /* --- LÓGICA DEL CURSOR MÁGICO --- */
-        const cursorGlow = document.getElementById('cursor-glow');
-        const cursorDot = document.getElementById('cursor-dot');
-
-        document.addEventListener('mousemove', (e) => {
-            cursorGlow.style.left = e.clientX + 'px';
-            cursorGlow.style.top = e.clientY + 'px';
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
-        });
-
-        document.querySelectorAll('.clikable, #pantalla-intro, .avatar').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorGlow.style.width = '60px';
-                cursorGlow.style.height = '60px';
-                cursorGlow.style.background = 'radial-gradient(circle, rgba(0, 210, 255, 0.9) 0%, rgba(0, 210, 255, 0) 70%)';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorGlow.style.width = '30px';
-                cursorGlow.style.height = '30px';
-                cursorGlow.style.background = 'radial-gradient(circle, rgba(0, 210, 255, 0.8) 0%, rgba(0, 210, 255, 0) 70%)';
-            });
-        });
-
-        /* --- REPRODUCTOR DE MÚSICA --- */
-        const music = document.getElementById('bgMusic');
-        const muteBtn = document.getElementById('muteBtn');
-        const playBtn = document.getElementById('playBtn');
-
-        music.volume = 0.5;
-
-        function togglePlay() {
-            if (music.paused) {
-                music.play().then(() => {
-                    playBtn.className = "fas fa-pause clikable";
-                }).catch(e => console.log("Reproducción bloqueada por navegador"));
-            } else {
-                music.pause();
-                playBtn.className = "fas fa-play clikable";
-            }
-        }
-
-        function toggleMute() {
-            if (music.muted) { 
-                music.muted = false; 
-                muteBtn.className = "fas fa-volume-up clikable"; 
-            } else { 
-                music.muted = true; 
-                muteBtn.className = "fas fa-volume-mute clikable"; 
-            }
-        }
-
-        function changeVolume(val) {
-            music.volume = val;
-            muteBtn.className = val == 0 ? "fas fa-volume-mute clikable" : "fas fa-volume-up clikable";
-            if(val > 0) music.muted = false;
-        }
-
-        /* --- FETCH ONLINE STATUS --- */
-        async function fetchOnlineStatus() {
-            try {
-                const response = await fetch('https://illuxat.com/api/online/jinkitarma');
-                const text = await response.text();
-                const statusText = document.getElementById('status-text');
-                const statusIndicator = document.getElementById('status-indicator');
-                
-                let isOnline = false;
-                
-                try {
-                    const data = JSON.parse(text);
-                    if (data && data.data && data.data.status === "Online") {
-                        isOnline = true;
-                    } else if (data && data.status === "Online") {
-                        isOnline = true;
-                    } else if (data === "Online") {
-                        isOnline = true;
-                    }
-                } catch (e) {
-                    const cleanText = text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-                    if (cleanText === "online" || cleanText === "1" || cleanText === "true") {
-                        isOnline = true;
-                    }
-                }
-                
-                if (isOnline) {
-                    statusText.innerText = "EN LÍNEA";
-                    statusIndicator.className = "status-dot bg-green-500 animate-pulse";
-                    statusIndicator.style.backgroundColor = "#22c55e";
-                    statusIndicator.style.boxShadow = "0 0 8px #22c55e";
-                } else {
-                    statusText.innerText = "AUSENTE";
-                    statusIndicator.className = "status-dot bg-orange-500 animate-pulse";
-                    statusIndicator.style.backgroundColor = "#f97316";
-                    statusIndicator.style.boxShadow = "0 0 8px #f97316";
-                }
-            } catch (error) {
-                console.error("Error fetching online status:", error);
-                const statusText = document.getElementById('status-text');
-                const statusIndicator = document.getElementById('status-indicator');
-                statusText.innerText = "AUSENTE";
-                statusIndicator.style.backgroundColor = "#f97316";
-            }
-        }
-        
-        fetchOnlineStatus();
-
-        /* --- LÓGICA DEL ENTORNO --- */
-        const intro = document.getElementById('pantalla-intro');
-        const introTexto = document.getElementById('intro-texto');
-        const introBg = document.getElementById('intro-bg');
-        const introOverlay = document.getElementById('intro-overlay');
-        const tarjeta = document.getElementById('tarjeta-principal');
-
-        function entrarAlPerfil() {
-            music.play().then(() => {
-                playBtn.className = "fas fa-pause clikable";
-            }).catch(e => console.log("Reproducción bloqueada por navegador"));
-
-            introTexto.style.opacity = '0';
-            introTexto.style.transform = 'scale(0.8)';
-            introBg.style.filter = 'grayscale(0%) blur(0px)';
-            introOverlay.style.opacity = '0.3'; 
-            intro.style.pointerEvents = 'none';
-
-            setTimeout(() => {
-                intro.style.opacity = '0'; 
-                setTimeout(() => {
-                    intro.style.display = 'none'; 
-                    tarjeta.classList.add('visible'); 
-                    actualizarIndicador(document.querySelector('.nav-btn.activo'));
-                }, 1000); 
-            }, 1500); 
-        }
-
-        function actualizarIndicador(elemento) {
-            const indicador = document.getElementById('nav-indicator');
-            const navContainer = document.getElementById('nav-container');
-            
-            const btnRect = elemento.getBoundingClientRect();
-            const navRect = navContainer.getBoundingClientRect();
-            
-            const leftPos = btnRect.left - navRect.left;
-            const width = btnRect.width;
-
-            indicador.style.width = width + 'px';
-            indicador.style.transform = `translateX(${leftPos}px)`;
-        }
-
-        function abrirTab(tabId, elemento) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('activa'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('activa'));
-            document.getElementById(tabId).classList.add('activa');
-            elemento.classList.add('activa');
-            
-            actualizarIndicador(elemento);
-        }
-
-        window.addEventListener('resize', () => {
-            const btnActivo = document.querySelector('.nav-btn.activo');
-            if (btnActivo) {
-                actualizarIndicador(btnActivo);
-            }
-        });
-    </script>
+		function animate(timestamp) {
+			const deltaTime = (timestamp - lastTime) / 1000;
+			lastTime = timestamp;
+			
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			
+			beams.forEach(beam => {
+				beam.update(deltaTime);
+				beam.draw();
+			});
+			requestAnimationFrame(animate);
+		}
+		animate(0);
+	</script>
 </body>
+
 </html>
