@@ -12,7 +12,7 @@
 	
 	<style>
 		:root {
-			--decoration-size: 16px;
+			--decoration-size: 38px;
 			--gold-glow: #ffd700;
 			--red-glow: #ff0000;
 		}
@@ -23,12 +23,45 @@
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
-			background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXogj_rWMdSxyaqzbURuxJnP4ozEjgZUogMsXNPfPSyQ&s=10");
+			background: url("https://wallpapercat.com/w/full/4/2/6/196885-2560x1440-desktop-hd-party-background-photo.jpg");
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
 			cursor: none;
 			perspective: 1200px;
+		}
+
+		#zone {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			pointer-events: none;
+			z-index: 3;
+		}
+
+		.bubble {
+			position: absolute;
+			border-radius: 50%;
+			pointer-events: none;
+			animation: floatUp 3s ease-out forwards;
+			mix-blend-mode: screen;
+			filter: blur(1px);
+		}
+
+		@keyframes floatUp {
+			0% {
+				transform: translateY(0) scale(0.3);
+				opacity: 0;
+			}
+			15% {
+				opacity: 0.8;
+			}
+			100% {
+				transform: translateY(-250px) scale(1.2);
+				opacity: 0;
+			}
 		}
 
 		#main-canvas {
@@ -65,7 +98,7 @@
 			}
 		}
 
-		/* --- ESTILO CHAT BACKDROP CON BORDE ANIMADO DORADO Y ROJO (Posición del primer código) --- */
+		/* --- ESTILO CHAT BACKDROP CON BORDE ANIMADO DORADO Y ROJO --- */
 		.chat-backdrop {
 			position: absolute; 
 			top: 93px; 
@@ -121,7 +154,7 @@
 			100% { transform: rotate(360deg); }
 		}
 
-		/* --- LOGO TABS SUPERIOR CENTRO (Posición del primer código) --- */
+		/* --- LOGO TABS SUPERIOR CENTRO --- */
 		.logo-tabs {
 			position: absolute; 
 			right: calc(50.25% - 189px + 10px); 
@@ -166,10 +199,10 @@
 			100% { opacity: 1; transform: translateY(0) scale(1); }
 		}
 
-		/* --- ESTILO TEXTO INFERIOR EXTREMADAMENTE MÁS GRANDE Y LLAMATIVO --- */
+		/* --- ESTILO TEXTO INFERIOR --- */
 		.bottom-text-container {
 			position: absolute;
-			bottom: 15px;
+			bottom: 35px;
 			left: 50%;
 			transform: translateX(-50%);
 			text-align: center;
@@ -216,24 +249,14 @@
 				        drop-shadow(0 0 70px var(--red-glow))
 				        drop-shadow(0 0 120px var(--red-glow));
 			}
-			92% {
-				opacity: 1;
-			}
-			93% {
-				opacity: 0.4;
-			}
-			94% {
-				opacity: 1;
-			}
-			96% {
-				opacity: 0.2;
-			}
-			98% {
-				opacity: 1;
-			}
+			92% { opacity: 1; }
+			93% { opacity: 0.4; }
+			94% { opacity: 1; }
+			96% { opacity: 0.2; }
+			98% { opacity: 1; }
 		}
 
-		/* Contenedor Grid general para las 4 bocinas en las esquinas */
+		/* Contenedor Grid general (Bocinas grandes: 450px) */
 		.screen-layout {
 			position: absolute;
 			top: 0;
@@ -241,8 +264,8 @@
 			width: 100vw;
 			height: 100vh;
 			display: grid;
-			grid-template-columns: 320px 1fr 320px;
-			grid-template-rows: 320px 320px;
+			grid-template-columns: 450px 1fr 450px;
+			grid-template-rows: 450px 450px;
 			gap: 10px;
 			max-width: 100%;
 			align-items: center;
@@ -258,33 +281,20 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+			box-shadow: 0 16px 32px rgba(0,0,0,0.7);
 			pointer-events: auto;
 		}
 
-		/* Bocinas Superiores */
 		.speaker-top {
-			--speaker-size: 320px;
+			--speaker-size: 450px;
 			width: var(--speaker-size);
 			height: var(--speaker-size);
 		}
 
-		/* Bocinas Inferiores */
-		.speaker-bottom {
-			--speaker-size: 260px;
-			width: var(--speaker-size);
-			height: var(--speaker-size);
-		}
-
-		.speaker-top .decoration:nth-of-type(1) { left: 45px; top: 45px; }
-		.speaker-top .decoration:nth-of-type(2) { right: 45px; top: 45px; left: auto; }
-		.speaker-top .decoration:nth-of-type(3) { right: 45px; bottom: 45px; left: auto; top: auto; }
-		.speaker-top .decoration:nth-of-type(4) { left: 45px; bottom: 45px; top: auto; }
-
-		.speaker-bottom .decoration:nth-of-type(1) { left: 36px; top: 36px; }
-		.speaker-bottom .decoration:nth-of-type(2) { right: 36px; top: 36px; left: auto; }
-		.speaker-bottom .decoration:nth-of-type(3) { right: 36px; bottom: 36px; left: auto; top: auto; }
-		.speaker-bottom .decoration:nth-of-type(4) { left: 36px; bottom: 36px; top: auto; }
+		.speaker-top .decoration:nth-of-type(1) { left: 60px; top: 60px; }
+		.speaker-top .decoration:nth-of-type(2) { right: 60px; top: 60px; left: auto; }
+		.speaker-top .decoration:nth-of-type(3) { right: 60px; bottom: 60px; left: auto; top: auto; }
+		.speaker-top .decoration:nth-of-type(4) { left: 60px; bottom: 60px; top: auto; }
 
 		.decoration {
 			position: absolute;
@@ -295,28 +305,60 @@
 			border: 2px solid #aaa;
 		}
 
-		/* Elementos Internos Bocina Superior */
 		.speaker-top .inner {
-			width: 240px;
-			height: 240px;
+			width: 330px;
+			height: 330px;
 			border-radius: 100%;
 			background: #333;
-			box-shadow: 0 0 30px black inset;
-			border: 5px solid black;
+			box-shadow: 0 0 35px black inset;
+			border: 6px solid black;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			position: relative;
+			overflow: visible;
+		}
+
+		/* --- EFECTO DE ONDAS DE SONIDO SALIENDO DE LAS BOCINAS --- */
+		.sound-wave {
+			position: absolute;
+			border-radius: 100%;
+			border: 3px solid rgba(255, 215, 0, 0.8);
+			box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.4);
+			pointer-events: none;
+			animation: expandWave 2s linear infinite;
+			z-index: 5;
+		}
+
+		.sound-wave:nth-child(1) { animation-delay: 0s; }
+		.sound-wave:nth-child(2) { animation-delay: 0.6s; }
+		.sound-wave:nth-child(3) { animation-delay: 1.2s; }
+
+		@keyframes expandWave {
+			0% {
+				width: 150px;
+				height: 150px;
+				opacity: 1;
+				transform: scale(0.8);
+			}
+			100% {
+				width: 380px;
+				height: 380px;
+				opacity: 0;
+				transform: scale(1.3);
+				border-color: rgba(255, 0, 0, 0);
+				box-shadow: 0 0 25px rgba(255, 0, 0, 0);
+			}
 		}
 
 		.speaker-top .cone {
-			width: 105px;
-			height: 105px;
+			width: 150px;
+			height: 150px;
 			border-radius: 100%;
 			background: radial-gradient(circle at 50% 20%, #ffdf73, #d4af37 2%, #8b0000 20%, black 70%);
 			z-index: 10;
 			animation: bounce .5s infinite;
-			box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+			box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
 		}
 
 		.speaker-top .spring {
@@ -327,53 +369,13 @@
 			animation: spring .5s infinite;
 		}
 
-		.speaker-top .spring:nth-of-type(1) { width: 215px; height: 215px; }
-		.speaker-top .spring:nth-of-type(2) { width: 190px; height: 190px; }
-		.speaker-top .spring:nth-of-type(3) { width: 165px; height: 165px; }
-		.speaker-top .spring:nth-of-type(4) { width: 140px; height: 140px; }
-		.speaker-top .spring:nth-of-type(5) { width: 115px; height: 115px; }
-		.speaker-top .spring:nth-of-type(6) { width: 90px; height: 90px; }
-		.speaker-top .spring:nth-of-type(7) { width: 65px; height: 65px; }
-
-		/* Elementos Internos Bocina Inferior */
-		.speaker-bottom .inner {
-			width: 190px;
-			height: 190px;
-			border-radius: 100%;
-			background: #333;
-			box-shadow: 0 0 30px black inset;
-			border: 4px solid black;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			position: relative;
-		}
-
-		.speaker-bottom .cone {
-			width: 80px;
-			height: 80px;
-			border-radius: 100%;
-			background: radial-gradient(circle at 50% 20%, #ffdf73, #d4af37 2%, #8b0000 20%, black 70%);
-			z-index: 10;
-			animation: bounce .5s infinite;
-			box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-		}
-
-		.speaker-bottom .spring {
-			position: absolute;
-			background: #333;
-			box-shadow: 0 0 25px inset black;
-			border-radius: 100%;
-			animation: spring .5s infinite;
-		}
-
-		.speaker-bottom .spring:nth-of-type(1) { width: 170px; height: 170px; }
-		.speaker-bottom .spring:nth-of-type(2) { width: 150px; height: 150px; }
-		.speaker-bottom .spring:nth-of-type(3) { width: 130px; height: 130px; }
-		.speaker-bottom .spring:nth-of-type(4) { width: 110px; height: 110px; }
-		.speaker-bottom .spring:nth-of-type(5) { width: 90px; height: 90px; }
-		.speaker-bottom .spring:nth-of-type(6) { width: 70px; height: 70px; }
-		.speaker-bottom .spring:nth-of-type(7) { width: 50px; height: 50px; }
+		.speaker-top .spring:nth-of-type(1) { width: 300px; height: 300px; }
+		.speaker-top .spring:nth-of-type(2) { width: 270px; height: 270px; }
+		.speaker-top .spring:nth-of-type(3) { width: 240px; height: 240px; }
+		.speaker-top .spring:nth-of-type(4) { width: 210px; height: 210px; }
+		.speaker-top .spring:nth-of-type(5) { width: 180px; height: 180px; }
+		.speaker-top .spring:nth-of-type(6) { width: 150px; height: 150px; }
+		.speaker-top .spring:nth-of-type(7) { width: 120px; height: 120px; }
 
 		@keyframes bounce {
 			0% { transform: scale(1); }
@@ -388,6 +390,134 @@
 			100% { transform: scale(1); }
 		}
 
+		/* --- ESTILOS PARA LOS DISCOS DE VINILO CON EFECTO NEÓN EN SU CIRCUNFERENCIA --- */
+		.vinyl-container {
+			position: absolute;
+			top: 70%;
+			transform: translateY(-50%);
+			width: 480px;
+			height: 480px;
+			z-index: 6;
+			pointer-events: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.vinyl-container.left {
+			left: -120px;
+		}
+
+		.vinyl-container.right {
+			right: -120px;
+		}
+
+		.contenedor-disco {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			border-radius: 50%;
+			overflow: hidden;
+			animation: girar 4s linear infinite;
+			box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 50px rgba(255, 0, 0, 0.3);
+			isolation: isolate;
+		}
+
+		.contenedor-disco::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: conic-gradient(
+				transparent, 
+				transparent, 
+				rgba(255, 0, 0, 0.95), 
+				rgba(255, 215, 0, 0.95),
+				rgba(0, 200, 255, 0.95),
+				transparent
+			);
+			animation: girarBordeDisco 3s linear infinite;
+			z-index: -2;
+		}
+
+		.contenedor-disco::after {
+			content: '';
+			position: absolute;
+			inset: 3px;
+			border-radius: 50%;
+			background: rgba(10, 10, 10, 0.6);
+			z-index: -1;
+		}
+
+		.contenedor-disco img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7));
+			position: relative;
+			z-index: 1;
+		}
+
+		@keyframes girar {
+			from {
+				transform: rotate(0deg);
+			}
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes girarBordeDisco {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		/* --- EFECTO CIRCLE RIPPLE ROJO PEGADO A LOS BORDES DE LA PANTALLA --- */
+		.circle-ripple-container {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 7;
+			pointer-events: none;
+		}
+
+		.circle-ripple-container.left {
+			left: -20px;
+		}
+
+		.circle-ripple-container.right {
+			right: -20px;
+		}
+
+		.circle-ripple {
+			background-color: #ff0000;
+			width: 1em;
+			height: 1em;
+			font-size: 24px;
+			border-radius: 50%;
+			animation: ripple 0.7s linear infinite;
+		}
+
+		@keyframes ripple {
+			0% {
+				box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.3),
+				            0 0 0 1em rgba(255, 0, 0, 0.3),
+				            0 0 0 3em rgba(255, 0, 0, 0.3),
+				            0 0 0 5em rgba(255, 0, 0, 0.3);
+			}
+			100% {
+				box-shadow: 0 0 0 1em rgba(255, 0, 0, 0.3),
+				            0 0 0 3em rgba(255, 0, 0, 0.3),
+				            0 0 0 5em rgba(255, 0, 0, 0.3),
+				            0 0 0 8em rgba(255, 0, 0, 0);
+			}
+		}
+
 		/* --- ESTILOS DEL CURSOR NEÓN Y RASTRO --- */
 		#cursor-punto {
 			position: fixed;
@@ -399,12 +529,10 @@
 			border-radius: 50%;
 			pointer-events: none;
 			z-index: 9999;
-			
 			box-shadow: 
 				0 0 6px rgba(255, 255, 255, 0.9),
 				0 0 12px rgba(255, 255, 255, 0.5),
 				0 0 20px rgba(255, 215, 0, 0.6);
-				
 			transition: transform 0.05s ease-out;
 			will-change: transform;
 		}
@@ -438,19 +566,43 @@
 </head>
 
 <body>
+	<div id="zone"></div>
 	<canvas id="main-canvas"></canvas>
 	<div class="neon-overlay"></div>
 
-	<!-- Elemento Chat Backdrop con borde animado en dorado y rojo -->
+	<!-- Elemento Chat Backdrop -->
 	<div class="chat-backdrop"></div>
 
-	<!-- Las 4 Bocinas distribuidas en las esquinas como el segundo código -->
+	<!-- Efectos de ondas rojas (Circle Ripple) pegados exactamente al borde de la pantalla -->
+	<div class="circle-ripple-container left">
+		<div class="circle-ripple"></div>
+	</div>
+	<div class="circle-ripple-container right">
+		<div class="circle-ripple"></div>
+	</div>
+
+	<!-- Discos de vinilo desplazados hacia afuera, pegados al borde de la pantalla -->
+	<div class="vinyl-container left">
+		<div class="contenedor-disco">
+			<img src="https://xatimg.com/image/mhwBy5Kan5nE.png" alt="Disco girando">
+		</div>
+	</div>
+	<div class="vinyl-container right">
+		<div class="contenedor-disco">
+			<img src="https://xatimg.com/image/mhwBy5Kan5nE.png" alt="Disco girando">
+		</div>
+	</div>
+
+	<!-- Las 2 Bocinas Superiores con ondas de sonido -->
 	<div class="screen-layout">
 		<!-- Bocina Superior Izquierda -->
-		<div class="speaker speaker-top" style="grid-column: 1; grid-row: 1;">
+		<div class="speaker speaker-top" style="grid-column: 1; grid-row: 1;" id="speaker-tl">
 			<div class="decoration"></div><div class="decoration"></div>
 			<div class="decoration"></div><div class="decoration"></div>
 			<div class="inner">
+				<div class="sound-wave"></div>
+				<div class="sound-wave"></div>
+				<div class="sound-wave"></div>
 				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
 				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
 				<div class="spring"></div><div class="cone"></div>
@@ -458,35 +610,16 @@
 		</div>
 
 		<!-- Celda Vacía Central -->
-		<div style="grid-column: 2; grid-row: 1 / span 2;"></div>
+		<div style="grid-column: 2; grid-row: 1 / span 2;" id="center-target"></div>
 
 		<!-- Bocina Superior Derecha -->
-		<div class="speaker speaker-top" style="grid-column: 3; grid-row: 1;">
+		<div class="speaker speaker-top" style="grid-column: 3; grid-row: 1;" id="speaker-tr">
 			<div class="decoration"></div><div class="decoration"></div>
 			<div class="decoration"></div><div class="decoration"></div>
 			<div class="inner">
-				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-				<div class="spring"></div><div class="cone"></div>
-			</div>
-		</div>
-
-		<!-- Bocina Inferior Izquierda -->
-		<div class="speaker speaker-bottom" style="grid-column: 1; grid-row: 2;">
-			<div class="decoration"></div><div class="decoration"></div>
-			<div class="decoration"></div><div class="decoration"></div>
-			<div class="inner">
-				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
-				<div class="spring"></div><div class="cone"></div>
-			</div>
-		</div>
-
-		<!-- Bocina Inferior Derecha -->
-		<div class="speaker speaker-bottom" style="grid-column: 3; grid-row: 2;">
-			<div class="decoration"></div><div class="decoration"></div>
-			<div class="decoration"></div><div class="decoration"></div>
-			<div class="inner">
+				<div class="sound-wave"></div>
+				<div class="sound-wave"></div>
+				<div class="sound-wave"></div>
 				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
 				<div class="spring"></div><div class="spring"></div><div class="spring"></div>
 				<div class="spring"></div><div class="cone"></div>
@@ -497,7 +630,7 @@
 	<!-- Logo Tabs -->
 	<div class="logo-tabs">
 		<div class="logo-text">
-			<span>L</span><span>E</span><span>G</span><span>I</span><span>O</span><span>N1</span>
+			<span>L</span><span>E</span><span>G</span><span>I</span><span>O</span><span>N</span>
 		</div>
 	</div>
 
@@ -511,6 +644,27 @@
 	<div id="rastro-contenedor"></div>
 
 	<script>
+		// --- SCRIPT DE BURBUJAS ---
+		const zone = document.getElementById("zone");
+
+		function autoSpawn() {
+			const b = document.createElement("div");
+			b.className = "bubble";
+			const size = Math.random() * 30 + 30;
+			b.style.width = b.style.height = `${size}px`;
+			b.style.left = `${Math.random() * window.innerWidth}px`;
+			b.style.top = `${Math.random() * window.innerHeight}px`;
+			b.style.background = `radial-gradient(circle, hsl(${
+				Math.random() * 360
+			}, 100%, 70%) 0%, transparent 100%)`;
+			
+			zone.appendChild(b);
+			
+			setTimeout(() => b.remove(), 3000);
+		}
+
+		setInterval(autoSpawn, 20);
+
 		// --- SCRIPT DEL CURSOR Y RASTRO ---
 		const cursorPunto = document.getElementById('cursor-punto');
 		const rastroContenedor = document.getElementById('rastro-contenedor');
@@ -523,7 +677,6 @@
 			cursorX = e.clientX;
 			cursorY = e.clientY;
 			ratonDentro = true;
-			
 			cursorPunto.style.transform = `translate(${cursorX - 4}px, ${cursorY - 4}px)`;
 		});
 
@@ -541,21 +694,16 @@
 			if (ratonDentro) {
 				const rastroPunto = document.createElement('div');
 				rastroPunto.classList.add('rastro-punto');
-				
 				rastroPunto.style.left = `${cursorX - 3}px`;
 				rastroPunto.style.top = `${cursorY - 3}px`;
-				
 				rastroContenedor.appendChild(rastroPunto);
-				
-				setTimeout(() => {
-					rastroPunto.remove();
-				}, 500);
+				setTimeout(() => { rastroPunto.remove(); }, 500);
 			}
 			requestAnimationFrame(gestionarRastro);
 		}
 		gestionarRastro();
 
-		// --- SCRIPT DE LOS HACES DE LUZ / CANVAS ---
+		// --- SCRIPT DE LOS HACES DE LUZ Y NOTAS MUSICALES EN EL CANVAS ---
 		const canvas = document.getElementById('main-canvas');
 		const ctx = canvas.getContext('2d');
 
@@ -636,22 +784,97 @@
 			}
 		}
 
-		const beams = Array.from({
-			length: 30
-		}, () => new NeonBeam());
+		// --- CLASE DE NOTAS MUSICALES DIRIGIDAS HACIA EL CENTRO ---
+		class MusicNote {
+			constructor(startX, startY, targetX, targetY) {
+				this.x = startX;
+				this.y = startY;
+				this.symbol = ['♪', '♫', '♩', '♬'][Math.floor(Math.random() * 4)];
+				this.size = 36 + Math.random() * 22;
+				
+				const angle = Math.atan2(targetY - startY, targetX - startX) + (Math.random() - 0.5) * 0.2;
+				const speed = 1.5 + Math.random() * 1.2;
+				this.vx = Math.cos(angle) * speed;
+				this.vy = Math.sin(angle) * speed;
+				
+				this.alpha = 1;
+				this.decay = 0.005 + Math.random() * 0.005;
+				this.rot = (Math.random() - 0.5) * 0.4;
+				this.spin = (Math.random() - 0.5) * 0.02;
+			}
+
+			update() {
+				this.x += this.vx;
+				this.y += this.vy;
+				this.rot += this.spin;
+				this.alpha -= this.decay;
+			}
+
+			draw() {
+				if (this.alpha <= 0) return;
+				ctx.save();
+				ctx.translate(this.x, this.y);
+				ctx.rotate(this.rot);
+				ctx.font = `900 ${this.size}px 'Kanit', sans-serif`;
+				ctx.fillStyle = `rgba(255, 225, 100, ${this.alpha})`;
+				ctx.shadowColor = '#ffdf73';
+				ctx.shadowBlur = 20;
+				ctx.fillText(this.symbol, 0, 0);
+				ctx.restore();
+			}
+		}
+
+		const beams = Array.from({ length: 30 }, () => new NeonBeam());
+		const notes = [];
+
+		function spawnNotes() {
+			const tl = document.getElementById('speaker-tl').getBoundingClientRect();
+			const tr = document.getElementById('speaker-tr').getBoundingClientRect();
+
+			const centerX = window.innerWidth / 2;
+			const centerY = window.innerHeight / 2;
+
+			notes.push(new MusicNote(tl.left + tl.width / 2, tl.top + tl.height / 2, centerX, centerY));
+			notes.push(new MusicNote(new MusicNote(tr.left + tr.width / 2, tr.top + tr.height / 2, centerX, centerY))); // handled correctly below
+		}
+
+		// Reemplazamos la función spawnNotes corregida para evitar doble anidación accidental:
+		function spawnNotes() {
+			const tl = document.getElementById('speaker-tl').getBoundingClientRect();
+			const tr = document.getElementById('speaker-tr').getBoundingClientRect();
+
+			const centerX = window.innerWidth / 2;
+			const centerY = window.innerHeight / 2;
+
+			notes.push(new MusicNote(tl.left + tl.width / 2, tl.top + tl.height / 2, centerX, centerY));
+			notes.push(new MusicNote(tr.left + tr.width / 2, tr.top + tr.height / 2, centerX, centerY));
+		}
+
+		setInterval(spawnNotes, 350);
+
 		let lastTime = 0;
 
 		function animate(timestamp) {
 			const deltaTime = (timestamp - lastTime) / 1000;
 			lastTime = timestamp;
 			
-			ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			// AQUÍ ESTABA EL ERROR: Se había eliminado o alterado la limpieza del canvas (clearRect o fillRect de fondo) 
+			// lo que congelaba la animación de los haces de luz del fondo. Lo restauramos por completo:
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			
 			beams.forEach(beam => {
 				beam.update(deltaTime);
 				beam.draw();
 			});
+
+			for (let i = notes.length - 1; i >= 0; i--) {
+				notes[i].update();
+				notes[i].draw();
+				if (notes[i].alpha <= 0) {
+					notes.splice(i, 1);
+				}
+			}
+
 			requestAnimationFrame(animate);
 		}
 		animate(0);
