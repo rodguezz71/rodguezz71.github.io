@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Legion Radio</title>
+	<title>LEGION RADIO</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Rubik+Glitch&display=swap" rel="stylesheet">
 	
 	<style>
 		:root {
@@ -173,10 +173,10 @@
 		}
 		
 		.logo-tabs .logo-text {
-			font-family: 'Outfit', sans-serif; 
-			font-size: 0.8rem; 
+			font-family: 'Metal Mania', cursive; 
+			font-size: 1rem; 
 			letter-spacing: 2px; 
-			font-weight: 700;
+			font-weight: 400;
 			color: #ffffff;
 			text-shadow: 0 0 16px rgba(255, 0, 17, 0.6);
 			position: relative;
@@ -193,6 +193,8 @@
 		.logo-tabs .logo-text span:nth-child(2) { animation-delay: 0.1s; }
 		.logo-tabs .logo-text span:nth-child(3) { animation-delay: 0.2s; }
 		.logo-tabs .logo-text span:nth-child(4) { animation-delay: 0.3s; }
+		.logo-tabs .logo-text span:nth-child(5) { animation-delay: 0.4s; }
+		.logo-tabs .logo-text span:nth-child(6) { animation-delay: 0.5s; }
 
 		@keyframes escribirYBrincarSutil {
 			0% { opacity: 0; transform: translateY(6px) scale(0.95); }
@@ -204,7 +206,7 @@
 		/* --- ESTILO TEXTO INFERIOR --- */
 		.bottom-text-container {
 			position: absolute;
-			bottom: 35px;
+			bottom: 25px;
 			left: 50%;
 			transform: translateX(-50%);
 			text-align: center;
@@ -214,14 +216,13 @@
 		}
 
 		.neon-title {
-			font-family: 'Montserrat', sans-serif;
-			font-size: 110px;
-			font-weight: 900;
-			font-style: italic;
-			text-transform: uppercase;
+			font-family: 'Rubik Glitch', cursive;
+			font-size: 105px;
+			font-weight: 400;
+			text-transform: none;
 			margin: 0;
 			line-height: 1;
-			letter-spacing: 6px;
+			letter-spacing: 4px;
 			color: #ffffff;
 
 			background: linear-gradient(180deg, #ffffff 0%, #ffbb99 35%, #ff0011 60%, #800000 100%);
@@ -568,7 +569,7 @@
 
 	<div class="logo-tabs">
 		<div class="logo-text">
-			<span>L</span><span>E</span><span>G</span><span>I</span><span>O</span><span>N</span>
+			<span>D</span><span>A</span><span>G</span><span>G</span><span>E</span><span>R</span>
 		</div>
 	</div>
 
@@ -743,7 +744,7 @@
 				beam.draw();
 			});
 
-		for (let i = notes.length - 1; i >= 0; i--) {
+			for (let i = notes.length - 1; i >= 0; i--) {
 				notes[i].update();
 				notes[i].draw();
 				if (notes[i].alpha <= 0) {
