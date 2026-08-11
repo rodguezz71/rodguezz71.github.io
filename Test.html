@@ -5,16 +5,17 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Xatframe Backxatbox - Legion Radio</title>
-	<!-- Fuente impactante y moderna desde Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
 	
 	<style>
 		:root {
 			--decoration-size: 38px;
-			--gold-glow: #ffd700;
-			--red-glow: #ff0000;
+			--red-pure: #ff0011;
+			--red-bright: #ff3300;
+			--red-deep: #800000;
+			--orange-fire: #ff6600;
 		}
 
 		body, html {
@@ -23,7 +24,7 @@
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
-			background: url("https://wallpapercat.com/w/full/4/2/6/196885-2560x1440-desktop-hd-party-background-photo.jpg");
+			background: linear-gradient(rgba(10, 0, 0, 0.9), rgba(10, 0, 0, 0.9)), url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8CVGdQaCqOJ0XCETflTj1Cq4AkyZjP1jXzEoXQCW-TLwAinejUr6FTRA&s=10");
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -56,7 +57,7 @@
 				opacity: 0;
 			}
 			15% {
-				opacity: 0.8;
+				opacity: 0.6;
 			}
 			100% {
 				transform: translateY(-250px) scale(1.2);
@@ -64,12 +65,14 @@
 			}
 		}
 
+		/* --- CANVAS DE LUCES POR DETRÁS DEL RECUADRO --- */
 		#main-canvas {
 			display: block;
 			position: absolute;
 			top: 0;
 			left: 0;
-			z-index: 1;
+			z-index: 9;
+			pointer-events: none;
 		}
 
 		.neon-overlay {
@@ -81,7 +84,7 @@
 			pointer-events: none;
 			background:
 				radial-gradient(circle at 50% 50%,
-					rgba(255, 50, 150, 0.15),
+					rgba(255, 0, 17, 0.15),
 					transparent 70%);
 			animation: neon-pulse 3s infinite;
 			z-index: 2;
@@ -89,16 +92,16 @@
 
 		@keyframes neon-pulse {
 			0%, 100% {
-				opacity: 0.4;
+				opacity: 0.3;
 				filter: blur(20px);
 			}
 			50% {
-				opacity: 0.8;
+				opacity: 0.7;
 				filter: blur(35px);
 			}
 		}
 
-		/* --- ESTILO CHAT BACKDROP CON BORDE ANIMADO DORADO Y ROJO --- */
+		/* --- ESTILO CHAT BACKDROP (Z-INDEX 10) --- */
 		.chat-backdrop {
 			position: absolute; 
 			top: 93px; 
@@ -107,7 +110,7 @@
 			width: 728px; 
 			height: 486px; 
 			border-radius: 16px;
-			box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 35px rgba(255, 215, 0, 0.3);
+			box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 35px rgba(255, 0, 17, 0.35);
 			z-index: 10; 
 			pointer-events: none; 
 			overflow: hidden; 
@@ -115,7 +118,7 @@
 			background-size: cover; 
 			background-position: center; 
 			background-repeat: no-repeat;
-			opacity: 0.86;
+			opacity: 0.88;
 			isolation: isolate;
 		}
 
@@ -129,8 +132,8 @@
 			background: conic-gradient(
 				transparent, 
 				transparent, 
-				rgba(255, 0, 0, 0.9), 
-				rgba(255, 215, 0, 0.9),
+				rgba(255, 102, 0, 0.85), 
+				rgba(255, 0, 17, 0.85),
 				transparent
 			);
 			animation: girarBorde 4s linear infinite;
@@ -162,10 +165,10 @@
 			transform: translateY(-50%); 
 			z-index: 11; 
 			text-align: right;
-			background: rgba(15, 25, 40, 0.8); 
+			background: rgba(15, 0, 0, 0.85); 
 			padding: 4px 16px;
 			border-radius: 10px 10px 0 0; 
-			border: 1px solid rgba(255,255,255,0.1); 
+			border: 1px solid rgba(255,0,17,0.2); 
 			border-bottom: none;
 			isolation: isolate;
 		}
@@ -175,8 +178,8 @@
 			font-size: 0.8rem; 
 			letter-spacing: 2px; 
 			font-weight: 700;
-			color: #fff;
-			text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
+			color: #ffffff;
+			text-shadow: 0 0 16px rgba(255, 0, 17, 0.6);
 			position: relative;
 			z-index: 2;
 			display: inline-flex; 
@@ -212,7 +215,7 @@
 		}
 
 		.neon-title {
-			font-family: 'Kanit', sans-serif;
+			font-family: 'Montserrat', sans-serif;
 			font-size: 110px;
 			font-weight: 900;
 			font-style: italic;
@@ -222,14 +225,14 @@
 			letter-spacing: 6px;
 			color: #ffffff;
 
-			background: linear-gradient(180deg, #ffffff 0%, #ffdf73 35%, #d4af37 60%, #ff1100 100%);
+			background: linear-gradient(180deg, #ffffff 0%, #ffbb99 35%, #ff0011 60%, #800000 100%);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 
 			filter: drop-shadow(0 0 10px #ffffff)
-			        drop-shadow(0 0 25px var(--gold-glow))
-			        drop-shadow(0 0 50px var(--red-glow))
-			        drop-shadow(0 0 90px var(--red-glow));
+			        drop-shadow(0 0 25px var(--red-pure))
+			        drop-shadow(0 0 50px var(--orange-fire))
+			        drop-shadow(0 0 90px var(--red-deep));
 
 			animation: neon-flicker-beat 2s infinite alternate;
 		}
@@ -238,25 +241,24 @@
 			0%, 100% {
 				transform: scale(1);
 				filter: drop-shadow(0 0 10px #ffffff)
-				        drop-shadow(0 0 25px var(--gold-glow))
-				        drop-shadow(0 0 50px var(--red-glow))
-				        drop-shadow(0 0 90px var(--red-glow));
+				        drop-shadow(0 0 25px var(--red-pure))
+				        drop-shadow(0 0 50px var(--orange-fire))
+				        drop-shadow(0 0 90px var(--red-deep));
 			}
 			50% {
-				transform: scale(1.04);
+				transform: scale(1.02);
 				filter: drop-shadow(0 0 15px #ffffff)
-				        drop-shadow(0 0 40px var(--gold-glow))
-				        drop-shadow(0 0 70px var(--red-glow))
-				        drop-shadow(0 0 120px var(--red-glow));
+				        drop-shadow(0 0 35px var(--red-pure))
+				        drop-shadow(0 0 65px var(--orange-fire))
+				        drop-shadow(0 0 100px var(--red-deep));
 			}
 			92% { opacity: 1; }
-			93% { opacity: 0.4; }
+			93% { opacity: 0.85; }
 			94% { opacity: 1; }
-			96% { opacity: 0.2; }
+			96% { opacity: 0.9; }
 			98% { opacity: 1; }
 		}
 
-		/* Contenedor Grid general (Bocinas grandes: 450px) */
 		.screen-layout {
 			position: absolute;
 			top: 0;
@@ -274,14 +276,16 @@
 			pointer-events: none;
 		}
 
+		/* --- BOCINAS CLARAS Y NITIDAS (TONO ROJO PURO) --- */
 		.speaker {
 			border-radius: 100%;
-			background: linear-gradient(#333, black);
+			background: radial-gradient(circle, #330000 0%, #1a0000 70%, #050000 100%);
 			position: relative;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			box-shadow: 0 16px 32px rgba(0,0,0,0.7);
+			box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 30px rgba(255, 0, 17, 0.35);
+			border: 4px solid #b30000;
 			pointer-events: auto;
 		}
 
@@ -291,27 +295,28 @@
 			height: var(--speaker-size);
 		}
 
-		.speaker-top .decoration:nth-of-type(1) { left: 60px; top: 60px; }
-		.speaker-top .decoration:nth-of-type(2) { right: 60px; top: 60px; left: auto; }
-		.speaker-top .decoration:nth-of-type(3) { right: 60px; bottom: 60px; left: auto; top: auto; }
-		.speaker-top .decoration:nth-of-type(4) { left: 60px; bottom: 60px; top: auto; }
+		.speaker-top .decoration:nth-of-type(1) { left: 55px; top: 55px; }
+		.speaker-top .decoration:nth-of-type(2) { right: 55px; top: 55px; left: auto; }
+		.speaker-top .decoration:nth-of-type(3) { right: 55px; bottom: 55px; left: auto; top: auto; }
+		.speaker-top .decoration:nth-of-type(4) { left: 55px; bottom: 55px; top: auto; }
 
 		.decoration {
 			position: absolute;
 			width: var(--decoration-size);
 			height: var(--decoration-size);
 			border-radius: 100%;
-			background: radial-gradient(gray, black);
-			border: 2px solid #aaa;
+			background: radial-gradient(#ff0011, #660000);
+			border: 2px solid #ff9999;
+			box-shadow: 0 0 10px rgba(255,0,17,0.6);
 		}
 
 		.speaker-top .inner {
-			width: 330px;
-			height: 330px;
+			width: 320px;
+			height: 320px;
 			border-radius: 100%;
-			background: #333;
-			box-shadow: 0 0 35px black inset;
-			border: 6px solid black;
+			background: radial-gradient(circle, #240000 0%, #0d0000 100%);
+			box-shadow: 0 0 30px rgba(255, 0, 17, 0.3) inset;
+			border: 6px solid #1a0000;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -319,12 +324,12 @@
 			overflow: visible;
 		}
 
-		/* --- EFECTO DE ONDAS DE SONIDO SALIENDO DE LAS BOCINAS --- */
+		/* --- ONDAS DE SONIDO NÍTIDAS --- */
 		.sound-wave {
 			position: absolute;
 			border-radius: 100%;
-			border: 3px solid rgba(255, 215, 0, 0.8);
-			box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.4);
+			border: 3px solid rgba(255, 0, 17, 0.9);
+			box-shadow: 0 0 20px rgba(255, 0, 17, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.4);
 			pointer-events: none;
 			animation: expandWave 2s linear infinite;
 			z-index: 5;
@@ -336,8 +341,8 @@
 
 		@keyframes expandWave {
 			0% {
-				width: 150px;
-				height: 150px;
+				width: 140px;
+				height: 140px;
 				opacity: 1;
 				transform: scale(0.8);
 			}
@@ -346,8 +351,8 @@
 				height: 380px;
 				opacity: 0;
 				transform: scale(1.3);
-				border-color: rgba(255, 0, 0, 0);
-				box-shadow: 0 0 25px rgba(255, 0, 0, 0);
+				border-color: rgba(255, 0, 17, 0);
+				box-shadow: 0 0 25px rgba(255, 0, 17, 0);
 			}
 		}
 
@@ -355,16 +360,18 @@
 			width: 150px;
 			height: 150px;
 			border-radius: 100%;
-			background: radial-gradient(circle at 50% 20%, #ffdf73, #d4af37 2%, #8b0000 20%, black 70%);
+			background: radial-gradient(circle at 45% 35%, #ffffff 0%, #ff6633 25%, #ff0011 60%, #330000 90%);
 			z-index: 10;
 			animation: bounce .5s infinite;
-			box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+			box-shadow: 0 0 25px rgba(255, 0, 17, 0.8);
+			border: 2px solid rgba(255, 255, 255, 0.4);
 		}
 
 		.speaker-top .spring {
 			position: absolute;
-			background: #333;
-			box-shadow: 0 0 25px inset black;
+			background: transparent;
+			border: 2px solid rgba(255, 0, 17, 0.4);
+			box-shadow: 0 0 12px rgba(255, 0, 17, 0.25) inset;
 			border-radius: 100%;
 			animation: spring .5s infinite;
 		}
@@ -390,7 +397,7 @@
 			100% { transform: scale(1); }
 		}
 
-		/* --- ESTILOS PARA LOS DISCOS DE VINILO CON EFECTO NEÓN EN SU CIRCUNFERENCIA --- */
+		/* --- DISCOS DE VINILO --- */
 		.vinyl-container {
 			position: absolute;
 			top: 70%;
@@ -404,13 +411,8 @@
 			justify-content: center;
 		}
 
-		.vinyl-container.left {
-			left: -120px;
-		}
-
-		.vinyl-container.right {
-			right: -120px;
-		}
+		.vinyl-container.left { left: -120px; }
+		.vinyl-container.right { right: -120px; }
 
 		.contenedor-disco {
 			position: relative;
@@ -419,7 +421,7 @@
 			border-radius: 50%;
 			overflow: hidden;
 			animation: girar 4s linear infinite;
-			box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 50px rgba(255, 0, 0, 0.3);
+			box-shadow: 0 0 30px rgba(255, 0, 17, 0.45), 0 0 50px rgba(255, 102, 0, 0.3);
 			isolation: isolate;
 		}
 
@@ -433,9 +435,8 @@
 			background: conic-gradient(
 				transparent, 
 				transparent, 
-				rgba(255, 0, 0, 0.95), 
-				rgba(255, 215, 0, 0.95),
-				rgba(0, 200, 255, 0.95),
+				rgba(255, 0, 17, 0.95), 
+				rgba(255, 102, 0, 0.95),
 				transparent
 			);
 			animation: girarBordeDisco 3s linear infinite;
@@ -447,7 +448,7 @@
 			position: absolute;
 			inset: 3px;
 			border-radius: 50%;
-			background: rgba(10, 10, 10, 0.6);
+			background: rgba(10, 0, 0, 0.9);
 			z-index: -1;
 		}
 
@@ -455,18 +456,14 @@
 			width: 100%;
 			height: 100%;
 			object-fit: contain;
-			filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7));
+			filter: drop-shadow(0 15px 30px rgba(0,0,0,0.85));
 			position: relative;
 			z-index: 1;
 		}
 
 		@keyframes girar {
-			from {
-				transform: rotate(0deg);
-			}
-			to {
-				transform: rotate(360deg);
-			}
+			from { transform: rotate(0deg); }
+			to { transform: rotate(360deg); }
 		}
 
 		@keyframes girarBordeDisco {
@@ -474,7 +471,7 @@
 			100% { transform: rotate(360deg); }
 		}
 
-		/* --- EFECTO CIRCLE RIPPLE ROJO PEGADO A LOS BORDES DE LA PANTALLA --- */
+		/* --- EFECTO CIRCLE RIPPLE --- */
 		.circle-ripple-container {
 			position: absolute;
 			top: 50%;
@@ -486,16 +483,11 @@
 			pointer-events: none;
 		}
 
-		.circle-ripple-container.left {
-			left: -20px;
-		}
-
-		.circle-ripple-container.right {
-			right: -20px;
-		}
+		.circle-ripple-container.left { left: -20px; }
+		.circle-ripple-container.right { right: -20px; }
 
 		.circle-ripple {
-			background-color: #ff0000;
+			background-color: #ff0011;
 			width: 1em;
 			height: 1em;
 			font-size: 24px;
@@ -505,20 +497,20 @@
 
 		@keyframes ripple {
 			0% {
-				box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.3),
-				            0 0 0 1em rgba(255, 0, 0, 0.3),
-				            0 0 0 3em rgba(255, 0, 0, 0.3),
-				            0 0 0 5em rgba(255, 0, 0, 0.3);
+				box-shadow: 0 0 0 0 rgba(255, 0, 17, 0.45),
+				            0 0 0 1em rgba(255, 0, 17, 0.45),
+				            0 0 0 3em rgba(255, 0, 17, 0.45),
+				            0 0 0 5em rgba(255, 0, 17, 0.45);
 			}
 			100% {
-				box-shadow: 0 0 0 1em rgba(255, 0, 0, 0.3),
-				            0 0 0 3em rgba(255, 0, 0, 0.3),
-				            0 0 0 5em rgba(255, 0, 0, 0.3),
-				            0 0 0 8em rgba(255, 0, 0, 0);
+				box-shadow: 0 0 0 1em rgba(255, 0, 17, 0.45),
+				            0 0 0 3em rgba(255, 0, 17, 0.45),
+				            0 0 0 5em rgba(255, 0, 17, 0.45),
+				            0 0 0 8em rgba(255, 0, 17, 0);
 			}
 		}
 
-		/* --- ESTILOS DEL CURSOR NEÓN Y RASTRO --- */
+		/* --- CURSOR Y RASTRO --- */
 		#cursor-punto {
 			position: fixed;
 			top: 0;
@@ -532,7 +524,7 @@
 			box-shadow: 
 				0 0 6px rgba(255, 255, 255, 0.9),
 				0 0 12px rgba(255, 255, 255, 0.5),
-				0 0 20px rgba(255, 215, 0, 0.6);
+				0 0 20px rgba(255, 0, 17, 0.9);
 			transition: transform 0.05s ease-out;
 			will-change: transform;
 		}
@@ -551,15 +543,15 @@
 			position: absolute;
 			width: 6px;
 			height: 6px;
-			background-color: rgba(255, 215, 0, 0.6);
+			background-color: rgba(255, 0, 17, 0.75);
 			border-radius: 50%;
 			pointer-events: none;
-			box-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+			box-shadow: 0 0 4px rgba(255, 0, 17, 0.6);
 			animation: fadeOut 0.5s forwards ease-out;
 		}
 
 		@keyframes fadeOut {
-			0% { transform: scale(1); opacity: 0.6; }
+			0% { transform: scale(1); opacity: 0.75; }
 			100% { transform: scale(0.1); opacity: 0; }
 		}
 	</style>
@@ -570,10 +562,8 @@
 	<canvas id="main-canvas"></canvas>
 	<div class="neon-overlay"></div>
 
-	<!-- Elemento Chat Backdrop -->
 	<div class="chat-backdrop"></div>
 
-	<!-- Efectos de ondas rojas (Circle Ripple) pegados exactamente al borde de la pantalla -->
 	<div class="circle-ripple-container left">
 		<div class="circle-ripple"></div>
 	</div>
@@ -581,7 +571,6 @@
 		<div class="circle-ripple"></div>
 	</div>
 
-	<!-- Discos de vinilo desplazados hacia afuera, pegados al borde de la pantalla -->
 	<div class="vinyl-container left">
 		<div class="contenedor-disco">
 			<img src="https://xatimg.com/image/mhwBy5Kan5nE.png" alt="Disco girando">
@@ -593,9 +582,7 @@
 		</div>
 	</div>
 
-	<!-- Las 2 Bocinas Superiores con ondas de sonido -->
 	<div class="screen-layout">
-		<!-- Bocina Superior Izquierda -->
 		<div class="speaker speaker-top" style="grid-column: 1; grid-row: 1;" id="speaker-tl">
 			<div class="decoration"></div><div class="decoration"></div>
 			<div class="decoration"></div><div class="decoration"></div>
@@ -609,10 +596,8 @@
 			</div>
 		</div>
 
-		<!-- Celda Vacía Central -->
 		<div style="grid-column: 2; grid-row: 1 / span 2;" id="center-target"></div>
 
-		<!-- Bocina Superior Derecha -->
 		<div class="speaker speaker-top" style="grid-column: 3; grid-row: 1;" id="speaker-tr">
 			<div class="decoration"></div><div class="decoration"></div>
 			<div class="decoration"></div><div class="decoration"></div>
@@ -627,45 +612,37 @@
 		</div>
 	</div>
 
-	<!-- Logo Tabs -->
 	<div class="logo-tabs">
 		<div class="logo-text">
 			<span>L</span><span>E</span><span>G</span><span>I</span><span>O</span><span>N</span>
 		</div>
 	</div>
 
-	<!-- Texto con efecto neón de alto impacto -->
 	<div class="bottom-text-container">
 		<h1 class="neon-title">LEGION RADIO</h1>
 	</div>
 
-	<!-- Elementos del cursor personalizado -->
 	<div id="cursor-punto"></div>
 	<div id="rastro-contenedor"></div>
 
 	<script>
-		// --- SCRIPT DE BURBUJAS ---
 		const zone = document.getElementById("zone");
 
 		function autoSpawn() {
 			const b = document.createElement("div");
 			b.className = "bubble";
-			const size = Math.random() * 30 + 30;
+			const size = Math.random() * 25 + 20;
 			b.style.width = b.style.height = `${size}px`;
 			b.style.left = `${Math.random() * window.innerWidth}px`;
 			b.style.top = `${Math.random() * window.innerHeight}px`;
-			b.style.background = `radial-gradient(circle, hsl(${
-				Math.random() * 360
-			}, 100%, 70%) 0%, transparent 100%)`;
+			b.style.background = `radial-gradient(circle, rgba(255, 0, 17, 0.45) 0%, transparent 100%)`;
 			
 			zone.appendChild(b);
-			
 			setTimeout(() => b.remove(), 3000);
 		}
 
-		setInterval(autoSpawn, 20);
+		setInterval(autoSpawn, 30);
 
-		// --- SCRIPT DEL CURSOR Y RASTRO ---
 		const cursorPunto = document.getElementById('cursor-punto');
 		const rastroContenedor = document.getElementById('rastro-contenedor');
 		
@@ -703,7 +680,6 @@
 		}
 		gestionarRastro();
 
-		// --- SCRIPT DE LOS HACES DE LUZ Y NOTAS MUSICALES EN EL CANVAS ---
 		const canvas = document.getElementById('main-canvas');
 		const ctx = canvas.getContext('2d');
 
@@ -717,8 +693,9 @@
 		class NeonBeam {
 			constructor() {
 				this.reset();
-				this.hue = Math.random() < 0.4 ? (Math.random() < 0.5 ? 45 : 0) : (200 + Math.random() * 160); 
-				this.glowColor = `hsla(${this.hue}, 100%, 50%, 0.5)`;
+				// Luces multicolores de fiesta recorriendo todo el espectro (0 a 360 grados)
+				this.hue = Math.random() * 360; 
+				this.glowColor = `hsla(${this.hue}, 100%, 50%, 0.75)`;
 			}
 			reset() {
 				this.x = Math.random() * canvas.width;
@@ -784,13 +761,13 @@
 			}
 		}
 
-		// --- CLASE DE NOTAS MUSICALES DIRIGIDAS HACIA EL CENTRO ---
 		class MusicNote {
 			constructor(startX, startY, targetX, targetY) {
 				this.x = startX;
 				this.y = startY;
 				this.symbol = ['♪', '♫', '♩', '♬'][Math.floor(Math.random() * 4)];
 				this.size = 36 + Math.random() * 22;
+				this.hue = Math.random() * 360; // Notas también multicolores
 				
 				const angle = Math.atan2(targetY - startY, targetX - startX) + (Math.random() - 0.5) * 0.2;
 				const speed = 1.5 + Math.random() * 1.2;
@@ -816,8 +793,8 @@
 				ctx.translate(this.x, this.y);
 				ctx.rotate(this.rot);
 				ctx.font = `900 ${this.size}px 'Kanit', sans-serif`;
-				ctx.fillStyle = `rgba(255, 225, 100, ${this.alpha})`;
-				ctx.shadowColor = '#ffdf73';
+				ctx.fillStyle = `hsla(${this.hue}, 100%, 65%, ${this.alpha})`;
+				ctx.shadowColor = `hsla(${this.hue}, 100%, 50%, 0.85)`;
 				ctx.shadowBlur = 20;
 				ctx.fillText(this.symbol, 0, 0);
 				ctx.restore();
@@ -827,18 +804,6 @@
 		const beams = Array.from({ length: 30 }, () => new NeonBeam());
 		const notes = [];
 
-		function spawnNotes() {
-			const tl = document.getElementById('speaker-tl').getBoundingClientRect();
-			const tr = document.getElementById('speaker-tr').getBoundingClientRect();
-
-			const centerX = window.innerWidth / 2;
-			const centerY = window.innerHeight / 2;
-
-			notes.push(new MusicNote(tl.left + tl.width / 2, tl.top + tl.height / 2, centerX, centerY));
-			notes.push(new MusicNote(new MusicNote(tr.left + tr.width / 2, tr.top + tr.height / 2, centerX, centerY))); // handled correctly below
-		}
-
-		// Reemplazamos la función spawnNotes corregida para evitar doble anidación accidental:
 		function spawnNotes() {
 			const tl = document.getElementById('speaker-tl').getBoundingClientRect();
 			const tr = document.getElementById('speaker-tr').getBoundingClientRect();
@@ -858,8 +823,6 @@
 			const deltaTime = (timestamp - lastTime) / 1000;
 			lastTime = timestamp;
 			
-			// AQUÍ ESTABA EL ERROR: Se había eliminado o alterado la limpieza del canvas (clearRect o fillRect de fondo) 
-			// lo que congelaba la animación de los haces de luz del fondo. Lo restauramos por completo:
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			
 			beams.forEach(beam => {
