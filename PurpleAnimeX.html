@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeXPurple</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <!-- Estilos Generales y del Universo 3D -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- ESTILOS DE LA PANTALLA DE INICIO --- */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://static.vecteezy.com/system/resources/previews/046/805/942/non_2x/cute-cloudy-pink-sky-with-stars-fantasy-pastel-background-purple-dreamy-landscape-abstract-gradient-girly-wallpaper-vector.jpg');
+            background-color: #d69aab;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #welcome-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .glitter-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .global-sparkle {
+            position: absolute;
+            background: radial-gradient(circle, #fff 20%, #ffeb3b 50%, rgba(255,235,59,0) 80%);
+            clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+            box-shadow: 0 0 8px #fff, 0 0 12px #ff69b4;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                transform: scale(0.2) rotate(0deg);
+                opacity: 0.1;
+            }
+            50% {
+                transform: scale(1.6) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        .like {
+            display: inline-block;
+            width: 8rem;
+            height: 8rem;
+            border-radius: 50%;
+            background: rgba(255, 192, 203, 0.6);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            overflow: visible;
+            box-shadow: 0 4px 15px rgba(214, 154, 171, 0.4);
+            z-index: 2;
+        }
+
+        .like:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 6px 20px rgba(214, 154, 171, 0.6);
+            transition: all 0.35s ease;
+        }
+
+        .liked .like-icon-state {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewbox='0 0 100 100'><path fill='%23de3618' d='M50,88.87 C76.67,70.46 90,53.9 90,39.17 C90,17.08 63.12,3.84 50,27.63 C38.875,3.85 10,17.08 10,39.17 C10,53.9 23.33,70.46 50,88.87 Z'/></svg>");
+        }
+
+        .unliked .like-icon-state {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewbox='0 0 100 100'><path fill='none' stroke='%23666' stroke-width='5' d='M50,88.87 C76.67,70.46 90,53.9 90,39.17 C90,17.08 63.12,3.84 50,27.63 C38.875,3.85 10,17.08 10,39.17 C10,53.9 23.33,70.46 50,88.87 Z'/></svg>");
+        }
+
+        .like span {
+            text-indent: -1000px;
+            font-size: 1px;
+        }
+
+        .like-icon {
+            background-size: contain;
+            position: absolute;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            top: 15%;
+            right: 15%;
+            bottom: 15%;
+            left: 15%;
+        }
+
+        .liked .like-icon-state {
+            transform: scale(0);
+            opacity: 0;
+            animation: 1.2s like-animation both cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        @keyframes like-animation {
+            0% { transform: scale(0); }
+            15% { transform: scale(1.25); }
+            32% { transform: scale(0.95); }
+            50% { transform: scale(1); opacity: 1; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .liked {
+            background: #fff; 
+            animation: 1.2s liked-bg-animation both;
+        }
+
+        @keyframes liked-bg-animation {
+            0% { transform: scale(0); }
+            15% { transform: scale(1.1); }
+            30% { transform: scale(0.95); }
+            50% { transform: scale(1); opacity: 1; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .saving::after {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            border: .15em solid rgba(214, 154, 171, 0.8);
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            animation: spin-animation 400ms infinite linear;
+        }
+
+        @keyframes spin-animation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fuente-cursiva {
+            font-family: 'Dancing Script', cursive;
+            z-index: 2;
+        }
+
+        /* --- ESTILOS DEL CONTENIDO PRINCIPAL --- */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: 1;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 100;
+        }
+
+        .overlay-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            position: relative;
+            width: 100%;
+            max-width: 1050px;
+            padding: 0 20px;
+            pointer-events: auto;
+            animation: floatingContainer 6s ease-in-out infinite;
+        }
+
+        @keyframes floatingContainer {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(52, 208, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.6), 0 0 45px rgba(52, 208, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.4); }
+            100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(52, 208, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.2); }
+        }
+
+        .wrapper {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            position: relative;
+            width: 350px;
+            padding: 35px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .online-status-badge {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .online-status-badge span {
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .w-1\.5 { width: 8px; }
+        .h-1\.5 { height: 8px; }
+        .rounded-full { border-radius: 50%; }
+        .bg-green-500 { background-color: #2ed573; box-shadow: 0 0 8px #2ed573; }
+        .bg-orange-500 { background-color: #ffa502; box-shadow: 0 0 8px #ffa502; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.15); }
+        }
+        .animate-pulse { animation: pulse 2s infinite ease-in-out; }
+
+        .side-window {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            position: relative;
+            width: 310px;
+            height: 480px;
+            padding: 22px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.1s ease;
+            z-index: 5;
+            flex-shrink: 0;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .side-window.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-window h3 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #fff, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            overflow-y: auto;
+            max-height: 380px;
+            padding-right: 2px;
+        }
+
+        .gallery-grid::-webkit-scrollbar { width: 4px; }
+        .gallery-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+
+        .gallery-item {
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), filter 0.3s ease;
+            filter: brightness(0.9);
+        }
+
+        .gallery-item:hover {
+            border-color: rgba(255, 52, 221, 0.8);
+            box-shadow: 0 8px 25px rgba(255, 52, 221, 0.4);
+            transform: translateY(-4px) scale(1.03);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.18);
+            filter: brightness(1.05);
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            width: 320px;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 30px rgba(255, 52, 221, 0.5), 0 0 15px rgba(52, 208, 255, 0.4);
+            transform: scale(0.3) rotate(-10deg);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .lightbox.active img {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: calc(50% - 190px);
+            right: calc(50% - 175px);
+            color: white;
+            font-size: 30px;
+            font-weight: 300;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, background 0.3s ease;
+            z-index: 1001;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.15) rotate(90deg);
+            background: rgba(255, 52, 221, 0.8);
+        }
+
+        .friends-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 380px;
+            padding-right: 2px;
+        }
+
+        .friends-list::-webkit-scrollbar { width: 4px; }
+        .friends-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+
+        .friend-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 15px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 12px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .friend-row:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(197, 52, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(238, 52, 255, 0.3);
+        }
+
+        .friend-row img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            object-fit: cover;
+            animation: glowPulse 3s infinite ease-in-out;
+        }
+
+        .wrapper .img-area {             
+            height: 140px;
+            width: 140px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            animation: glowPulse 3s infinite ease-in-out;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .img-area .inner-area {
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .inner-area img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .wrapper .img-area:hover {
+            border-color: #d134c4;
+            box-shadow: 0 0 30px rgba(255, 52, 221, 0.8), inset 0 0 15px rgba(255, 52, 221, 0.6);
+            transform: scale(1.09) rotate(3deg);
+        }
+
+        .wrapper .img-area:hover .inner-area img {
+            transform: scale(1.09);
+        }
+
+        .wrapper .name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(270deg, #ffffff, #ff34dd, #34d0ff, #ffffff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 5s ease infinite;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .wrapper .about {
+            color: #f0f0f0;
+            font-weight: 300;
+            font-size: 15px;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .wrapper .social-icons {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            height: 45px;
+            width: 45px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .audio-controls {
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 10px 20px; 
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .audio-controls i {
+            cursor: pointer; 
+            color: #ffffff; 
+            font-size: 1.1rem; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            transition: 0.3s;
+        }
+
+        .audio-controls i:hover {
+            text-shadow: 0 0 15px #ffffff;
+            transform: scale(1.1);
+        }
+
+        input[type=range] { 
+            -webkit-appearance: none; 
+            width: 70px; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-runnable-track { 
+            width: 100%; 
+            height: 3px; 
+            background: rgba(255, 255, 255, 0.3); 
+            border-radius: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            height: 10px; 
+            width: 10px; 
+            border-radius: 50%; 
+            background: #ffffff; 
+            cursor: pointer; 
+            margin-top: -3.5px; 
+            box-shadow: 0 0 10px #ffffff; 
+        }
+
+        .typing-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1.4;
+            min-height: 50px;
+        }
+
+        .typing-cursor {
+            font-weight: 300;
+            color: #ffffff;
+            animation: blinkCursor 0.8s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Pantalla de Inicio -->
+    <div id="welcome-screen" x-data="{ sparkles: Array.from({ length: 45 }) }">
+        <div class="glitter-container">
+            <template x-for="(sparkle, index) in sparkles">
+                <div class="global-sparkle" 
+                     :style="`
+                        top: ${Math.random() * 100}%; 
+                        left: ${Math.random() * 100}%; 
+                        width: ${Math.random() * 16 + 8}px; 
+                        height: ${Math.random() * 16 + 8}px; 
+                        --duration: ${Math.random() * 1.5 + 1}s; 
+                        --delay: ${Math.random() * 2}s;
+                     `">
+                </div>
+            </template>
+        </div>
+
+        <div class="flex flex-col items-center gap-2 z-10">
+            <button x-data="{
+                state: 'Unliked',
+                usedKeyboard: false,
+                async updateState(to) {
+                    this.state = 'Saving'
+                    await new Response(resolve => setTimeout(resolve, 600))
+                    this.state = to
+                    enterUniverse();
+                }
+            }"
+            :class="{
+                'like unliked': state === 'Unliked',
+                'like saving': state === 'Saving',
+                'like liked': state === 'Liked',
+                'focus:outline-none': !usedKeyboard
+            }"
+            @click="updateState('Liked')" 
+            @keydown.window.tab="usedKeyboard = true">
+                <span class="like-icon like-icon-state" aria-label="state" x-text="state" aria-live="polite"></span>
+            </button>
+            <span class="fuente-cursiva text-white text-3xl tracking-wide drop-shadow-md">Entrar</span>
+        </div>
+    </div>
+
+    <div id="loading">GENERATING UNIVERSE...</div>
+    <div id="canvas-container"></div>
+
+    <!-- Contenido Principal -->
+    <div class="overlay-layer">
+        <div class="main-container">
+            <!-- Ventana Izquierda: Galería -->
+            <div id="gallery-window" class="side-window left-window" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
+                <h3>Galería</h3>
+                <div class="gallery-grid">
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNYWXMHyX5r5c1PnzLhG-Lo8vwYXLzDB4nIQRvFD9F2w&s=10" alt="Gallery 1"></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKj5vTodjhD5LmHvM1a4LPqgYLa-JEXjXm-UalMoPAaQ&s=10" alt="Gallery 2"></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpSpAXhSJHYEsQjm94IVV3GzYpsA-JRvAUuqa1CC96Fw&s=10" alt="Gallery 3"></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh7sMUQEanwCDmQrmWPjwwNt_N-CmkLia0zqu6Dg6jmg&s=10" alt="Gallery 4"></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwQusOB0PuPvJd5Bj43yoczl62Vil_o57cuX-Eswg2FQ&s=10" alt="Gallery 5"></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShBqZopz3iNfeU6dfmn_ifuNX2W6epiKuupe_nX1edkeyfhD6S8kZXcn0&s" alt="Gallery 6"></div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Central -->
+            <div class="wrapper">
+                <div class="online-status-badge">
+                    <div id="status-indicator" class="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
+                    <span id="status-text">VERIFICANDO...</span>
+                </div>
+
+                <div class="img-area" onclick="openProfileLightbox()">
+                    <div class="inner-area">
+                        <img id="profile-img" src="https://images.stockcake.com/public/a/6/1/a61396d8-a43f-4f14-82f9-b568f68ebfe7_large/neon-music-vibes-stockcake.jpg" alt="MyName">
+                    </div>
+                </div>
+                <div class="name">MyName</div>
+                <div class="about">
+                    <i class="Noicon" aria-hidden="true"></i> User oyeaAA<br>
+                    <i class="Noicon" aria-hidden="true"></i> ID 00000000
+                </div>
+
+                <div class="social-icons">
+                    <a href="#" class="gl" title="Inicio" onclick="toggleWindow('home')"><i class="fa-solid fa-house"></i></a>
+                    <a href="#" class="facebook" title="Personajes" onclick="toggleWindow('friends')"><i class="fa-solid fa-users"></i></a>
+                    <a href="#" class="insta" title="Galería" onclick="toggleWindow('gallery')"><i class="fa-solid fa-image"></i></a>
+                </div>
+
+                <div class="audio-controls">
+                    <i class="fas fa-play" id="playBtn" onclick="togglePlay()"></i>
+                    <i class="fas fa-volume-up" id="muteBtn" onclick="toggleMute()"></i>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
+                </div>
+
+                <audio id="bgMusic" loop>
+                    <source src="https://www.image2url.com/r2/default/audio/1785475401390-61b1c014-cfaf-4a85-befb-7129a8f858ed.mp3" type="audio/mpeg">
+                </audio>
+
+                <div class="typing-container">
+                    <span id="typing-text"></span><span id="typing-cursor" class="typing-cursor">|</span>
+                </div>
+            </div>
+
+            <!-- Ventana Derecha: Personajes Chicas de Anime -->
+            <div id="friends-window" class="side-window right-window" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
+                <h3>Personajes</h3>
+                <div class="friends-list">
+                    <a href="https://xat.me/rem" target="_blank" class="friend-row">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWQE45qMwRngVPasS4aGaGRwPebTLev9_pEkVG8fP62A&s=10" alt="Rem">
+                        <div style="display: flex; flex-direction: column;">
+                            <span>Rem</span>
+                            <span style="font-size: 11px; opacity: 0.7; font-weight: 300;">ID: 000000</span>
+                        </div>
+                    </a>
+                    <a href="https://xat.me/zerotwo" target="_blank" class="friend-row">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPk-sK7rQEPghiyjuHKxTVa1DEgkyNTBgwGYecdIeVDw&s=10" alt="Zero Two">
+                        <div style="display: flex; flex-direction: column;">
+                            <span>Zero Two</span>
+                            <span style="font-size: 11px; opacity: 0.7; font-weight: 300;">ID: 000000</span>
+                        </div>
+                    </a>
+                    <a href="https://xat.me/kurumi" target="_blank" class="friend-row">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSm1ecoSsUgNcKpHMipXOkrmDg4uRxBxAqmjzy32CjgWQ&s=10" alt="Kurumi Tokisaki">
+                        <div style="display: flex; flex-direction: column;">
+                            <span>Kurumi Tokisaki</span>
+                            <span style="font-size: 11px; opacity: 0.7; font-weight: 300;">ID: 000000</span>
+                        </div>
+                    </a>
+                    <a href="https://xat.me/nezuko" target="_blank" class="friend-row">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMoDynKh0ffzzcEiLRLuXrIKyG_w5rUZWArrEDQduSjw&s=10" alt="Nezuko Kamado">
+                        <div style="display: flex; flex-direction: column;">
+                            <span>Nezuko Kamado</span>
+                            <span style="font-size: 11px; opacity: 0.7; font-weight: 300;">ID: 000000</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-btn">&times;</span>
+        <img id="lightbox-img" src="" alt="Zoom Image" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function handleCardTilt(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;  
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = -((y - centerY) / centerY) * 12;
+            const rotateY = ((x - centerX) / centerX) * 12;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+
+        function resetCardTilt(card) {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        }
+
+        function enterUniverse() {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            welcomeScreen.classList.add('fade-out');
+
+            const music = document.getElementById('bgMusic');
+            const playBtn = document.getElementById('playBtn');
+            music.play().then(() => {
+                playBtn.className = "fas fa-pause";
+            }).catch(error => {
+                console.log("Reproducción automática bloqueada por el navegador:", error);
+            });
+
+            setTimeout(typeEffect, 1000);
+        }
+
+        async function fetchOnlineStatus() {
+            try {
+                const response = await fetch('https://illuxat.com/api/online/RaphaeLDRZM');
+                const text = await response.text();
+                const statusText = document.getElementById('status-text');
+                const statusIndicator = document.getElementById('status-indicator');
+                
+                let isOnline = false;
+                try {
+                    const data = JSON.parse(text);
+                    if (data?.data?.status === "Online" || data?.status === "Online" || data === "Online") {
+                        isOnline = true;
+                    }
+                } catch (e) {
+                    const cleanText = text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+                    if (cleanText === "online" || cleanText === "1" || cleanText === "true") {
+                        isOnline = true;
+                    }
+                }
+                
+                if (isOnline) {
+                    statusText.innerText = "EN LÍNEA";
+                    statusIndicator.className = "w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse";
+                } else {
+                    statusText.innerText = "AUSENTE";
+                    statusIndicator.className = "w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse";
+                }
+            } catch (error) {
+                console.error("Error fetching online status:", error);
+            }
+        }
+
+        fetchOnlineStatus();
+
+        function toggleWindow(type) {
+            if (event) event.preventDefault();
+            
+            const galleryWin = document.getElementById('gallery-window');
+            const friendsWin = document.getElementById('friends-window');
+
+            if (type === 'home') {
+                galleryWin.classList.remove('active');
+                friendsWin.classList.remove('active');
+            } else if (type === 'friends') {
+                friendsWin.classList.toggle('active');
+                galleryWin.classList.remove('active');
+            } else if (type === 'gallery') {
+                galleryWin.classList.toggle('active');
+                friendsWin.classList.remove('active');
+            }
+        }
+
+        function openLightbox(element) {
+            const imgElement = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            
+            lightboxImg.src = imgElement.src;
+            lightbox.classList.add('active');
+        }
+
+        function openProfileLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            
+            lightboxImg.src = "https://images-ng.pixai.art/images/thumb/7f15eeab-0a24-493b-829b-c54be0ee2fd8";
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        }
+
+        const music = document.getElementById('bgMusic');
+        const muteBtn = document.getElementById('muteBtn');
+        const playBtn = document.getElementById('playBtn');
+
+        music.volume = 0.5;
+
+        function togglePlay() {
+            if (music.paused) {
+                music.play();
+                playBtn.className = "fas fa-pause";
+            } else {
+                music.pause();
+                playBtn.className = "fas fa-play";
+            }
+        }
+
+        function toggleMute() {
+            if (music.muted) { 
+                music.muted = false; 
+                muteBtn.className = "fas fa-volume-up"; 
+            } else { 
+                music.muted = true; 
+                muteBtn.className = "fas fa-volume-mute"; 
+            }
+        }
+
+        function changeVolume(val) {
+            music.volume = val;
+            muteBtn.className = val == 0 ? "fas fa-volume-mute" : "fas fa-volume-up";
+            if(val > 0) music.muted = false;
+        }
+
+        const textToType = "Mientras tú estés aquí sonriendo, no hay nada que pueda ponermi triste, Porque mi felicidad es verte sonriendo feliz.";
+        let charIndex = 0;
+        const typingSpeed = 80;
+
+        function typeEffect() {
+            const typingElement = document.getElementById('typing-text');
+            const cursorElement = document.getElementById('typing-cursor');
+            
+            if (charIndex < textToType.length) {
+                typingElement.textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeEffect, typingSpeed);
+            } else {
+                if (cursorElement) {
+                    cursorElement.style.animation = 'none';
+                    cursorElement.style.opacity = '1';
+                }
+            }
+        }
+    </script>
+
+    <!-- Script 3D (Three.js Universo) -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        
+        const universe = new THREE.Group();
+        scene.add(universe);
+        
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(0, 0, 100);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const clock = new THREE.Clock();
+
+        const bgVertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        const bgFragmentShader = `
+            uniform float uTime;
+            varying vec2 vUv;
+
+            float hash(vec2 p) { 
+                return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); 
+            }
+            
+            float noise(vec2 p) {
+                vec2 i = floor(p); 
+                vec2 f = fract(p);
+                f = f * f * (3.0 - 2.0 * f);
+                return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                           mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+            }
+            
+            float fbm(vec2 p) {
+                float v = 0.0; 
+                float a = 0.5;
+                for (int i = 0; i < 5; i++) {
+                    v += a * noise(p); 
+                    p *= 2.0; 
+                    a *= 0.5;
+                }
+                return v;
+            }
+
+            void main() {
+                vec2 uv = vUv * 2.0;
+                float t = uTime * 0.02;
+
+                float equator = smoothstep(0.4, 0.0, abs(vUv.y - 0.5));
+
+                float n1 = fbm(uv * 3.0 + vec2(t, t));
+                float n2 = fbm(uv * 5.0 - vec2(t * 1.2, t * 0.8) + n1);
+
+                vec3 baseSpace = vec3(0.005, 0.0, 0.015);
+                vec3 color1 = vec3(0.15, 0.02, 0.25);
+                vec3 color2 = vec3(0.02, 0.12, 0.25);
+                vec3 starBand = vec3(0.1, 0.08, 0.05);
+
+                vec3 finalColor = baseSpace;
+                
+                finalColor += color1 * n1 * (0.4 + 0.6 * equator);
+                finalColor += color2 * n2 * (0.4 + 0.4 * equator);
+                finalColor += starBand * equator * (n1 * n2) * 2.0;
+
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+
+        const bgGeometry = new THREE.SphereGeometry(1000, 32, 32);
+        const bgMaterial = new THREE.ShaderMaterial({
+            vertexShader: bgVertexShader,
+            fragmentShader: bgFragmentShader,
+            uniforms: { uTime: { value: 0 } },
+            side: THREE.BackSide,
+            depthWrite: false
+        });
+        const nebulaMesh = new THREE.Mesh(bgGeometry, bgMaterial);
+        universe.add(nebulaMesh);
+
+        const particleCount = 65000;
+        const starGeometry = new THREE.BufferGeometry();
+        
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        const phases = new Float32Array(particleCount);
+        const twinkleSpeeds = new Float32Array(particleCount);
+
+        const colorPalette = [
+            '#ff1e4a', '#23ff4b', '#2a6fff', '#ffd900', 
+            '#ff00ea', '#00ffea', '#ffffff', '#ff8800'
+        ].map(c => new THREE.Color(c));
+
+        const radius = 800;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const r = radius * Math.cbrt(Math.random());
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = r * Math.cos(phi);
+
+            const baseColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            const color = baseColor.clone().lerp(new THREE.Color(0xffffff), Math.random() * 0.2);
+            
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+
+            sizes[i] = Math.pow(Math.random(), 7.0) * 20.0 + 1.0; 
+            
+            phases[i] = Math.random() * Math.PI * 2;
+            twinkleSpeeds[i] = Math.random() * 4.0 + 0.5;
+        }
+
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        starGeometry.setAttribute('customColor', new THREE.BufferAttribute(colors, 3));
+        starGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        starGeometry.setAttribute('phase', new THREE.BufferAttribute(phases, 1));
+        starGeometry.setAttribute('twinkleSpeed', new THREE.BufferAttribute(twinkleSpeeds, 1));
+
+        const starVertexShader = `
+            uniform float uTime;
+            uniform float uPixelRatio;
+
+            attribute float size;
+            attribute float phase;
+            attribute float twinkleSpeed;
+            attribute vec3 customColor;
+
+            varying vec3 vColor;
+            varying float vTwinkle;
+
+            void main() {
+                vColor = customColor;
+
+                float t = uTime * twinkleSpeed + phase;
+                float wave = sin(t) * 0.5 + 0.5;
+                
+                float flash = pow(wave, 10.0) * 2.5; 
+                float basePulse = 0.15 + wave * 0.3;
+                
+                vTwinkle = basePulse + flash;
+
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                gl_Position = projectionMatrix * mvPosition;
+
+                float dist = length(mvPosition.xyz);
+                gl_PointSize = size * uPixelRatio * (600.0 / dist) * vTwinkle;
+            }
+        `;
+
+        const starFragmentShader = `
+            varying vec3 vColor;
+            varying float vTwinkle;
+
+            void main() {
+                vec2 uv = gl_PointCoord.xy * 2.0 - 1.0;
+                float d = length(uv);
+
+                float rayX = exp(-abs(uv.x) * 30.0) * exp(-abs(uv.y) * 1.0);
+                float rayY = exp(-abs(uv.y) * 30.0) * exp(-abs(uv.x) * 1.0);
+
+                float core = exp(-d * 15.0);
+                float halo = exp(-d * 4.0) * 0.5;
+
+                float alpha = (rayX + rayY) * 0.8 + core + halo;
+
+                alpha *= smoothstep(1.0, 0.1, d);
+
+                if (alpha < 0.02) discard;
+
+                vec3 finalColor = mix(vColor, vec3(1.0), core * 0.9);
+
+                gl_FragColor = vec4(finalColor, alpha * min(vTwinkle, 2.5));
+            }
+        `;
+
+        const starMaterial = new THREE.ShaderMaterial({
+            vertexShader: starVertexShader,
+            fragmentShader: starFragmentShader,
+            uniforms: {
+                uTime: { value: 0.0 },
+                uPixelRatio: { value: renderer.getPixelRatio() }
+            },
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const starMesh = new THREE.Points(starGeometry, starMaterial);
+        universe.add(starMesh);
+
+        document.getElementById('loading').style.opacity = '0';
+
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enablePan = false;
+        controls.enableZoom = true;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.4;
+
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            controls.update();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            starMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            starMaterial.uniforms.uTime.value = elapsedTime;
+            bgMaterial.uniforms.uTime.value = elapsedTime;
+
+            universe.rotation.x += (mouseY * 0.08 - universe.rotation.x) * 0.05;
+            universe.rotation.y += (mouseX * 0.08 - universe.rotation.y) * 0.05;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
