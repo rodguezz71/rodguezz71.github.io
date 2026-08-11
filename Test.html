@@ -28,7 +28,6 @@
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
-			cursor: none;
 			perspective: 1200px;
 		}
 
@@ -509,51 +508,6 @@
 				            0 0 0 8em rgba(255, 0, 17, 0);
 			}
 		}
-
-		/* --- CURSOR Y RASTRO --- */
-		#cursor-punto {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 8px;
-			height: 8px;
-			background-color: white;
-			border-radius: 50%;
-			pointer-events: none;
-			z-index: 9999;
-			box-shadow: 
-				0 0 6px rgba(255, 255, 255, 0.9),
-				0 0 12px rgba(255, 255, 255, 0.5),
-				0 0 20px rgba(255, 0, 17, 0.9);
-			transition: transform 0.05s ease-out;
-			will-change: transform;
-		}
-
-		#rastro-contenedor {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			pointer-events: none;
-			z-index: 9998;
-		}
-
-		.rastro-punto {
-			position: absolute;
-			width: 6px;
-			height: 6px;
-			background-color: rgba(255, 0, 17, 0.75);
-			border-radius: 50%;
-			pointer-events: none;
-			box-shadow: 0 0 4px rgba(255, 0, 17, 0.6);
-			animation: fadeOut 0.5s forwards ease-out;
-		}
-
-		@keyframes fadeOut {
-			0% { transform: scale(1); opacity: 0.75; }
-			100% { transform: scale(0.1); opacity: 0; }
-		}
 	</style>
 </head>
 
@@ -622,9 +576,6 @@
 		<h1 class="neon-title">LEGION RADIO</h1>
 	</div>
 
-	<div id="cursor-punto"></div>
-	<div id="rastro-contenedor"></div>
-
 	<script>
 		const zone = document.getElementById("zone");
 
@@ -643,43 +594,6 @@
 
 		setInterval(autoSpawn, 30);
 
-		const cursorPunto = document.getElementById('cursor-punto');
-		const rastroContenedor = document.getElementById('rastro-contenedor');
-		
-		let cursorX = 0;
-		let cursorY = 0;
-		let ratonDentro = false;
-
-		document.addEventListener('mousemove', (e) => {
-			cursorX = e.clientX;
-			cursorY = e.clientY;
-			ratonDentro = true;
-			cursorPunto.style.transform = `translate(${cursorX - 4}px, ${cursorY - 4}px)`;
-		});
-
-		document.addEventListener('mouseleave', () => {
-			ratonDentro = false;
-			cursorPunto.style.opacity = '0';
-		});
-		
-		document.addEventListener('mouseenter', () => {
-			ratonDentro = true;
-			cursorPunto.style.opacity = '1';
-		});
-
-		function gestionarRastro() {
-			if (ratonDentro) {
-				const rastroPunto = document.createElement('div');
-				rastroPunto.classList.add('rastro-punto');
-				rastroPunto.style.left = `${cursorX - 3}px`;
-				rastroPunto.style.top = `${cursorY - 3}px`;
-				rastroContenedor.appendChild(rastroPunto);
-				setTimeout(() => { rastroPunto.remove(); }, 500);
-			}
-			requestAnimationFrame(gestionarRastro);
-		}
-		gestionarRastro();
-
 		const canvas = document.getElementById('main-canvas');
 		const ctx = canvas.getContext('2d');
 
@@ -693,7 +607,6 @@
 		class NeonBeam {
 			constructor() {
 				this.reset();
-				// Luces multicolores de fiesta recorriendo todo el espectro (0 a 360 grados)
 				this.hue = Math.random() * 360; 
 				this.glowColor = `hsla(${this.hue}, 100%, 50%, 0.75)`;
 			}
@@ -767,7 +680,7 @@
 				this.y = startY;
 				this.symbol = ['♪', '♫', '♩', '♬'][Math.floor(Math.random() * 4)];
 				this.size = 36 + Math.random() * 22;
-				this.hue = Math.random() * 360; // Notas también multicolores
+				this.hue = Math.random() * 360;
 				
 				const angle = Math.atan2(targetY - startY, targetX - startX) + (Math.random() - 0.5) * 0.2;
 				const speed = 1.5 + Math.random() * 1.2;
@@ -830,7 +743,7 @@
 				beam.draw();
 			});
 
-			for (let i = notes.length - 1; i >= 0; i--) {
+		for (let i = notes.length - 1; i >= 0; i--) {
 				notes[i].update();
 				notes[i].draw();
 				if (notes[i].alpha <= 0) {
