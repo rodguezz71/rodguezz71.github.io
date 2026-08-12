@@ -41,7 +41,7 @@
 			z-index: 10;
 			pointer-events: none;
 			overflow: hidden;
-			background-image: url('https://xatimg.com/image/8WAsWzHT65bj.png');
+			background-image: url('https://xatimg.com/image/elY0y7rDXXoR.png');
 			background-size: cover;
 			background-position: center;
 			background-repeat: no-repeat;
@@ -107,7 +107,7 @@
 
 		.neon-title {
 			font-family: 'Rubik Glitch', cursive;
-			font-size: 105px;
+			font-size: clamp(40px, 9vw, 105px);
 			font-weight: 400;
 			margin: 0;
 			line-height: 1;
@@ -119,6 +119,7 @@
 			filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 25px var(--red-pure)) drop-shadow(0 0 50px var(--orange-fire)) drop-shadow(0 0 90px var(--red-deep));
 			display: inline-flex;
 			animation: flotarSuave 3s infinite ease-in-out;
+			white-space: nowrap;
 		}
 
 		.neon-title span {
@@ -154,6 +155,19 @@
 			}
 			50% {
 				transform: translateY(-10px);
+			}
+		}
+
+		/* Media query para adaptar contenedores en pantallas pequeñas o dispositivos móviles */
+		@media (max-width: 768px) {
+			.chat-backdrop {
+				width: 92vw;
+				height: 55vw;
+				top: 70px;
+			}
+			.logo-tabs {
+				top: calc(70px + 55vw - 22px);
+				right: 5%;
 			}
 		}
 	</style>
